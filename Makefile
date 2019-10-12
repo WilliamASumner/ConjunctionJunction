@@ -52,4 +52,4 @@ $(TTARGET): $(TESTFILE)
 	$(CC) $(JFLAGS) $(TESTFILE)
 
 clean:
-	$(RM) $(CLASSFILES) $(TESTFILECLASS)
+	$(RM) '*.class' *.class
