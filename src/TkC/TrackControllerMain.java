@@ -1,20 +1,59 @@
+// Java includes
+import java.util.HashMap;
 import java.io.*; // IO
-import java.util.*; // Scanner and BufferedReader Class
 
 public class TrackControllerMain
 {
-    public static void main (String args[]) throws IOException
-    {
-        // Create a scanner to read from keyboard
-        File infile = new File("input.txt");
-        Scanner infileScanner = new Scanner(infile);
-        String line;
-        while (infileScanner.hasNextLine())
-        {
-            line = infileScanner.nextLine();
-        }
-        Scanner kbd = new Scanner (System.in);
-        // Template Screen Output
-        System.out.println("Hello world!");
+    Block currentBlock;
+    TrackController[] controllers;
+    Block[] OccupiedBlocks;
+    HashMap TrainPositions;
+
+    public static void updateOnTick() {
+        System.out.println("update");
+    }
+
+    public boolean SendSuggestedSpeed(String trainName,double speed) {
+        return true;
+    }
+
+    public boolean SendSuggestedAuthority(String trainName, Block authority) {
+        return true;
+    }
+
+    public boolean NotifyNewOccupancy(Block b, String trainName) {
+        return true;
+    }
+
+    public boolean SetSwitchState(SwitchBlock s, boolean SwitchState) {
+        return true;
+    }
+
+    public boolean SetCrossingState(CrossingBlock c, boolean crossState) {
+        return true;
+    }
+
+    public boolean SetBeaconData(StationBlock s, String data) {
+        return true;
+    }
+
+    private TrackController FindController(String trainName) {
+        return null;
+    }
+
+    public Block ConvertNameToBlock(String trainName) {
+        return null;
+    }
+
+    public TrackController BlockToTrackController(Block b) {
+        return null;
+    }
+
+    public boolean UpdateOccupiedBlocks() {
+        return true;
+    }
+    
+    public boolean VerifySafeConditions() {
+        return true;
     }
 }
