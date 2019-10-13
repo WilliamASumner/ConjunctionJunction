@@ -3,32 +3,32 @@
 # Vars
 CC             := javac
 RUNCMD         := java
+JARCMD         := jar -cvf
 
 MKDIR_P        = mkdir -p
-JAVAFX_PATH    = ./javafx-sdk-11.0.2/lib
+ifdef OS # windows
+	JAVAFX_PATH    = ./javafx-sdk-11.0.2-windows/lib
+else
+	JAVAFX_PATH    = ./javafx-sdk-11.0.2-unix/lib
+endif 
 JAVAFX_MODULES = javafx.controls # NOTE: must be comma separated
 
 JFLAGS         := --module-path=$(JAVAFX_PATH) --add-modules $(JAVAFX_MODULES)
 
 MODULES        = TkC TkM TrC TrM CTC
 JAVAFILES      := $(addsuffix .java,$(MODULES))
-CLASSFILES     := $(addsuffix .class,$(MODULES))
+CLASSFILES     = $(addsuffix .class,$(MODULES))
 TESTFILE       := HelloWorld.java # TODO remove
-TESTFILECLASS  := HelloWorld.class
+CLASSFILES     = HelloWorld.class
 
 TARGET         := trainsim
 DTARGET        := trainsimdebug
 TTARGET        := HelloWorld
+JARTARGET      := app.jar
 .PHONY         := clean runtest # TODO add tar for packaging
 
-ifdef OS # running on windows
-	RM = del
-	MKDIR_P = mkdir
-	JFXFLAGS = $(subst /,\,JFXFLAGS) # TODO test on windows
-else # unix-like
-	RM = rm -f
-	MKDIR_P = mkdir -p
-endif
+RM = rm -f
+MKDIR_P = mkdir -p
 
 # Rules
 
@@ -36,6 +36,8 @@ all: $(TARGET)
 debug: $(DTARGET)
 runtest: $(TTARGET)
 	$(RUNCMD) $(JFLAGS) $(TTARGET)
+jar: $(TTARGET)
+	$(JARCMD) $(JARTARGET) *.class
 
 #TODO add tar
 
