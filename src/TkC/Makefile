@@ -1,10 +1,11 @@
-# Makefile for team Conjunction Junction
+# Makefile for TrackController Module
 
 ############### GENERAL VARS #################
 CC             := javac
 RUNCMD         := java
 JARCMD         := jar -cvf
-MKDIR_P        = mkdir -p
+MKDIR_P        := mkdir -p
+RM             := rm -f
 ifdef OS # windows
 	JAVAFX_PATH    = ../../lib/javafx-sdk-11.0.2-windows/lib
 else
@@ -12,41 +13,36 @@ else
 endif 
 
 
-JAVAFX_MODULES = javafx.controls # NOTE: must be comma separated
-JFLAGS         := --module-path=$(JAVAFX_PATH) --add-modules $(JAVAFX_MODULES)
-BLOCKFILES     = Block SwitchBlock CrossingBlock StationBlock BlockType
-
-############### MODULE VARS ##################
-MODULES        = TkC TkM TrC TrM CTC
+JAVAFX_MODULES   = javafx.controls# NOTE: must be comma separated
+JFLAGS          := --module-path=$(JAVAFX_PATH) --add-modules $(JAVAFX_MODULES)
+BLOCKFILES       = Block SwitchBlock CrossingBlock StationBlock BlockType
+BLOCK_SRCDIR    := ../
+BLOCK_JAVAFILES := $(addsuffix .java,$(addprefix $(BLOCK_SRCDIR),$(BLOCKFILES)))
+CLASS_PATH      := ../../bin/TkC
 
 ######### TRACK CONTROLLER #############
 TKC_MODULE     = TrackController TrackControllerMain TrackControllerGUI
-TKC_SRCDIR        = ./src/TkC/ # TODO ADD curr_dir variable
-TKC_BINDIR        = ./bin/TkC/
+TKC_SRCDIR     = ../../src/TkC/
+TKC_BINDIR     = ../../bin/TkC/
 
-TKC_JAVAFILES  = $(addsuffix .java,$(TKC_MODULE))
-TKC_CLASSFILES = $(addsuffix .class,$(TKC_MODULE))
-
-TKC_JAVAFILES  = $(addprefix $(TKC_SRCDIR),$(TKC_JAVAFILES)) # dir prefixes
-TKC_CLASSFILES = $(addprefix $(TKC_BINDIR),$(TKC_CLASSFILES))
+TKC_JAVAFILES  = $(addsuffix .java,$(addprefix $(TKC_SRCDIR),$(TKC_MODULE)))
+TKC_CLASSFILES = $(addsuffix .class,$(addprefix $(TKC_BINDIR),$(TKC_MODULE)))
 
 #JAVAFILES      := $(addsuffix .java,$(MODULES))
 #CLASSFILES     = $(addsuffix .class,$(MODULES))
 
 ################# TEST VARS ##################
 
-TTARGET        := TrainControllerGUI.class
+TTARGET_CLASS  := $(addprefix $(TKC_BINDIR),TrackControllerGUI.class)
+TTARGET        := TrackControllerGUI
 .PHONY         := clean runtest
 
-RM = rm -f
-MKDIR_P = mkdir -p
-
 # Rules
-runtest: $(TTARGET)
-	$(RUNCMD) $(JFLAGS) $(TTARGET)
+default: $(TTARGET_CLASS)
+	$(RUNCMD) -cp $(CLASS_PATH) $(JFLAGS) $(TTARGET)
 
-$(TTARGET): $(TKC_CLASSFILES) $(TKC_JAVAFILES) $(BLOCKfILES)
-	$(CC) $(JFLAGS) -d $(TKC_BINDIR) $(TKC_JAVAFILES) $(BLOCKFILES)
+$(TTARGET_CLASS): $(TKC_JAVAFILES) $(BLOCK_JAVAFILES)
+	$(CC) $(JFLAGS) -d $(TKC_BINDIR) $(BLOCK_JAVAFILES) $(TKC_JAVAFILES)
 
 clean:
 	$(RM) '*.class' *.class
