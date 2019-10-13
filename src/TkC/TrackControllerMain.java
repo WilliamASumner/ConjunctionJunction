@@ -56,4 +56,12 @@ public class TrackControllerMain
     public boolean VerifySafeConditions() {
         return true;
     }
+
+    public TrackControllerMain() {
+        currentBlock = null;
+        controllers = null;
+        OccupiedBlocks = null;
+        TrainPositions = null;
+    }
+
 }
