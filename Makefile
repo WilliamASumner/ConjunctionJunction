@@ -7,9 +7,9 @@ JARCMD         := jar -cvf
 
 MKDIR_P        = mkdir -p
 ifdef OS # windows
-	JAVAFX_PATH    = ./javafx-sdk-11.0.2-windows/lib
+	JAVAFX_PATH    = ./lib/javafx-sdk-11.0.2-windows/lib
 else
-	JAVAFX_PATH    = ./javafx-sdk-11.0.2-unix/lib
+	JAVAFX_PATH    = ./lib/javafx-sdk-11.0.2-unix/lib
 endif 
 JAVAFX_MODULES = javafx.controls # NOTE: must be comma separated
 
@@ -21,10 +21,10 @@ CLASSFILES     = $(addsuffix .class,$(MODULES))
 TESTFILE       := HelloWorld.java # TODO remove
 CLASSFILES     = HelloWorld.class
 
-TARGET         := trainsim
-DTARGET        := trainsimdebug
+TARGET         := ./bin/trainsim
+DTARGET        := ./bin/trainsimdebug
 TTARGET        := HelloWorld
-JARTARGET      := app.jar
+JARTARGET      := ./bin/app.jar
 .PHONY         := clean runtest # TODO add tar for packaging
 
 RM = rm -f
