@@ -3,12 +3,12 @@ public class TrackController
     String PLCProgram;
     Block[] ControlledBlocks;
 
-    public TrainController() {
+    public TrackController() {
         PLCProgram = "";
         ControlledBlocks = null;
     }
 
-    public TrainController(String plc, Block[] blocks) {
+    public TrackController(String plc, Block[] blocks) {
         PLCProgram = plc;
         ControlledBlocks = blocks;
     }
