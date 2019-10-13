@@ -1,3 +1,7 @@
+import java.awt.Desktop;
+import java.io.File;
+import java.io.IOException;
+
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -11,6 +15,7 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.stage.FileChooser;
 import javafx.geometry.Pos;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
@@ -18,20 +23,20 @@ import javafx.geometry.Insets;
 
 public class TrackControllerGUI extends Application {
 
-    TrackController CurrentController;
-    String CurrentBlock;
-    String Occupancy;
-    String Status;
-    String Line;
-    String mode;
-    Boolean Light1;
-    Boolean Light2;
-    Boolean Light3;
-    String SwitchState;
-    String CrossState;
-    String BlockStatus;
-    String PLCFile;
-    Boolean OverrideOccupied;
+    private TrackController CurrentController;
+    private String CurrentBlock;
+    private String Occupancy;
+    private String Status;
+    private String Line;
+    private String mode;
+    private Boolean Light1;
+    private Boolean Light2;
+    private Boolean Light3;
+    private String SwitchState;
+    private String CrossState;
+    private String BlockStatus;
+    private String PLCFile;
+    private Boolean OverrideOccupied;
 
 
     public static void main(String[] args) {
@@ -41,6 +46,8 @@ public class TrackControllerGUI extends Application {
     @Override // not sure what this does?
     public void start(Stage primaryStage) { // entry point for all apps
         primaryStage.setTitle("Track Controller GUI"); // container for all of it
+
+        final FileChooser fileChooser = new FileChooser();
 
         TrackControllerMain trackControl = new TrackControllerMain();
 
@@ -124,7 +131,36 @@ public class TrackControllerGUI extends Application {
         //root.getChildren().addAll(,l,l2); // middle left
         //root.getChildren().addAll(,l,l2); // middle right
 
-        //root.getChildren().addAll(,l,l2); // lower left
+        Button importButton = new Button("Import PLC");
+        importButton.setPrefWidth(400);
+        importButton.setPrefHeight(200);
+        importButton.setOnAction(new EventHandler<ActionEvent>() {
+
+            @Override
+            public void handle(ActionEvent event) {
+                fileChooser.setTitle("Choose a PLC Program");
+                fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+                fileChooser.getExtensionFilters().addAll(
+                        new FileChooser.ExtensionFilter("PLC Program","*.plc"),
+                        new FileChooser.ExtensionFilter("All Files","*.*")
+                );
+
+                File file = fileChooser.showOpenDialog(primaryStage);
+                if (file != null) {
+                    try {
+                        Desktop.getDesktop().open(file);
+                    } catch (IOException ex) {
+                        System.out.println("Error: could not open file");
+                    }
+                }
+            }
+        });
+        GridPane.setConstraints(importButton,0,2);
+
+        root.getChildren().addAll(importButton); // lower left
+
+
+
         //root.getChildren().addAll(,l,l2); // lower right
 
 
