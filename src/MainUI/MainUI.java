@@ -12,6 +12,8 @@ import javafx.scene.control.TextField;
 import javafx.event.EventHandler;
 import javafx.event.ActionEvent;
 
+import javafx.animation.AnimationTimer;
+
 public class MainUI extends Application {
     // fields
     
@@ -27,10 +29,10 @@ public class MainUI extends Application {
 
     private TrackControllerMain tkc = null;
     //private TrackModel tkm = null;
-    private CTC ctc = null;
-    private CTC ctcg = null;
-    
-    public static void main(String[] args) {
+    //private CTC ctc = null;
+    //private CTC ctcg = null;
+    //
+   public static void main(String[] args) {
         // launch CTC 
         //CTC newCTC = new CTC();
         // launch the app
@@ -39,12 +41,12 @@ public class MainUI extends Application {
     
     @Override
     public void start(Stage stage) {
-        
+
         // Create button
         Button CTC = new Button("CTC");
         // Register the event handler
         CTC.setOnAction(new CTCButtonHandler());
-        
+
         // Create button
         Button trackController = new Button("Track Controller");
         // Register the event handler
@@ -53,7 +55,7 @@ public class MainUI extends Application {
         Button trackModel = new Button("Track Model");
         // Register the event handler
         trackModel.setOnAction(new TrackModelButtonHandler());
-        
+
         // Create button
         Button trainModel = new Button("Train Model");
         // Register the event handler
@@ -65,18 +67,42 @@ public class MainUI extends Application {
         trainController.setOnAction(
                 new TrainControllerButtonHandler()
         );
-        
+
         // Put the HBox, dispatchT, and myLabel in a VBox
         VBox vbox = new VBox(10, CTC, trackController, trackModel, trainModel, trainController);
         // set the VBox's alignment to center
         vbox.setAlignment(Pos.CENTER);
-        
+
         // Create a scene with the VBox as its root node
         Scene scene = new Scene(vbox);
         stage.setTitle("Train Sim Home Page");
         stage.setScene(scene);
+
+        final long startNanoTime = System.nanoTime();
+
+        new AnimationTimer() { // anonymous animation timer
+            public void handle(long currentNanoTime) {
+                double deltaT = (currentNanoTime - startNanoTime)/1000000000.0;
+
+                // update all modules in succession
+                //ctc.update()
+                //tkc.update()
+                //tkm.update()
+                //tnm.update()
+                //tnc.update()
+                System.out.println("here");
+            }
+        }.start();
+
+
         stage.show();
 
+    }
+
+    private void MainLoop() {
+        while(true) {
+            System.out.println("he");
+        }
     }
 
     /**
@@ -87,8 +113,8 @@ public class MainUI extends Application {
         public void handle(ActionEvent event) {
             Stage newWindow = new Stage();
             System.out.println("CTC Office");
-            ctcg = new CTC_GUI();
-            ctcg.start(newWindow);
+            //ctcg = new CTC_GUI();
+            //ctcg.start(newWindow);
         }
     }
     
@@ -145,5 +171,5 @@ public class MainUI extends Application {
             //tncg.start(newWindow);
 
         }
-    }   
+    }
 }
