@@ -84,7 +84,7 @@ public class MainUI extends Application {
         public void handle(ActionEvent event) {
             Stage newWindow = new Stage();
             System.out.println("CTC Office");
-            //ctcg = new CTCGUI();
+            //ctcg = new CTC_GUI();
             //ctcg.start(newWindow);
         }
     }
