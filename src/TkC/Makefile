@@ -23,7 +23,7 @@ CLASS_PATH      := ../../bin/TkC
 ######### TRACK CONTROLLER #############
 TKC_MODULE     = TrackController TrackControllerMain TrackControllerGUI
 TKC_SRCDIR     = ../../src/TkC/
-TKC_BINDIR     = ../../bin/TkC/
+TKC_BINDIR     = ../../bin/
 
 TKC_JAVAFILES  = $(addsuffix .java,$(addprefix $(TKC_SRCDIR),$(TKC_MODULE)))
 TKC_CLASSFILES = $(addsuffix .class,$(addprefix $(TKC_BINDIR),$(TKC_MODULE)))
@@ -39,10 +39,13 @@ TTARGET        := TrackControllerGUI
 
 # Rules
 default: $(TTARGET_CLASS)
-	$(RUNCMD) -cp $(CLASS_PATH) $(JFLAGS) $(TTARGET)
+
+run: $(TTARGET_CLASS)
+	$(RUNCMD) $(JFLAGS) -cp $(TKC_BINDIR) $(TTARGET)
+
 
 $(TTARGET_CLASS): $(TKC_JAVAFILES) $(BLOCK_JAVAFILES)
 	$(CC) $(JFLAGS) -d $(TKC_BINDIR) $(BLOCK_JAVAFILES) $(TKC_JAVAFILES)
 
 clean:
-	$(RM) '*.class' *.class
+	$(RM) '*.class' *.class $(TKC_CLASSFILES)

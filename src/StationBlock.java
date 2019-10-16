@@ -1,6 +1,6 @@
 public class StationBlock extends Block {
-    String BeaconData;
 
+    String BeaconData;
     public void setBeaconData(String newData) {
         BeaconData = newData;
     }
