@@ -5,6 +5,10 @@ import java.io.IOException;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -14,8 +18,10 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
+
 import javafx.stage.Stage;
 import javafx.stage.FileChooser;
+
 import javafx.geometry.Pos;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
@@ -74,25 +80,28 @@ public class TrackControllerGUI extends Application {
 
 
         String[] ControllerNames = {"G1","G2","G3"};
-        ComboBox controllerBox = new ComboBox();
+        ObservableList<String> ControllerOptions = FXCollections.observableArrayList();
         for (String option: ControllerNames) {
-            controllerBox.getItems().add(option);
+            ControllerOptions.addAll(option);
         }
+        @SuppressWarnings("unchecked")
+        ComboBox controllerBox = new ComboBox(ControllerOptions);
         controllerBox.getSelectionModel().selectFirst();
 
 
         String[] BlockNames = {"1","2","3","4","5"};
-        ComboBox blockBox = new ComboBox();
+        ObservableList<String> BoxOptions = FXCollections.observableArrayList();
         for (String option: BlockNames) {
-            blockBox.getItems().add(option);
+            BoxOptions.addAll(option);
         }
+
+        @SuppressWarnings("unchecked")
+        ComboBox blockBox = new ComboBox(BoxOptions);
         blockBox.getSelectionModel().selectFirst();
 
-        String[] modes = {"Automatic","Manual"};
-        ComboBox modeBox = new ComboBox();
-        for (String option: modes) {
-            modeBox.getItems().add(option);
-        }
+        ObservableList<String> ModeOptions = FXCollections.observableArrayList("Automatic","Manual");
+        @SuppressWarnings("unchecked")
+        ComboBox modeBox = new ComboBox(ModeOptions);
         modeBox.getSelectionModel().selectFirst();
 
         /*GridPane.setConstraints(controllerBox,0,0);
