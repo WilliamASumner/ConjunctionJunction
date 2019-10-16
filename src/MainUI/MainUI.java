@@ -27,7 +27,8 @@ public class MainUI extends Application {
 
     private TrackControllerMain tkc = null;
     //private TrackModel tkm = null;
-    //private CTC ctc = null;
+    private CTC ctc = null;
+    private CTC ctcg = null;
     
     public static void main(String[] args) {
         // launch CTC 
@@ -61,7 +62,9 @@ public class MainUI extends Application {
         // Create button
         Button trainController = new Button("Train Controller");
         // Register the event handler
-        trainController.setOnAction(new TrainControllerButtonHandler());
+        trainController.setOnAction(
+                new TrainControllerButtonHandler()
+        );
         
         // Put the HBox, dispatchT, and myLabel in a VBox
         VBox vbox = new VBox(10, CTC, trackController, trackModel, trainModel, trainController);
@@ -69,7 +72,7 @@ public class MainUI extends Application {
         vbox.setAlignment(Pos.CENTER);
         
         // Create a scene with the VBox as its root node
-        Scene scene = new Scene(vbox);//(new StackPane(l), 640, 480);
+        Scene scene = new Scene(vbox);
         stage.setTitle("Train Sim Home Page");
         stage.setScene(scene);
         stage.show();
@@ -84,8 +87,8 @@ public class MainUI extends Application {
         public void handle(ActionEvent event) {
             Stage newWindow = new Stage();
             System.out.println("CTC Office");
-            //ctcg = new CTC_GUI();
-            //ctcg.start(newWindow);
+            ctcg = new CTC_GUI();
+            ctcg.start(newWindow);
         }
     }
     
