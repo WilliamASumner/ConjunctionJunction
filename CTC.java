@@ -10,28 +10,28 @@ public class CTC{
 		
 		// main constructor
 		public CTC(){
-			// run CTC GUI
-		//	CTC_GUI runCTCGUI = new CTC_GUI();
-			
-			// Create 10 trains at start of application
-			for(int i =0; i <= 9; i++)
-				queuedTrains[i] = new Train();
+			// create trains for future use
+			dispatchedTrains = new Trains[10];
+		}
+		
+		public void addTrain(String trainName){
+			// instantiate new train with given name
+			newTrain = new Train(trainName);
+			// add train to currently dispatched trains array
+			dispatchedTrains[0] = newTrain;
 		}
 		
 		public void queueNewTrain(String trainName){
 			// Queue new train with given name
-			queuedTrains[0].setName(trainName);
 		}
 		
 		public void dispatchQueuedTrain(String trainName){
 			// dispatch train
-			dispatchedTrains[0] = queuedTrains[0];
+			dispatchedTrains[0] = ;
 		}
 		
 		public int sendAuthority(int trainsCurBlockID, int newAuthorityBlkID){
-			for(int i = 0; i <= 9; i++)
-				if(dispatchedTrains[i].)
-			dispatchedTrains
+			
 		}
 	}
 }
