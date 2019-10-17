@@ -62,8 +62,9 @@ public class CTC_GUI extends Application {
     //  borderPane.setStyle(cssLayout);
         
         //--------------------------------------------------------------
-        // Add image of track
-        Image trackLayout = new Image("file:trackLayout.jpg");
+        String projectBaseDir = "file:"+System.getProperty("user.dir") + "/src"; // get base dir
+        String imgPath = projectBaseDir + "/CTC/trackLayout.jpg";
+        Image trackLayout = new Image(imgPath);
         // create an ImageViw object
         ImageView imageView = new ImageView(trackLayout);
         imageView.setFitWidth(500);
@@ -200,7 +201,8 @@ public class CTC_GUI extends Application {
         //---------------------------------------------------------------
         // Create left BorderPane
         // Add image of clock
-        Image clock = new Image("file:digital_clock.jpg");
+        imgPath = projectBaseDir + "/CTC/digital_clock.jpg";
+        Image clock = new Image(imgPath);
         // create an ImageViw object
         ImageView imageView2 = new ImageView(clock);
         imageView2.setFitWidth(250);
