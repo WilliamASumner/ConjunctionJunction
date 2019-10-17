@@ -1,13 +1,16 @@
-
 import javafx.application.Application;
 import javafx.scene.Scene;
+//import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import java.util.ArrayList;
+import java.net.URL;
 
 
-public class TkM extends Application {
+
+public class TkM {
 
       public double grade;
       public double elevation;
@@ -18,9 +21,11 @@ public class TkM extends Application {
       public int blockID;
       public char section;
       public boolean isOccupied;
-      Block b = new Block();
+      TkMGUI tkmg = new TkMGUI();
+      //VBox GUI;
 
       public TkM() {
+        //this.initGUI();
         // grade = b.getGrade();
         // elevation = b.getElevation();
         // speed = b.getSpeed();
@@ -35,16 +40,28 @@ public class TkM extends Application {
 
       }
 
-      public TkM(Block b) {
+      // public TkM() {
+      //   initGUI();
+      //
+      //
+      //               // gr = grade;
+      //               // elev = elevation;
+      //               // sp = speed;
+      //               // // fails = failures;
+      //               // len = length;
+      //               // lineCol = lineColor;
+      //               // blkc = section;
+      //               // blkID = blockID;
+      // }
 
-                    // gr = grade;
-                    // elev = elevation;
-                    // sp = speed;
-                    // // fails = failures;
-                    // len = length;
-                    // lineCol = lineColor;
-                    // blkc = section;
-                    // blkID = blockID;
+      // public void initGUI() {
+      //   FXMLLoader loader = new FXMLLoader();
+      //   loader.setLocation(new URL("D:\Documents\Classes\Senior\softwareeng\javafiles\ConjunctionJunction\src\TkM"));
+      //   GUI = loader.<VBox>load();
+      // }
+
+      public void showGUI(Stage stage){
+        tkmg.start(stage);
       }
 
 
@@ -155,27 +172,29 @@ public class TkM extends Application {
                //"Failures: " + "\n" + failArr + "\n";
       }
 
-	 @Override
-	    public void start(Stage stage) {
-        TkM t = new TkM();
-        t.setGrade(0);
-        t.setSpeed(70);
-        t.setLength(100);
-        t.setBlockID(63);
-        t.setSection('K');
-        t.setElevation(0);
-        t.setLineColor("Green");
-        t.setIsOccupied(false);
-	        Label l = new Label(this.toString(t));
-	        Scene scene = new Scene(new StackPane(l), 640, 480);
-          stage.setTitle("Track Model UX");
-	        stage.setScene(scene);
-	        stage.show();
-	    }
+	 // @Override
+	 //    public void start(Stage stage) {
+   //
+   //        TkM t = new TkM();
+   //        this.setGrade(0);
+   //        this.setSpeed(70);
+   //        this.setLength(100);
+   //        this.setBlockID(63);
+   //        this.setSection('K');
+   //        this.setElevation(0);
+   //        this.setLineColor("Green");
+   //        this.setIsOccupied(false);
+  	//         Label l = new Label(this.toString(t));
+  	//         Scene scene = new Scene(GUI);
+   //          stage.setTitle("Track Model UX");
+  	//         stage.setScene(scene);
+  	//         stage.show();
+   //
+	 //    }
 
-	    public static void main(String[] args) {
-
-	        launch();
-	    }
+	    // public static void main(String[] args) {
+      //
+	    //     launch();
+	    // }
 
 }

@@ -16,7 +16,7 @@ ifdef OS # windows
 	JAVAFX_PATH    = $(MAKE_DIR)/lib/javafx-sdk-11.0.2-windows/lib
 else
 	JAVAFX_PATH    = $(MAKE_DIR)/lib/javafx-sdk-11.0.2-unix/lib
-endif 
+endif
 
 #NOTE: must be comma separated
 JAVAFX_MODULES  = javafx.controls,javafx.fxml
