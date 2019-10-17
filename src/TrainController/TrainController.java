@@ -1,4 +1,3 @@
-
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -29,21 +28,29 @@ public class TrainController{
     boolean lightsOn;
     Vbox GUI;
     String trainName;
-    trainModel trainModel;
+    trainModel TrainModel;
     
+    // //Train Controller Constructor
+    // public TrainController(String name, String authority, double speed, TrainModel tm){
+    //     auditedSpeed = speed;
+    //     authority = authority;
+    //     trainName = name;
+    //     trainModel = tm;
+    //     initGUI();
+    // }
+
     //Train Controller Constructor
-    public TrainController(String name, String authority, double speed, TrainModel tm){
+    public TrainController(String name, String authority, double speed){
         auditedSpeed = speed;
         authority = authority;
         trainName = name;
-        trainModel = tm;
+        //trainModel = tm;
         initGUI();
     }
-
     //Called when train controller is created
     void initGUI(){
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(new URL("ConjunctionJunction/ConjunctionJunction/src/TrainController/TrainControllerGUISceneBuilder.fxml"));
+        loader.setLocation(new URL("ConjunctionJunction/src/TrainController/TrainControllerGUISceneBuilder"));
         GUI = loader.<VBox>load();
     }
 
