@@ -1,14 +1,15 @@
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
-import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
-
-import java.net.URL;
-
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage; 
 public class TrainController{
-    double currSpeed = 60;
+    static double currSpeed = 60;
     // Block authority;
-    String authority = "test block";
+    static String authority = "test block";
     double auditedSpeed;   //CTC suggested speed limit
     double currTemp;
     boolean isUnderground;
@@ -25,7 +26,7 @@ public class TrainController{
     boolean eBrakeFailure;
     boolean serviceBreakFailure;
     boolean lightsOn;
-    String trainName = "train1";
+    static String trainName = "train1";
     // trainModel TrainModel;
     TrainControllerGUI myGUI;
     
@@ -60,17 +61,17 @@ public class TrainController{
     }
 
     //Updates train's audited speed limit from the train model
-    public double getAuditedSpeed(){
+    public static double getAuditedSpeed(){
         return currSpeed;
     }
 
     //Updates train's authority from the train model
-    public String getAuthority(){
+    public static String getAuthority(){
         return authority;
     }
 
     //Updates train's authority from the train model
-    public String getName(){
+    public static String getName(){
         return trainName;
     }
 
