@@ -28,6 +28,8 @@ public class MainUI extends Application {
     private TrackControllerGUI tkcg = null;
 
     private TrackControllerMain tkc = null;
+
+    private TkM tkm = null;
     //private TrackModel tkm = null;
     //private CTC ctc = null;
     //private CTC ctcg = null;
@@ -139,8 +141,8 @@ public class MainUI extends Application {
         public void handle(ActionEvent event){
             Stage newWindow = new Stage();
             System.out.println("Track Model");
-            //tkmg = new TrackControllerGUI();
-            //tkmg.start(newWindow);
+            tkm = new TkM();
+            tkm.start(newWindow);
 
         }
     }
