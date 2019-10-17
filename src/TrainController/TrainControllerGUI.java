@@ -24,14 +24,14 @@ import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.geometry.Insets;
 
-public class TrackControllerGUI extends Application {
-    int speed;
+public class TrainControllerGUI extends Application {
+    double speed;
     String authority;
     String name;
-    public TrackControllerGUI() {
-      speed = TrainController.auditedSpeed;
-      authority = TrainController.authority;
-      name = TrainController.trainName;
+    public TrainControllerGUI() {
+      speed = TrainController.getAuditedSpeed();
+      authority = TrainController.getAuthority();
+      name = TrainController.getTrainName();
     }
 
 
