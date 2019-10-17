@@ -1,37 +1,21 @@
-import java.awt.Desktop;
-import java.io.File;
-import java.io.IOException;
-
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.CheckBox;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.RowConstraints;
-import javafx.scene.layout.VBox;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import javafx.stage.FileChooser;
-import javafx.geometry.Pos;
-import javafx.geometry.HPos;
-import javafx.geometry.VPos;
-import javafx.geometry.Insets;
 
-public class TrackControllerGUI extends Application {
-    int speed;
+public class TrainControllerGUI extends Application {
+    double speed;
     String authority;
     String name;
-    public TrackControllerGUI() {
-      speed = TrainController.auditedSpeed;
-      authority = TrainController.authority;
-      name = TrainController.trainName;
+
+    public TrainControllerGUI() {
+      speed = TrainController.getAuditedSpeed();
+      authority = TrainController.getAuthority();
+      name = TrainController.getName();
     }
 
 
@@ -68,7 +52,7 @@ public class TrackControllerGUI extends Application {
         //    Label l = new Label(t.toString(t));
         //    Scene scene = new Scene(new StackPane(l), 640, 480);
            
-          StackPane root = new StackPane();
+           StackPane root = new StackPane();
            Label myLabel = new Label(output);
            root.getChildren().add(myLabel);
 
