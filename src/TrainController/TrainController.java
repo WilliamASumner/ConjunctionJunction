@@ -6,13 +6,10 @@ import javafx.stage.Stage;
 
 import java.net.URL;
 
-import java.io.IOException;
-import java.io.File;
-
 public class TrainController{
-    double currSpeed;
+    double currSpeed = 12;
     // Block authority;
-    String authority;
+    String authority = "test block";
     double auditedSpeed;   //CTC suggested speed limit
     double currTemp;
     boolean isUnderground;
@@ -29,9 +26,9 @@ public class TrainController{
     boolean eBrakeFailure;
     boolean serviceBreakFailure;
     boolean lightsOn;
-    VBox GUI;
-    String trainName;
-   // trainModel TrainModel;
+    String trainName = "train1";
+    // trainModel TrainModel;
+    TrainController myGUI;
     
     // //Train Controller Constructor
     // public TrainController(String name, String authority, double speed, TrainModel tm){
@@ -43,71 +40,34 @@ public class TrainController{
     // }
 
     //Train Controller Constructor
-    public TrainController(String name, String authority, double speed){
+    public TrainController(String name, String a, double speed){
         auditedSpeed = speed;
-        authority = authority;
+        authority = a;
         trainName = name;
         //trainModel = tm;
         initGUI();
     }
-
-    //Train Controller Constructor
-    public TrainController(){
-        auditedSpeed = 0.0;
-        authority = "";
-        trainName = "";
-        //trainModel = tm;
-        initGUI();
-    }
     //Called when train controller is created
-    void initGUI() {
-        FXMLLoader loader = new FXMLLoader();
-        String projectBaseDir = System.getProperty("user.dir") + "/src"; // get base dir
-        String fxmlPath = projectBaseDir + "/TrainController/TrainController.fxml";
-        File someFile = new File(fxmlPath);
-        URL tryURL = null;
-        try {
-            tryURL = someFile.toURL();
-        } catch (IOException e) {
-            System.out.println(e);
-        }
-
-        if (tryURL != null) {
-            loader.setLocation(tryURL);
-//loader.setLocation(getClass().getResource("/TrainController.fxml"));
-        }
-        else
-            System.out.println("ERROR DID NOT SET URL");
-        System.out.println("HEEEEEEEEEEEEEREEEEEEEEE");
-        System.out.print("getclass:");
-        System.out.println(tryURL);
-
-        loader.setLocation(tryURL);
-
-        try {
-            GUI = loader.<VBox>load();
-        } catch (IOException e) {
-            e.printStackTrace(new java.io.PrintStream(System.out));
-            System.out.println("Unable to find TrainController fxml");
-            System.exit(0);
-        }
+    void initGUI(){
+        
     }
 
     //Called when train controller selected from main menu
-    void showGUI(Stage primaryStage){
-        Scene scene = new Scene(GUI);
-        primaryStage.setScene(scene);
-        primaryStage.show();
+    void showGUI(){
+        myGUI = new TrainControllerGUI();
+        // Scene scene = new Scene(GUI);
+        // primaryStage.setScene(scene);
+        // primaryStage.show();
     }
 
     //Updates train's audited speed limit from the train model
     void updateAuditedSpeed(){
-        //currSpeed = trainModel.getAuditedSpeed();
+        currSpeed = trainModel.getAuditedSpeed();
     }
 
     //Updates train's authority from the train model
     void updateAuthority(){
-        //authority = trainModel.getAuthority();
+        authority = trainModel.getAuthority();
     }
 
     //Driver sets train controller mode to automatic
