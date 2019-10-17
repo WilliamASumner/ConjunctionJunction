@@ -11,7 +11,7 @@ import java.net.URL;
 public class TkMGUI extends Application {
 
     public TkMGUI() {
-      
+
     }
 
 
@@ -28,6 +28,9 @@ public class TkMGUI extends Application {
            t.setElevation(0);
            t.setLineColor("Green");
            t.setIsOccupied(false);
+           t.setAuthority(" K63");
+           // Text tx = new Text();
+           // tx.setText("This is a text sample");
              Label l = new Label(t.toString(t));
              Scene scene = new Scene(new StackPane(l), 640, 480);
              stage.setTitle("Track Model UX");

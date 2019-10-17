@@ -21,6 +21,7 @@ public class TkM {
       public int blockID;
       public char section;
       public boolean isOccupied;
+      public String authority;
       TkMGUI tkmg = new TkMGUI();
       //VBox GUI;
 
@@ -145,6 +146,14 @@ public class TkM {
         return isOccupied;
       }
 
+      public void setAuthority(String newAuth) {
+        authority = newAuth;
+      }
+
+      public String getAuthority() {
+        return authority;
+      }
+
 
       public String toString(TkM tm) {
 
@@ -167,7 +176,7 @@ public class TkM {
                "Grade: " + tm.getGrade() + "\n" +
                "Elevation: " + tm.getElevation() + "\n" +
                "Block length: " + tm.getLength() + "\n" +
-               "Speed Limit: " + tm.getSpeed() + "\n\n" + "Occupation: " + occ + "\n\n\n";
+               "Speed Limit: " + tm.getSpeed() + "\n\n" + "Occupation: " + occ + "\nAuthority:" + tm.getAuthority() + "\n\n\n";
                // +
                //"Failures: " + "\n" + failArr + "\n";
       }
