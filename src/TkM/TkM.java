@@ -21,10 +21,12 @@ public class TkM {
       public int blockID;
       public char section;
       public boolean isOccupied;
-      TkMGUI tkmg = new TkMGUI();
+      private TkMGUI tkmg = null;
       //VBox GUI;
 
       public TkM() {
+          System.out.println(this.toString());
+        tkmg = new TkMGUI(this);
         //this.initGUI();
         // grade = b.getGrade();
         // elevation = b.getElevation();
@@ -86,6 +88,8 @@ public class TkM {
 
       public void setSpeed(double newSpeed) {
         speed = newSpeed;
+        if (tkmg != null)
+            tkmg.update();
       }
 
       public double getSpeed() {
@@ -139,6 +143,8 @@ public class TkM {
 
       public void setIsOccupied(boolean occ) {
         isOccupied = occ;
+        if (tkmg != null)
+            tkmg.update();
       }
 
       public boolean getIsOccupied() {
@@ -146,7 +152,7 @@ public class TkM {
       }
 
 
-      public String toString(TkM tm) {
+      public String toString() {
 
 
         // String failArr = "";
@@ -155,6 +161,7 @@ public class TkM {
         // for(int i = 0; i < failures.size(); i++) {
         //   failArr += "\t" + trackFails.get(i) + "\n";
         // }
+        TkM tm = this;
         String occ = "";
         if (!tm.getIsOccupied()) {
           occ = "FREE";
