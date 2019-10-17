@@ -9,6 +9,7 @@ import javafx.geometry.Insets;
 import javafx.scene.layout.GridPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;;
 import javafx.scene.control.TextField;
 import javafx.event.EventHandler;
 import javafx.event.ActionEvent;
@@ -37,13 +38,15 @@ public class CTC_GUI extends Application {
 	private TextField trainName;
 	private TextField speed;
 	private VBox rightVbox;
+	private ComboBox<String> comboAuthority;
 	private String cssLayout = "-fx-border-color: black;\n" +
                    "-fx-border-insets: 0;\n" +
                    "-fx-border-width: 1;\n";
-  	
+	static CTC newCTC;
+	
     public static void main(String[] args) {
 		// launch CTC 
-		//CTC newCTC = new CTC();
+		newCTC = new CTC();
 		// launch the app
         launch();
     }
@@ -77,6 +80,23 @@ public class CTC_GUI extends Application {
 
 		// Create 'Add Train' view
 //		ListView<String> addTrains = new ListView<>();
+/**		
+		String[] StationNames = {"G1","G2","G3"};
+        ComboBox controllerBox = new ComboBox();
+        for (String option: ControllerNames) {
+            controllerBox.getItems().add(option);
+        }
+        controllerBox.getSelectionModel().selectFirst();		
+*/		
+		String[] StationNames = {"PIONEER","EDGEBROOK","STATION", "WHITED", 
+									"SOUTH BANK", "CENTRAL", "INGLEWOOD",
+									"OVERBROOK", "GLENBURY", "DORMONT",
+									"MT LEBANON", "POPLAR", "CASTLE SHANNON"};
+        comboAuthority = new ComboBox<>();
+        for (String option: StationNames)
+            comboAuthority.getItems().add(option);
+        comboAuthority.getSelectionModel().selectFirst();
+		
 		
 		Label promptLabelTName = new Label("Train name: ");
 		// create a TextField for input
@@ -84,7 +104,7 @@ public class CTC_GUI extends Application {
 		
 		Label promptLabelAuth = new Label("Authority (Station Name): ");
 		// create a TextField for input
-		authority = new TextField();		
+	//	authority = new TextField();		
 		
 		Label promptLabelSpeed = new Label("Speed in MPH: ");
 		// create a TextField for input
@@ -105,7 +125,7 @@ public class CTC_GUI extends Application {
 		myLabel = new Label();
 		
 		// Put in HBoxAdd
-		HBox hboxAdd1 = new HBox(10, promptLabelTName, trainName, promptLabelAuth, authority);
+		HBox hboxAdd1 = new HBox(10, promptLabelTName, trainName, promptLabelAuth, comboAuthority);
 		HBox hboxAdd2 = new HBox(10, promptLabelSpeed, speed, promptLabelDepart, departureTime);
 		
 		// Create StackPane for pronounced viewer section title
@@ -203,22 +223,16 @@ public class CTC_GUI extends Application {
 		@Override
 		public void handle(ActionEvent event){
 			String departTime = departureTime.getText();
-			String auth = authority.getText();
+			String auth = comboAuthority.getValue();
 			String tName = trainName.getText();
 			String speedMPH = speed.getText();
-			myLabel.setText(tName + "\t\tYARD" + "\t\t" + auth + "\t\t" + speedMPH);
+			myLabel.setText(tName + "\t\tK63" + "\t\t" + auth + "\t\t" + speedMPH);
 			rightVbox.getChildren().add(myLabel);
 			
-			//UPDATE NEW TRAIN IN CTC
-		//	CTC.addTrain(tName, auth);
+			//CREATE NEW TRAIN IN CTC
+			newCTC.addTrain(tName, auth, speedMPH);
 			// SEND DISPATCHED TRAIN INFO TO TRACK CONTROLLER
-		//	CTC.dispatchQueuedTrain(tName)
+			//CTC.dispatchQueuedTrain(tName, auth, sp);
 		}
 	}
-	
-	/**
-	 * Anonymous inner class for CTC functions
-	 */
-//	public class CTC{
-//	} 
 }

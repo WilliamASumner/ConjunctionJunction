@@ -1,37 +1,36 @@
 
 public class CTC{
-	public static void main(String[] args){
-		
-		Trains[] dispatchedTrains;
-		Train newTrain;
-		Trains[] queuedTrains;
-		int throughput;
-		int currentTime;
-		
-		// main constructor
-		public CTC(){
-			// create trains for future use
-			dispatchedTrains = new Trains[10];
-		}
-		
-		public void addTrain(String trainName){
-			// instantiate new train with given name
-			newTrain = new Train(trainName);
-			// add train to currently dispatched trains array
-			dispatchedTrains[0] = newTrain;
-		}
-		
-		public void queueNewTrain(String trainName){
-			// Queue new train with given name
-		}
-		
-		public void dispatchQueuedTrain(String trainName){
-			// dispatch train
-			dispatchedTrains[0] = ;
-		}
-		
-		public int sendAuthority(int trainsCurBlockID, int newAuthorityBlkID){
-			
-		}
+	TrainModel[] dispatchedTrains;
+	TrainModel newTrain;
+	TrainModel[] queuedTrains;
+	int throughput;
+	int currentTime;
+//	TrackControllerMain trckCntrl;
+
+	public CTC(){
+//		trckCntrl = new TrackControllerMain();
 	}
+	
+	public void addTrain(String trainName, String auth, String spd){
+		// instantiate new train with given name, auth, and spd
+		double speed = Double.parseDouble(spd);
+		newTrain = new TrainModel(trainName, auth, speed);
+		// add train to currently dispatched trains array
+		//dispatchedTrains[0] = newTrain;
+//		trckCntrl.dispatchTrainData(speed, auth);
+	}
+	
+/*	
+	public void queueNewTrain(String trainName){
+		// Queue new train with given name
+	}
+	
+	public void dispatchQueuedTrain(String trainName){
+		// dispatch train
+	}
+	
+	public int sendAuthority(int trainsCurBlockID, int newAuthorityBlkID){
+		
+	}
+*/	
 }
