@@ -57,6 +57,19 @@ public class TrackControllerMain
         return true;
     }
 
+    public boolean SendSuggestedSpeedAndAuthority(int blockID, double speed, int blockIDAuthority) {
+        return true;
+    }
+
+    public boolean SendSuggestedSpeed(int blockID, double speed) {
+        return true;
+    }
+
+    public boolean SendSuggestedAuthority(int blockID, int blockIDAuthority) {
+        return true;
+    }
+
+
     public TrackControllerMain() {
         currentBlock = null;
         controllers = null;
