@@ -83,3 +83,4 @@ $(TTARGET): $(TESTFILE)
 clean:
 	$(RM) $(BIN_DIR)/*.class
 	$(RM) *.class
+	$(RM) src.txt
