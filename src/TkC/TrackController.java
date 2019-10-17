@@ -67,8 +67,6 @@ public class TrackController
     }
 
     public boolean dispatchTrainData(double speed, String authority) {
-        System.out.println("IN TRACKCONTROLLER: DISPATCHING TRAIN");
-        System.out.println(this.toString());
         tm.setIsOccupied(true);
         tm.setSpeed(speed);
         //tm.setAuthority(authority);
