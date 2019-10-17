@@ -174,9 +174,10 @@ public class MainUI extends Application {
         @Override
         public void handle(ActionEvent event){
             Stage newWindow = new Stage();
-            tnc = new TrainController();
+            tnc = tnm.TNC;
+            if (tnc == null)
+                tnc = new TrainController();
             tnc.showGUI(newWindow);
-
         }
     }
 
