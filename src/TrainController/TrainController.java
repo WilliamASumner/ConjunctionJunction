@@ -43,7 +43,7 @@ public class TrainController{
     //Called when train controller is created
     void initGUI(){
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(new URL("C:/users/jbamb/Documents/ConjunctionJunction/ConjunctionJunction/src/TrainController/TrainControllerGUISceneBuilder"));
+        loader.setLocation(new URL("ConjunctionJunction/ConjunctionJunction/src/TrainController/TrainControllerGUISceneBuilder.fxml"));
         GUI = loader.<VBox>load();
     }
 
