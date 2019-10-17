@@ -159,10 +159,12 @@ public class MainUI extends Application {
         @Override
         public void handle(ActionEvent event){
              Stage newWindow = new Stage();
-            tnm = ctcg.getTrainModel();
+            if (ctcg != null)
+                tnm = ctcg.getTrainModel();
             if (tnm == null)
                 tnm = new TrainModel();
-            tnm.showGUI(newWindow);
+            if (tnm != null)
+                tnm.showGUI(newWindow);
 
         }
     }
@@ -174,10 +176,12 @@ public class MainUI extends Application {
         @Override
         public void handle(ActionEvent event){
             Stage newWindow = new Stage();
-            tnc = tnm.TNC;
-            if (tnc == null)
+            if (tnc == null && tnm == null)
                 tnc = new TrainController();
-            tnc.showGUI(newWindow);
+            else if (tnc == null)
+                tnc = tnm.TNC;
+            if (tnc != null)
+                tnc.showGUI(newWindow);
         }
     }
 

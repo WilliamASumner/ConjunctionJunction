@@ -40,6 +40,7 @@ public class TrainControllerGUI extends Application {
            stage.setTitle(name + " - Train Controller UI");
 
             // define UI Layout
+            /*
             ColumnConstraints col1 = new ColumnConstraints();
             col1.setPercentWidth(50);
             col1.setHalignment(HPos.CENTER);
@@ -55,6 +56,7 @@ public class TrainControllerGUI extends Application {
              row2.setPercentHeight(50);
             row2.setValignment(VPos.CENTER);
             root.getRowConstraints().addAll(row1,row2);
+            */
 
 
            // TrainController train = new TrainController();
