@@ -28,7 +28,7 @@ public class TrainController{
     boolean lightsOn;
     Vbox GUI;
     String trainName;
-    trainModel TrainModel;
+   // trainModel TrainModel;
     
     // //Train Controller Constructor
     // public TrainController(String name, String authority, double speed, TrainModel tm){
@@ -63,12 +63,12 @@ public class TrainController{
 
     //Updates train's audited speed limit from the train model
     void updateAuditedSpeed(){
-        currSpeed = trainModel.getAuditedSpeed();
+        //currSpeed = trainModel.getAuditedSpeed();
     }
 
     //Updates train's authority from the train model
     void updateAuthority(){
-        authority = trainModel.getAuthority();
+        //authority = trainModel.getAuthority();
     }
 
     //Driver sets train controller mode to automatic
