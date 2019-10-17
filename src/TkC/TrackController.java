@@ -10,7 +10,7 @@ public class TrackController
     public TrackController() {
         PLCProgram = "";
         ControlledBlocks = null;
-        tkcg = new TrackControllerGUI();
+        initGUI();
     }
 
     public TrackController(String plc, Block[] blocks) {
@@ -19,8 +19,16 @@ public class TrackController
 
     }
 
+    public void initGUI() {
+        tkcg = new TrackControllerGUI();
+    }
+
     public void showGUI(Stage newStage) {
         tkcg.start(newStage);
+    }
+
+    public void updateGUI() {
+        tkcg.update(/* updated values */);
     }
 
     public boolean VerifySafeConditions() {

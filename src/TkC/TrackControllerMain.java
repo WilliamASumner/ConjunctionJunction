@@ -9,8 +9,8 @@ public class TrackControllerMain
     Block[] OccupiedBlocks;
     HashMap TrainPositions;
 
-    public static void updateOnTick() {
-        System.out.println("update");
+    public TrackController createTrackController() {
+        return new TrackController();
     }
 
     public boolean SendSuggestedSpeed(String trainName,double speed) {

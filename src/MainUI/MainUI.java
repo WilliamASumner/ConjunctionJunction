@@ -25,9 +25,8 @@ public class MainUI extends Application {
     private TextField trainName;
     private TextField speed;
 
-    private TrackControllerGUI tkcg = null;
-
-    private TrackControllerMain tkc = null;
+    private TrackControllerMain tkcm = null;
+    private TrackController tkc = null;
 
     private TkM tkm = null;
     //private TrackModel tkm = null;
@@ -43,6 +42,10 @@ public class MainUI extends Application {
     
     @Override
     public void start(Stage stage) {
+
+        tkcm = new TrackControllerMain();
+        tkc = tkcm.createTrackController();
+
 
         // Create button
         Button CTC = new Button("CTC");
@@ -101,12 +104,6 @@ public class MainUI extends Application {
 
     }
 
-    private void MainLoop() {
-        while(true) {
-            System.out.println("he");
-        }
-    }
-
     /**
      * Event handler class for CTC button.
      */
@@ -128,8 +125,7 @@ public class MainUI extends Application {
         public void handle(ActionEvent event) {
             Stage newWindow = new Stage();
             System.out.println("Track Controller");
-            tkcg = new TrackControllerGUI();
-            tkcg.start(newWindow);
+            tkc.showGUI(newWindow);
         }
     }
 
@@ -142,7 +138,7 @@ public class MainUI extends Application {
             Stage newWindow = new Stage();
             System.out.println("Track Model");
             tkm = new TkM();
-            tkm.start(newWindow);
+            tkm.showGUI(newWindow);
 
         }
     }
