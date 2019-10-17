@@ -13,11 +13,6 @@ public class TrainControllerGUI extends Application {
     String name;
 
     public TrainControllerGUI() {
-<<<<<<< HEAD
-      speed = TrainController.getAuditedSpeed();
-      authority = TrainController.getAuthority();
-      name = TrainController.getName();
-=======
 		/*
       speed = TrainController.getAuditedSpeed();
       authority = TrainController.getAuthority();
@@ -36,7 +31,6 @@ public class TrainControllerGUI extends Application {
 	  speed = TrainController.auditedSpeed;
 	  authority = TrainController.authority;
 	  name = TrainController.trainName;
->>>>>>> 8640f08cf0e35aa93836f77d007755e0a766c3b6
     }
 
 
@@ -45,28 +39,28 @@ public class TrainControllerGUI extends Application {
        public void start(Stage stage) {
            stage.setTitle(name + " - Train Controller UI");
 
-            // // define UI Layout
-            // ColumnConstraints col1 = new ColumnConstraints();
-            // col1.setPercentWidth(50);
-            // col1.setHalignment(HPos.CENTER);
-            //  col2 = new ColumnConstraints();
-            // col2.setPercentWidth(50);
-            // col2.setHalignment(HPos.CENTER);
-            // root.getColumnConstraints().addAll(col1,col2);
+            // define UI Layout
+            ColumnConstraints col1 = new ColumnConstraints();
+            col1.setPercentWidth(50);
+            col1.setHalignment(HPos.CENTER);
+            col2 = new ColumnConstraints();
+            col2.setPercentWidth(50);
+            col2.setHalignment(HPos.CENTER);
+            root.getColumnConstraints().addAll(col1,col2);
 
-            // RowConstraints row1 = new RowConstraints();
-            // row1.setPercentHeight(50);
-            // row1.setValignment(VPos.CENTER);
-            // RowConstraints row2 = new RowConstraints();
-            //  row2.setPercentHeight(50);
-            // row2.setValignment(VPos.CENTER);
-            // root.getRowConstraints().addAll(row1,row2);
+            RowConstraints row1 = new RowConstraints();
+            row1.setPercentHeight(50);
+            row1.setValignment(VPos.CENTER);
+            RowConstraints row2 = new RowConstraints();
+             row2.setPercentHeight(50);
+            row2.setValignment(VPos.CENTER);
+            root.getRowConstraints().addAll(row1,row2);
 
 
            // TrainController train = new TrainController();
            //speed = train.getSpeed(0);
            //authority = train.getAuthority;
-           String output = "Train Name: " + name + "\nAudited Authority" + authority + "\nAudited Speed Limit" + speed;
+           String output = "Train Name: " + name + "\nAudited Authority: " + authority + "\nAudited Speed Limit: " + speed;
            
         //    Label AuthorityLabel = new Label("Authority: ");
         //    Label SpeedLabel = new Label("Speed: ");
