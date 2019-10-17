@@ -11,13 +11,14 @@ public class CTC{
 //      trckCntrl = new TrackControllerMain();
     }
     
-    public void addTrain(String trainName, String auth, String spd){
+    public TrainModel addTrain(String trainName, String auth, String spd){
         // instantiate new train with given name, auth, and spd
         double speed = Double.parseDouble(spd);
         newTrain = new TrainModel(trainName, auth, speed);
         // add train to currently dispatched trains array
         //dispatchedTrains[0] = newTrain;
 //      trckCntrl.dispatchTrainData(speed, auth);
+      return newTrain;
     }
     
 /*  

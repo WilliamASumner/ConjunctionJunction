@@ -42,20 +42,23 @@ public class CTC_GUI extends Application {
     private String cssLayout = "-fx-border-color: black;\n" +
                    "-fx-border-insets: 0;\n" +
                    "-fx-border-width: 1;\n";
-    static CTC newCTC;
+    private CTC newCTC;
+    private Scene scene;
+
+    private TrainModel ctctnm = null;
     
-    public static void main(String[] args) {
+    /*public static void main(String[] args) { // running CTC on its own as CTC_GUI
         // launch CTC 
         newCTC = new CTC();
         // launch the app
         launch();
-    }
-    
-    @Override
-    public void start(Stage stage) {
-        
+    }*/
+
+    public CTC_GUI(CTC nctc, Stage stage) {
+        newCTC = nctc;
+
+       BorderPane borderPane = new BorderPane();
         // Create a BorderPane object
-        BorderPane borderPane = new BorderPane();
     //  borderPane.setStyle(cssLayout);
         
         //--------------------------------------------------------------
@@ -122,7 +125,7 @@ public class CTC_GUI extends Application {
         dispatchT.setOnAction(new DispatchButtonHandler());
         
         // create an empty label to display dispatched train
-        myLabel = new Label();
+        myLabel = new Label("");
         
         // Put in HBoxAdd
         HBox hboxAdd1 = new HBox(10, promptLabelTName, trainName, promptLabelAuth, comboAuthority);
@@ -188,6 +191,7 @@ public class CTC_GUI extends Application {
         // Add to a VBox
         rightVbox = new VBox(10, stackDepat, dispatchedTrainsViewer);       
         rightVbox.setStyle(cssLayout);
+        rightVbox.getChildren().add(myLabel);
         
         borderPane.setRight(rightVbox);
         //---------------------------------------------------------------
@@ -210,10 +214,19 @@ public class CTC_GUI extends Application {
         
         
         // Create a scene with the borderPane as its root node
-        Scene scene = new Scene(borderPane);//(new StackPane(l), 640, 480);
+        scene = new Scene(borderPane);//(new StackPane(l), 640, 480);
         stage.setTitle("CTC Module");
         stage.setScene(scene);
+    }
+    
+    @Override
+    public void start(Stage stage) {
+        stage.setScene(scene);
         stage.show();
+    }
+
+    public TrainModel getTrainModel() {
+        return ctctnm;
     }
 
     /**
@@ -227,10 +240,10 @@ public class CTC_GUI extends Application {
             String tName = trainName.getText();
             String speedMPH = speed.getText();
             myLabel.setText(tName + "\t\tK63" + "\t\t" + auth + "\t\t" + speedMPH);
-            rightVbox.getChildren().add(myLabel);
+//rightVbox.getChildren().add(myLabel);
             
             //CREATE NEW TRAIN IN CTC
-            newCTC.addTrain(tName, auth, speedMPH);
+            ctctnm = newCTC.addTrain(tName, auth, speedMPH);
             // SEND DISPATCHED TRAIN INFO TO TRACK CONTROLLER
             //CTC.dispatchQueuedTrain(tName, auth, sp);
         }

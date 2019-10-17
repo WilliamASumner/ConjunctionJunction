@@ -32,8 +32,10 @@ public class MainUI extends Application {
 
     private TkM tkm = null;
     //private TrackModel tkm = null;
-    //private CTC ctc = null;
+    private CTC_GUI ctcg = null;
+    private CTC     ctc = null;
     //private CTC ctcg = null;
+    private TrainModel tnm = null;
     //
    public static void main(String[] args) {
         // launch CTC 
@@ -113,9 +115,11 @@ public class MainUI extends Application {
         @Override
         public void handle(ActionEvent event) {
             Stage newWindow = new Stage();
-            System.out.println("CTC Office");
-            //ctcg = new CTC_GUI();
-            //ctcg.start(newWindow);
+            if (ctc == null)
+                ctc = new CTC();
+            if (ctcg == null)
+                ctcg = new CTC_GUI(ctc,newWindow);
+            ctcg.start(newWindow);
         }
     }
     
@@ -126,7 +130,6 @@ public class MainUI extends Application {
         @Override
         public void handle(ActionEvent event) {
             Stage newWindow = new Stage();
-            System.out.println("Track Controller");
             tkc.showGUI(newWindow);
         }
     }
@@ -138,7 +141,6 @@ public class MainUI extends Application {
         @Override
         public void handle(ActionEvent event){
             Stage newWindow = new Stage();
-            System.out.println("Track Model");
             tkm = new TkM();
             tkm.showGUI(newWindow);
 
@@ -152,9 +154,10 @@ public class MainUI extends Application {
         @Override
         public void handle(ActionEvent event){
              Stage newWindow = new Stage();
-            System.out.println("Train Model");
-            //tnmg = new TrackControllerGUI();
-            //tnmg.start(newWindow);
+            tnm = ctcg.getTrainModel();
+            if (tnm == null)
+                tnm = new TrainModel();
+            tnm.showGUI(newWindow);
 
         }
     }
@@ -166,7 +169,6 @@ public class MainUI extends Application {
         @Override
         public void handle(ActionEvent event){
             Stage newWindow = new Stage();
-            System.out.println("Train Controller");
             tnc = new TrainController();
             tnc.showGUI(newWindow);
 
