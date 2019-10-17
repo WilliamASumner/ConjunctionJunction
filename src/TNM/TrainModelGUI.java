@@ -12,14 +12,9 @@ public class TrainModelGUI extends Application {
 	String myName = "wowee";
 	String myAuthority = "A1";//Audited Authority Block
 	double mydubSpeed = 0.0;
-	
+	//contructor
 	public TrainModelGUI()// String inName, String inBlock, double inSpeed)
 	{
-		/*
-		myName = inName;
-		myAuthority = inBlock;
-		mydubSpeed = inSpeed;
-		*/
 		myName = TrainModel.name;
 		myAuthority = TrainModel.AuthorityBlockID;
 		mydubSpeed = TrainModel.AuditedSpeed;
@@ -28,12 +23,10 @@ public class TrainModelGUI extends Application {
     @Override // not sure what this does?
     public void start(Stage primaryStage) { // entry point for all apps
         primaryStage.setTitle("Train Model GUI"); // container for all of it
-        
-		
-		int num = 0;
 		
 		String finalstring = "Train Name: " + myName + "\nAudited Authority: " + myAuthority + "\nAudited Speed: " + mydubSpeed;
-		
+		/*
+		int num = 0;
 		Button btn = new Button();
         btn.setText("Say 'NUMBER'");
         btn.setOnAction(new EventHandler<ActionEvent>() {
@@ -43,15 +36,14 @@ public class TrainModelGUI extends Application {
                 System.out.println(num);
             }
         });
+		root.getChildren().add(btn);
+		*/
 
-        StackPane root = new StackPane();
-        //root.getChildren().add(btn);
-		
+        StackPane root = new StackPane();		
 		Label myLabel = new Label(finalstring);
         root.getChildren().add(myLabel);
 		
-        primaryStage.setScene(new Scene(root, 300 ,250)); // content container
-		
+        primaryStage.setScene(new Scene(root, 300 ,250)); // content container		
         primaryStage.show();
     }
 }
