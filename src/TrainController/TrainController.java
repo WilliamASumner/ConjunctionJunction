@@ -6,6 +6,9 @@ import javafx.stage.Stage;
 
 import java.net.URL;
 
+import java.io.IOException;
+import java.io.File;
+
 public class TrainController{
     double currSpeed;
     // Block authority;
@@ -26,7 +29,7 @@ public class TrainController{
     boolean eBrakeFailure;
     boolean serviceBreakFailure;
     boolean lightsOn;
-    Vbox GUI;
+    VBox GUI;
     String trainName;
    // trainModel TrainModel;
     
@@ -47,15 +50,48 @@ public class TrainController{
         //trainModel = tm;
         initGUI();
     }
+
+    //Train Controller Constructor
+    public TrainController(){
+        auditedSpeed = 0.0;
+        authority = "";
+        trainName = "";
+        //trainModel = tm;
+        initGUI();
+    }
     //Called when train controller is created
-    void initGUI(){
+    void initGUI() {
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(new URL("ConjunctionJunction/src/TrainController/TrainControllerGUISceneBuilder"));
-        GUI = loader.<VBox>load();
+        String projectBaseDir = "file:/" + System.getProperty("user.dir") + "/src"; // get base dir
+        String fxmlPath = projectBaseDir + "/TrainController/TrainController.fxml";
+        URL tryURL;
+        try {
+            tryURL = new File(fxmlPath).toURI().toURL();
+        } catch (IOException e) {
+            System.out.println(e);
+            System.out.println("error could not construct url");
+        }
+        try {
+            loader.setLocation(tryURL);
+        } catch (IOException e) {
+            System.out.println("Error unable to set location");
+            System.out.println(e);
+            System.out.print("Try String: ");
+            System.out.println(fxmlPath);
+        }
+
+        try {
+            GUI = loader.<VBox>load();
+        } catch (IOException e) {
+            System.out.println(e);
+            System.out.println("Unable to find TrainController fxml");
+            System.out.print("Try String: ");
+            System.out.println(fxmlPath);
+        }
     }
 
     //Called when train controller selected from main menu
-    void showGUI(){
+    void showGUI(Stage primaryStage){
         Scene scene = new Scene(GUI);
         primaryStage.setScene(scene);
         primaryStage.show();

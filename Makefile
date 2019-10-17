@@ -19,7 +19,7 @@ else
 endif 
 
 #NOTE: must be comma separated
-JAVAFX_MODULES  = javafx.controls
+JAVAFX_MODULES  = javafx.controls,javafx.fxml
 JFLAGS         := --module-path=$(JAVAFX_PATH) --add-modules $(JAVAFX_MODULES)
 
 ############### MODULE VARS ##################

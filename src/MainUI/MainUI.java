@@ -140,7 +140,7 @@ public class MainUI extends Application {
             Stage newWindow = new Stage();
             System.out.println("Track Model");
             tkm = new TkM();
-            tkm.showGUI(newWindow);
+            //tkm.showGUI(newWindow);
 
         }
     }
