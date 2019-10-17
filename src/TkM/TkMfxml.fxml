@@ -55,11 +55,6 @@
     </MenuBar>
     <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
       <children>
-        <Label alignment="CENTER" layoutX="155.0" layoutY="177.0" style="&#10;" text="Drag components from Library here…" textAlignment="CENTER" textFill="#9f9f9f" wrapText="false">
-          <font>
-            <Font size="18.0" />
-          </font>
-        </Label>
             <Button layoutX="29.0" layoutY="24.0" mnemonicParsing="false" text="&lt; Back" />
             <Text fill="#1aff31" layoutX="228.0" layoutY="44.0" strokeType="OUTSIDE" strokeWidth="0.0" text="SECTION" wrappingWidth="92.0">
                <font>
@@ -71,7 +66,46 @@
                   <Font name="Bookshelf Symbol 7" size="22.0" />
                </font>
             </Text>
-            <Pane layoutX="24.0" layoutY="71.0" prefHeight="274.0" prefWidth="586.0" />
+            <Pane layoutX="27.0" layoutY="63.0" prefHeight="274.0" prefWidth="586.0">
+               <children>
+              <Label alignment="CENTER" layoutX="154.0" layoutY="221.0" prefHeight="27.0" prefWidth="139.0" style="&#10;" text="Adjacent Blocks:" textAlignment="CENTER" textFill="#0d0000" wrapText="false">
+                <font>
+                  <Font size="18.0" />
+                </font>
+              </Label>
+                  <Label layoutX="71.0" layoutY="20.0" text="Grade:">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="47.0" layoutY="53.0" text="Elevation:">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="307.0" layoutY="20.0" text="Block Length:">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="315.0" layoutY="53.0" text="Speed Limit:">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="197.0" layoutY="194.0" text="Occupation:">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="140.0" layoutY="25.0" text="Label" />
+                  <Label layoutX="140.0" layoutY="58.0" text="Label" />
+                  <Label layoutX="431.0" layoutY="25.0" text="Label" />
+                  <Label layoutX="431.0" layoutY="58.0" text="Label" />
+                  <Label layoutX="301.0" layoutY="199.0" text="Label" />
+                  <Label layoutX="301.0" layoutY="226.0" text="Label" />
+               </children>
+            </Pane>
             <Button layoutX="558.0" layoutY="24.0" mnemonicParsing="false" text="IMPORT" />
       </children>
     </AnchorPane>
