@@ -78,9 +78,9 @@ public class MainUI extends Application {
         stage.setTitle("Train Sim Home Page");
         stage.setScene(scene);
 
-        final long startNanoTime = System.nanoTime();
+        //final long startNanoTime = System.nanoTime();
 
-        new AnimationTimer() { // anonymous animation timer
+        /*new AnimationTimer() { // anonymous animation timer
             public void handle(long currentNanoTime) {
                 double deltaT = (currentNanoTime - startNanoTime)/1000000000.0;
 
@@ -90,9 +90,9 @@ public class MainUI extends Application {
                 //tkm.update()
                 //tnm.update()
                 //tnc.update()
-                System.out.println("here");
+                //System.out.println("here");
             }
-        }.start();
+        }.start(); */
 
 
         stage.show();

@@ -18,6 +18,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
+import javafx.scene.layout.HBox;
 
 import javafx.stage.Stage;
 import javafx.stage.FileChooser;
@@ -44,6 +45,15 @@ public class TrackControllerGUI extends Application {
     private String PLCFile;
     private Boolean OverrideOccupied;
 
+    private String BlockAuthority = "";
+    private double BlockSpeed = 0.0;
+    String status = "";
+
+
+    private Label AuthorityVal;
+    private Label SpeedVal;
+    private Label StatusVal;
+
 
     public static void main(String[] args) {
         launch(args);
@@ -54,8 +64,6 @@ public class TrackControllerGUI extends Application {
         primaryStage.setTitle("Track Controller GUI"); // container for all of it
 
         final FileChooser fileChooser = new FileChooser();
-
-        TrackControllerMain trackControl = new TrackControllerMain();
 
         GridPane root = new GridPane();
 
@@ -89,7 +97,7 @@ public class TrackControllerGUI extends Application {
         controllerBox.getSelectionModel().selectFirst();
 
 
-        String[] BlockNames = {"1","2","3","4","5"};
+        String[] BlockNames = {"K63"};//,"2","3","4","5"};
         ObservableList<String> BoxOptions = FXCollections.observableArrayList();
         for (String option: BlockNames) {
             BoxOptions.addAll(option);
@@ -117,19 +125,37 @@ public class TrackControllerGUI extends Application {
 
         root.getChildren().addAll(MainControls); // upper left
 
-        Label LineInfo = new Label("Line: ");
+        Label LineInfo = new Label("Line: Green");
         Label OccupancyInfo = new Label("Occupancy: ");
-        Label StatusInfo = new Label("Status: ");
 
         CheckBox OccupancyCheckBox = new CheckBox("Override to Occupied");
         OccupancyCheckBox.setIndeterminate(false); // only true/false
 
 
 
+
+        Label AuthorityLabel = new Label("Authority: ");
+        Label SpeedLabel = new Label("Speed: ");
+        AuthorityVal = new Label(BlockAuthority);
+        SpeedVal = new Label(String.valueOf(BlockSpeed));
+
+
+        Label StatusLabel = new Label("Status: ");
+        StatusVal = new Label(status);
+
+        HBox AuthBox = new HBox();
+        AuthBox.getChildren().addAll(AuthorityLabel,AuthorityVal);
+        HBox SpeedBox = new HBox();
+        SpeedBox.getChildren().addAll(SpeedLabel,SpeedVal);
+
+        HBox StatusBox = new HBox();
+        StatusBox.getChildren().addAll(StatusLabel,StatusVal);
+
         VBox GeneralInfo = new VBox();
         GeneralInfo.setPadding(new Insets(10));
         GeneralInfo.setSpacing(8);
-        GeneralInfo.getChildren().addAll(LineInfo,OccupancyInfo,StatusInfo,OccupancyCheckBox); // upper left
+        GeneralInfo.getChildren().addAll(LineInfo,OccupancyInfo,OccupancyCheckBox); // upper left
+        GeneralInfo.getChildren().addAll(AuthBox,SpeedBox,StatusBox); // upper left
 
         GridPane.setConstraints(GeneralInfo,1,0);
 
@@ -177,8 +203,9 @@ public class TrackControllerGUI extends Application {
         primaryStage.show();
     }
 
-    void draw() {
-        return;
+    void update() {
+        AuthorityVal.setText(BlockAuthority);
+        SpeedVal.setText(String.valueOf(BlockSpeed));
     }
     public void ChangeSwitchState() {
         return;
