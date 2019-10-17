@@ -1,16 +1,26 @@
+import javafx.stage.Stage;
+
 public class TrackController
 {
     String PLCProgram;
     Block[] ControlledBlocks;
 
+    TrackControllerGUI tkcg;
+
     public TrackController() {
         PLCProgram = "";
         ControlledBlocks = null;
+        tkcg = new TrackControllerGUI();
     }
 
     public TrackController(String plc, Block[] blocks) {
         PLCProgram = plc;
         ControlledBlocks = blocks;
+
+    }
+
+    public void showGUI(Stage newStage) {
+        tkcg.start(newStage);
     }
 
     public boolean VerifySafeConditions() {
@@ -45,11 +55,15 @@ public class TrackController
         return 0.0;
     }
 
-    public boolean SendSuggestedSpeed(int blockID) {
+    public boolean SendSuggestedSpeedAndAuthority(int blockID, double speed, int blockIDAuthority) {
         return true;
     }
 
-    public boolean SendSuggestedAuthority(int blockID) {
+    public boolean SendSuggestedSpeed(int blockID, double speed) {
+        return true;
+    }
+
+    public boolean SendSuggestedAuthority(int blockID, int blockIDAuthority) {
         return true;
     }
 

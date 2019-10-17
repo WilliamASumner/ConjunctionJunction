@@ -24,13 +24,13 @@ Train Simulator for Team Conjunction Junction
 * running `make` or `make all` needs all of our modules to be present
 * The naming convention the makefile uses is now
 
-|     Module     | Java Filename |
+|     Module     | Directory Name|
 |:--------------:|:-------------:|
-|Track Controller|      TkC.java |
-|Track Model     |      TkM.java |
-|Train Model     |      TrM.java |
-|Train Controller|      TrC.java |
-|CTC             |      CTC.java |
+|Track Controller|      TkC      |
+|Track Model     |      TkM      |
+|Train Model     |      TnM      |
+|Train Controller|      TnC      |
+|CTC             |      CTC      |
 
 This isn't final but just a quickly made up convention to test the makefile
 
