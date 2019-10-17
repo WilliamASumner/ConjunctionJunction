@@ -5,7 +5,7 @@ public class TrainModel {
     static String name = "test name";
     static String AuthorityBlockID = "test Block";
     static double AuditedSpeed = 3.14;
-    //TrainController TNC;
+    TrainController TNC = null;
     TrainModelGUI myGUI;
 
     public TrainModel()
@@ -44,7 +44,7 @@ public class TrainModel {
     
     public void initTrainController(String Stringname, String ABlock, double ASpeed)
     {
-        //TNC = new TrainController(String Stringname, String ABlock, double ASpeed, this);
+        TNC = new TrainController(Stringname, ABlock, ASpeed);
     }
 
 }
