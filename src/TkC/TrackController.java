@@ -69,7 +69,7 @@ public class TrackController
     public boolean dispatchTrainData(double speed, String authority) {
         tm.setIsOccupied(true);
         tm.setSpeed(speed);
-        //tm.setAuthority(authority);
+        tm.setAuthority(authority);
 
         tkcg.setIsOccupied(true);
         tkcg.setSpeed(speed);
