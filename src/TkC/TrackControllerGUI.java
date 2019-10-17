@@ -221,4 +221,3 @@ public class TrackControllerGUI extends Application {
         return;
     }
 }
-
