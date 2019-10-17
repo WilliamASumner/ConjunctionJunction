@@ -1,10 +1,18 @@
 
-public class TrainController(
-    int currSpeed;
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+
+import java.net.URL;
+
+public class TrainController{
+    double currSpeed;
     // Block authority;
     String authority;
-    int auditedSpeed;   //CTC suggested speed limit
-    int currTemp;
+    double auditedSpeed;   //CTC suggested speed limit
+    double currTemp;
     boolean isUnderground;
     String beaconData;
     boolean eBrake_isActive;
@@ -19,44 +27,61 @@ public class TrainController(
     boolean eBrakeFailure;
     boolean serviceBreakFailure;
     boolean lightsOn;
-
-    string trainName;
+    Vbox GUI;
+    String trainName;
     trainModel trainModel;
     
     //Train Controller Constructor
-    public TrainController(string name, trainModel tm){
+    public TrainController(String name, String authority, double speed, TrainModel tm){
+        auditedSpeed = speed;
+        authority = authority;
         trainName = name;
         trainModel = tm;
+        initGUI();
+    }
+
+    //Called when train controller is created
+    void initGUI(){
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(new URL("C:/users/jbamb/Documents/ConjunctionJunction/ConjunctionJunction/src/TrainController/TrainControllerGUISceneBuilder"));
+        GUI = loader.<VBox>load();
+    }
+
+    //Called when train controller selected from main menu
+    void showGUI(){
+        Scene scene = new Scene(GUI);
+        primaryStage.setScene(scene);
+        primaryStage.show();
     }
 
     //Updates train's audited speed limit from the train model
-    updateAuditedSpeed(){
+    void updateAuditedSpeed(){
         currSpeed = trainModel.getAuditedSpeed();
     }
 
     //Updates train's authority from the train model
-    updateAuthority(){
+    void updateAuthority(){
         authority = trainModel.getAuthority();
     }
 
     //Driver sets train controller mode to automatic
-    setAutomaticMode(){
-        isAutomaticMode = TRUE;
+    void setAutomaticMode(){
+        isAutomaticMode = true;
     }
 
     //Driver sets train controller mode to manual
-    setManualMode(){
-        isAutomaticMode = FALSE;
+    void setManualMode(){
+        isAutomaticMode = false;
     }
 
     //Set speed of train to new driverSetSpeed, only if it not above
     //speed limit
-    setNewSpeed(integer driverSetSpeed){
-
-        currSpeed = driverSetSpeed();
-        return 0;
+    void setNewSpeed(int driverSetSpeed){
+        currSpeed = driverSetSpeed;
     }
 
+    //@returns int calulcalatePower - power command to Train Model in kiloWatts 
+    //Calculates power command based on current and desired speed
     int calculatePower(int desiredSpeed, int currentSpeed){
         int powerOut;   //power command output, in kiloWatts
 
@@ -64,4 +89,5 @@ public class TrainController(
         return powerOut;
     }
     
-)
+}
+   
