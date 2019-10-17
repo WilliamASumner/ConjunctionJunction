@@ -6,6 +6,7 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import java.util.ArrayList;
 
+
 public class TkM extends Application {
 
       public double grade;
@@ -14,32 +15,36 @@ public class TkM extends Application {
       // public ArrayList<String> failures;
       public double length;
       public String lineColor;
-      public String blockNum;
+      public int blockID;
+      public char section;
+      public boolean isOccupied;
+      Block b = new Block();
 
       public TkM() {
-        grade = 0.5;
-        elevation = 0.25;
-        speed = 50;
-        // failures.add("failure");
-        // failures.add("failure2");
-        // failures.add("failure3");
-        length = 40;
-        lineColor = "Red";
-        blockNum = "A1";
+        // grade = b.getGrade();
+        // elevation = b.getElevation();
+        // speed = b.getSpeed();
+        // // failures.add("failure");
+        // // failures.add("failure2");
+        // // failures.add("failure3");
+        // length = b.getLength();
+        // lineColor = b.getLineColor();
+        // blockID = b.getBlockID();
+        // section = b.getSection();
 
 
       }
 
-      public TkM(double gr, double elev, double sp,
-                  double len, String lineCol, String blkN) {
+      public TkM(Block b) {
 
-                    gr = grade;
-                    elev = elevation;
-                    sp = speed;
-                    // fails = failures;
-                    len = length;
-                    lineCol = lineColor;
-                    blkN = blockNum;
+                    // gr = grade;
+                    // elev = elevation;
+                    // sp = speed;
+                    // // fails = failures;
+                    // len = length;
+                    // lineCol = lineColor;
+                    // blkc = section;
+                    // blkID = blockID;
       }
 
 
@@ -99,12 +104,28 @@ public class TkM extends Application {
         return lineColor;
       }
 
-      public void setBlockNum(String newNum) {
-        blockNum = newNum;
+      public void setBlockID(int newID) {
+        blockID = newID;
       }
 
-      public String getBlockNum() {
-        return blockNum;
+      public int getBlockID() {
+        return blockID;
+      }
+
+      public char getSection() {
+        return section;
+      }
+
+      public void setSection(char newSection) {
+        section = newSection;
+      }
+
+      public void setIsOccupied(boolean occ) {
+        isOccupied = occ;
+      }
+
+      public boolean getIsOccupied() {
+        return isOccupied;
       }
 
 
@@ -117,12 +138,19 @@ public class TkM extends Application {
         // for(int i = 0; i < failures.size(); i++) {
         //   failArr += "\t" + trackFails.get(i) + "\n";
         // }
+        String occ = "";
+        if (!tm.getIsOccupied()) {
+          occ = "FREE";
+        }
+        else {
+          occ = "OCCUPIED";
+        }
 
-        return "For Block " + tm.getLineColor() + " " + tm.getBlockNum() + "\n" +
+        return "For Block " + tm.getLineColor() + " " + tm.getSection() + tm.getBlockID() + "\n" +
                "Grade: " + tm.getGrade() + "\n" +
                "Elevation: " + tm.getElevation() + "\n" +
                "Block length: " + tm.getLength() + "\n" +
-               "Speed Limit: " + tm.getSpeed() + "\n\n\n";
+               "Speed Limit: " + tm.getSpeed() + "\n\n" + "Occupation: " + occ + "\n\n\n";
                // +
                //"Failures: " + "\n" + failArr + "\n";
       }
@@ -130,12 +158,14 @@ public class TkM extends Application {
 	 @Override
 	    public void start(Stage stage) {
         TkM t = new TkM();
-        t.setGrade(0.4);
-        t.setSpeed(60);
-        t.setLength(80);
-        t.setBlockNum("B2");
-        t.setElevation(0.76);
+        t.setGrade(0);
+        t.setSpeed(70);
+        t.setLength(100);
+        t.setBlockID(63);
+        t.setSection('K');
+        t.setElevation(0);
         t.setLineColor("Green");
+        t.setIsOccupied(false);
 	        Label l = new Label(this.toString(t));
 	        Scene scene = new Scene(new StackPane(l), 640, 480);
           stage.setTitle("Track Model UX");
