@@ -57,7 +57,7 @@ run: src.txt $(TARGET_CLASS)
 
 # java build text
 src.txt: ./src/
-	find ./src/ -name "*.java" > src.txt
+	find ./src -name "*.java" > src.txt
 
 
 #$(TARGET_CLASS):

@@ -7,6 +7,11 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import java.util.ArrayList;
 import java.net.URL;
+import javafx.scene.text.TextFlow;
+import javafx.scene.text.Text;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.paint.Color;
 
 
 
@@ -22,6 +27,8 @@ public class TkM {
       public char section;
       public boolean isOccupied;
       private TkMGUI tkmg = null;
+      public String authority;
+      Stage s = null;
       //VBox GUI;
 
       public TkM() {
@@ -64,6 +71,7 @@ public class TkM {
 
       public void showGUI(Stage stage){
         tkmg.start(stage);
+        s = stage;
       }
 
 
@@ -89,7 +97,7 @@ public class TkM {
       public void setSpeed(double newSpeed) {
         speed = newSpeed;
         if (tkmg != null)
-            tkmg.update();
+            tkmg.update(s);
       }
 
       public double getSpeed() {
@@ -144,24 +152,30 @@ public class TkM {
       public void setIsOccupied(boolean occ) {
         isOccupied = occ;
         if (tkmg != null)
-            tkmg.update();
+            tkmg.update(s);
       }
 
       public boolean getIsOccupied() {
         return isOccupied;
       }
 
+      public void setAuthority(String newAuth) {
+        authority = newAuth;
+      }
 
-      public String toString() {
+      public String getAuthority() {
+        return authority;
+      }
 
 
+      public TextFlow toString(TkM tm) {
         // String failArr = "";
         // ArrayList<String> trackFails = tm.getFailures();
         //
         // for(int i = 0; i < failures.size(); i++) {
         //   failArr += "\t" + trackFails.get(i) + "\n";
         // }
-        TkM tm = this;
+        tm = this;
         String occ = "";
         if (!tm.getIsOccupied()) {
           occ = "FREE";
@@ -170,13 +184,42 @@ public class TkM {
           occ = "OCCUPIED";
         }
 
-        return "For Block " + tm.getLineColor() + " " + tm.getSection() + tm.getBlockID() + "\n" +
-               "Grade: " + tm.getGrade() + "\n" +
-               "Elevation: " + tm.getElevation() + "\n" +
-               "Block length: " + tm.getLength() + "\n" +
-               "Speed Limit: " + tm.getSpeed() + "\n\n" + "Occupation: " + occ + "\n\n\n";
+        Text t1 = new Text("For Block ");
+        t1.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
+        Text t1l = new Text(tm.getLineColor() + " " + tm.getSection() + tm.getBlockID() + ":\n");
+        t1l.setFont(Font.font("Verdana", 20));
+        t1l.setFill(Color.GREEN);
+        Text t2 = new Text("Grade: ");
+        t2.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
+        Text t2l = new Text(tm.getGrade() + "\n");
+        t2l.setFont(Font.font("Verdana",  20));
+        Text t3 = new Text("Elevation: ");
+        t3.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
+        Text t3l = new Text(tm.getElevation() + "\n");
+        t3l.setFont(Font.font("Verdana",  20));
+        Text t4 = new Text("Block length: ");
+        t4.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
+        Text t4l = new Text(tm.getLength() + "\n");
+        t4l.setFont(Font.font("Verdana",  20));
+        Text t5 = new Text("Speed Limit: ");
+        t5.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
+        Text t5l = new Text(tm.getSpeed() + "\n\n");
+        t5l.setFont(Font.font("Verdana",  20));
+        Text t6 = new Text("Occupation: ");
+        t6.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
+        Text t6l = new Text(occ);
+        t6l.setFont(Font.font("Verdana",  20));
+        Text t7 = new Text("\nAuthority:");
+        t7.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
+        Text t7l = new Text(tm.getAuthority() + "\n\n\n");
+        t7l.setFont(Font.font("Verdana",  20));
+
+
                // +
                //"Failures: " + "\n" + failArr + "\n";
+
+               TextFlow tf = new TextFlow(t1,t1l,t2,t2l,t3,t3l,t4,t4l,t5,t5l,t6,t6l,t7,t7l);
+               return tf;
       }
 
 	 // @Override
