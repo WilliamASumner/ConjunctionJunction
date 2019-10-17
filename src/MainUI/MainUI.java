@@ -46,9 +46,10 @@ public class MainUI extends Application {
     
     @Override
     public void start(Stage stage) {
+        tkm = new TkM(); // initialize track controller
 
-        tkcm = new TrackControllerMain();
-        tkc = tkcm.createTrackController();
+        tkcm = new TrackControllerMain(); // should this be elsewhere?
+        tkc = tkcm.createTrackController("plc",null,tkm);
 
 
         // Create button
@@ -83,7 +84,7 @@ public class MainUI extends Application {
         vbox.setAlignment(Pos.CENTER);
 
         // Create a scene with the VBox as its root node
-        Scene scene = new Scene(vbox);
+        Scene scene = new Scene(vbox,300,200);
         stage.setTitle("Train Sim Home Page");
         stage.setScene(scene);
 
@@ -116,7 +117,7 @@ public class MainUI extends Application {
         public void handle(ActionEvent event) {
             Stage newWindow = new Stage();
             if (ctc == null)
-                ctc = new CTC();
+                ctc = new CTC(tkcm);
             if (ctcg == null)
                 ctcg = new CTC_GUI(ctc,newWindow);
             ctcg.start(newWindow);
@@ -130,6 +131,7 @@ public class MainUI extends Application {
         @Override
         public void handle(ActionEvent event) {
             Stage newWindow = new Stage();
+            System.out.println(tkc.toString());
             tkc.showGUI(newWindow);
         }
     }
@@ -141,7 +143,8 @@ public class MainUI extends Application {
         @Override
         public void handle(ActionEvent event){
             Stage newWindow = new Stage();
-            tkm = new TkM();
+            if (tkm == null)
+                tkm = new TkM();
             tkm.showGUI(newWindow);
 
         }

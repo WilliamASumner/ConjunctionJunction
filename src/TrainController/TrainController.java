@@ -67,7 +67,7 @@ public class TrainController{
         File someFile = new File(fxmlPath);
         URL tryURL = null;
         try {
-            tryURL = new File(fxmlPath).toURI().toURL();
+            tryURL = someFile.toURL();
         } catch (IOException e) {
             System.out.println(e);
         }
@@ -78,11 +78,16 @@ public class TrainController{
         }
         else
             System.out.println("ERROR DID NOT SET URL");
+        System.out.println("HEEEEEEEEEEEEEREEEEEEEEE");
+        System.out.print("getclass:");
+        System.out.println(tryURL);
+
+        loader.setLocation(tryURL);
 
         try {
             GUI = loader.<VBox>load();
         } catch (IOException e) {
-            System.out.println(e);
+            e.printStackTrace(new java.io.PrintStream(System.out));
             System.out.println("Unable to find TrainController fxml");
             System.exit(0);
         }

@@ -8,9 +8,26 @@ public class TrackControllerMain
     TrackController[] controllers;
     Block[] OccupiedBlocks;
     HashMap TrainPositions;
+    public TrackControllerMain() {
+        currentBlock = null;
+        controllers = new TrackController[3];
+        OccupiedBlocks = null;
+        TrainPositions = null;
+    }
+    private void addController(TrackController tkc) {
+        controllers[0] = tkc;
+    }
+    public TrackController getController() { // TODO: change this into finding a controller
+        return controllers[0];
+    }
 
     public TrackController createTrackController() {
-        return new TrackController();
+        controllers[0] = new TrackController();
+        return controllers[0];
+    }
+    public TrackController createTrackController(String plc, Block[] blocks,TkM tkm ) {
+        controllers[0] = new TrackController(plc,blocks,tkm);
+        return controllers[0];
     }
 
     public boolean SendSuggestedSpeed(String trainName,double speed) {
@@ -69,12 +86,14 @@ public class TrackControllerMain
         return true;
     }
 
-
-    public TrackControllerMain() {
-        currentBlock = null;
-        controllers = null;
-        OccupiedBlocks = null;
-        TrainPositions = null;
+    public boolean dispatchTrainData(double speed, String authority) {
+        if (controllers[0] == null)
+            createTrackController();
+        controllers[0].dispatchTrainData(speed,authority);
+        return true;
     }
+
+
+    
 
 }

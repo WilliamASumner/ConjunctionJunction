@@ -54,14 +54,19 @@ public class TrackControllerGUI extends Application {
     private Label SpeedVal;
     private Label StatusVal;
 
+    private Scene scene = null;
+    private Stage currentStage = null;
+
+    public TrackControllerGUI() {
+        setup();
+    }
+
 
     public static void main(String[] args) {
         launch(args);
     }
 
-    @Override // not sure what this does?
-    public void start(Stage primaryStage) { // entry point for all apps
-        primaryStage.setTitle("Track Controller GUI"); // container for all of it
+    public void setup() {
 
         final FileChooser fileChooser = new FileChooser();
 
@@ -180,7 +185,7 @@ public class TrackControllerGUI extends Application {
                         new FileChooser.ExtensionFilter("All Files","*.*")
                 );
 
-                File file = fileChooser.showOpenDialog(primaryStage);
+                File file = fileChooser.showOpenDialog(currentStage);
                 if (file != null) {
                     try {
                         Desktop.getDesktop().open(file);
@@ -194,12 +199,22 @@ public class TrackControllerGUI extends Application {
 
         root.getChildren().addAll(importButton); // lower left
 
-
+        scene = new Scene(root, 860,480);
 
         //root.getChildren().addAll(,l,l2); // lower right
 
+    }
 
-        primaryStage.setScene(new Scene(root, 860,480)); // content container
+
+    @Override // not sure what this does?
+    public void start(Stage primaryStage) { // entry point for all apps
+        currentStage = primaryStage;
+        if (scene == null)
+            setup();
+
+        primaryStage.setTitle("Track Controller GUI"); // container for all of it
+        
+        primaryStage.setScene(scene); // content container
         primaryStage.show();
     }
 
@@ -212,7 +227,7 @@ public class TrackControllerGUI extends Application {
     }
 
 
-    void update() {
+    void update(String BlockAuthority,double BlockSpeed) {
         AuthorityVal.setText(BlockAuthority);
         SpeedVal.setText(String.valueOf(BlockSpeed));
     }

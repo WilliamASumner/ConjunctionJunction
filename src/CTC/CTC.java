@@ -5,10 +5,11 @@ public class CTC{
     TrainModel[] queuedTrains;
     int throughput;
     int currentTime;
-//  TrackControllerMain trckCntrl;
+    TrackControllerMain trckCntrl;
 
-    public CTC(){
-//      trckCntrl = new TrackControllerMain();
+    public CTC(TrackControllerMain tkcm){
+        dispatchedTrains = new TrainModel[1];
+        trckCntrl = tkcm;
     }
     
     public TrainModel addTrain(String trainName, String auth, String spd){
@@ -16,8 +17,8 @@ public class CTC{
         double speed = Double.parseDouble(spd);
         newTrain = new TrainModel(trainName, auth, speed);
         // add train to currently dispatched trains array
-        //dispatchedTrains[0] = newTrain;
-//      trckCntrl.dispatchTrainData(speed, auth);
+        dispatchedTrains[0] = newTrain;
+        trckCntrl.dispatchTrainData(speed, auth);
       return newTrain;
     }
     

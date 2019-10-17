@@ -9,4 +9,8 @@ public class Controller implements Initializable {
         System.out.println("View is now loaded!");
     }
 
+    public void start() {
+        System.out.println("Here!");
+    }
+
 }

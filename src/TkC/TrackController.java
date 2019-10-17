@@ -18,6 +18,7 @@ public class TrackController
         PLCProgram = plc;
         ControlledBlocks = blocks;
         tm = tkm;
+        initGUI();
 
     }
 
@@ -29,8 +30,8 @@ public class TrackController
         tkcg.start(newStage);
     }
 
-    public void updateGUI() {
-        tkcg.update(/* updated values */);
+    public void updateGUI(String BlockAuthority, double speed) {
+        tkcg.update(BlockAuthority,speed);
     }
 
     public boolean VerifySafeConditions() {
@@ -66,6 +67,8 @@ public class TrackController
     }
 
     public boolean dispatchTrainData(double speed, String authority) {
+        System.out.println("IN TRACKCONTROLLER: DISPATCHING TRAIN");
+        System.out.println(this.toString());
         tm.setIsOccupied(true);
         tm.setSpeed(speed);
         //tm.setAuthority(authority);
@@ -73,6 +76,8 @@ public class TrackController
         tkcg.setIsOccupied(true);
         tkcg.setSpeed(speed);
         tkcg.setAuthority(authority);
+
+        updateGUI(authority,speed);
 
         return true;
     }
