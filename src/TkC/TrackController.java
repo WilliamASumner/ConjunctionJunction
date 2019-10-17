@@ -4,6 +4,7 @@ public class TrackController
 {
     String PLCProgram;
     Block[] ControlledBlocks;
+    TkM tm = null;
 
     TrackControllerGUI tkcg;
 
@@ -13,9 +14,10 @@ public class TrackController
         initGUI();
     }
 
-    public TrackController(String plc, Block[] blocks) {
+    public TrackController(String plc, Block[] blocks, TkM tkm) {
         PLCProgram = plc;
         ControlledBlocks = blocks;
+        tm = tkm;
 
     }
 
@@ -63,7 +65,15 @@ public class TrackController
         return 0.0;
     }
 
-    public boolean SendSuggestedSpeedAndAuthority(int blockID, double speed, int blockIDAuthority) {
+    public boolean dispatchTrainData(double speed, String authority) {
+        tm.setIsOccupied(true);
+        tm.setSpeed(speed);
+        //tm.setAuthority(authority);
+
+        tkcg.setIsOccupied(true);
+        tkcg.setSpeed(speed);
+        tkcg.setAuthority(authority);
+
         return true;
     }
 

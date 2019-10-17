@@ -62,31 +62,29 @@ public class TrainController{
     //Called when train controller is created
     void initGUI() {
         FXMLLoader loader = new FXMLLoader();
-        String projectBaseDir = "file:/" + System.getProperty("user.dir") + "/src"; // get base dir
+        String projectBaseDir = System.getProperty("user.dir") + "/src"; // get base dir
         String fxmlPath = projectBaseDir + "/TrainController/TrainController.fxml";
-        URL tryURL;
+        File someFile = new File(fxmlPath);
+        URL tryURL = null;
         try {
             tryURL = new File(fxmlPath).toURI().toURL();
         } catch (IOException e) {
             System.out.println(e);
-            System.out.println("error could not construct url");
         }
-        try {
+
+        if (tryURL != null) {
             loader.setLocation(tryURL);
-        } catch (IOException e) {
-            System.out.println("Error unable to set location");
-            System.out.println(e);
-            System.out.print("Try String: ");
-            System.out.println(fxmlPath);
+//loader.setLocation(getClass().getResource("/TrainController.fxml"));
         }
+        else
+            System.out.println("ERROR DID NOT SET URL");
 
         try {
             GUI = loader.<VBox>load();
         } catch (IOException e) {
             System.out.println(e);
             System.out.println("Unable to find TrainController fxml");
-            System.out.print("Try String: ");
-            System.out.println(fxmlPath);
+            System.exit(0);
         }
     }
 

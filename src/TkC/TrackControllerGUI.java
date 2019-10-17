@@ -203,6 +203,15 @@ public class TrackControllerGUI extends Application {
         primaryStage.show();
     }
 
+    public void setIsOccupied(boolean isOccupied) {
+        /// 
+    }
+    public void setSpeed(double speed) {
+    }
+    public void setAuthority(String authority) {
+    }
+
+
     void update() {
         AuthorityVal.setText(BlockAuthority);
         SpeedVal.setText(String.valueOf(BlockSpeed));
