@@ -13,9 +13,30 @@ public class TrainControllerGUI extends Application {
     String name;
 
     public TrainControllerGUI() {
+<<<<<<< HEAD
       speed = TrainController.getAuditedSpeed();
       authority = TrainController.getAuthority();
       name = TrainController.getName();
+=======
+		/*
+      speed = TrainController.getAuditedSpeed();
+      authority = TrainController.getAuthority();
+      name = TrainController.getName();
+	  */
+	  speed = TrainController.auditedSpeed;
+	  authority = TrainController.authority;
+	  name = TrainController.trainName;
+    }
+    public TrainControllerGUI(Stage primaryStage) {
+      /*
+      speed = TrainController.getAuditedSpeed();
+      authority = TrainController.getAuthority();
+      name = TrainController.getName();
+	  */
+	  speed = TrainController.auditedSpeed;
+	  authority = TrainController.authority;
+	  name = TrainController.trainName;
+>>>>>>> 8640f08cf0e35aa93836f77d007755e0a766c3b6
     }
 
 

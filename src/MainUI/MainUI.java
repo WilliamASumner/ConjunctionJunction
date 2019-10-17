@@ -11,6 +11,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.event.EventHandler;
 import javafx.event.ActionEvent;
+//import javafx.event.WindowEvent;
 
 import javafx.animation.AnimationTimer;
 
@@ -105,6 +106,7 @@ public class MainUI extends Application {
         }.start(); */
 
 
+        //stage.setOnCloseRequest(new closeWindowHandler());
         stage.show();
 
     }
@@ -172,9 +174,18 @@ public class MainUI extends Application {
         @Override
         public void handle(ActionEvent event){
             Stage newWindow = new Stage();
-            tnc = new TrainController();
+            tnc = tnm.TNC;
+            if (tnc == null)
+                tnc = new TrainController();
             tnc.showGUI(newWindow);
-
         }
     }
+
+    /*
+    class closeWindowHandler implements EventHandler<WindowEvent> {
+        @Override
+        public void handle(WindowEvent event) {
+            stop();
+        }
+    }*/
 }

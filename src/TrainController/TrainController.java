@@ -10,7 +10,11 @@ public class TrainController{
     static double currSpeed = 60;
     // Block authority;
     static String authority = "test block";
+<<<<<<< HEAD
     double auditedSpeed;   //CTC suggested speed limit
+=======
+    static double auditedSpeed;   //CTC suggested speed limit
+>>>>>>> 8640f08cf0e35aa93836f77d007755e0a766c3b6
     double currTemp;
     boolean isUnderground;
     String beaconData;
@@ -54,6 +58,7 @@ public class TrainController{
         authority = a;
         trainName = name;
         //trainModel = tm;
+		System.out.println("Name: "+name+"Block: "+authority+"Speed: "+auditedSpeed);
         initGUI();
     }
     //Called when train controller is created
