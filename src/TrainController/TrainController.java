@@ -1,5 +1,4 @@
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -7,7 +6,7 @@ import javafx.stage.Stage;
 import java.net.URL;
 
 public class TrainController{
-    double currSpeed = 12;
+    double currSpeed = 60;
     // Block authority;
     String authority = "test block";
     double auditedSpeed;   //CTC suggested speed limit
@@ -28,7 +27,7 @@ public class TrainController{
     boolean lightsOn;
     String trainName = "train1";
     // trainModel TrainModel;
-    TrainController myGUI;
+    TrainControllerGUI myGUI;
     
     // //Train Controller Constructor
     // public TrainController(String name, String authority, double speed, TrainModel tm){
@@ -61,13 +60,18 @@ public class TrainController{
     }
 
     //Updates train's audited speed limit from the train model
-    void updateAuditedSpeed(){
-        currSpeed = trainModel.getAuditedSpeed();
+    public double getAuditedSpeed(){
+        return currSpeed;
     }
 
     //Updates train's authority from the train model
-    void updateAuthority(){
-        authority = trainModel.getAuthority();
+    public String getAuthority(){
+        return authority;
+    }
+
+    //Updates train's authority from the train model
+    public String getName(){
+        return trainName;
     }
 
     //Driver sets train controller mode to automatic
