@@ -38,7 +38,16 @@ public class TrainController{
     //     trainModel = tm;
     //     initGUI();
     // }
-
+    //
+    //Train Controller Constructor
+    public TrainController(){
+        auditedSpeed = 0.0;
+        authority = "";
+        trainName = "";
+        //trainModel = tm;
+        initGUI();
+    }
+ 
     //Train Controller Constructor
     public TrainController(String name, String a, double speed){
         auditedSpeed = speed;
@@ -49,12 +58,13 @@ public class TrainController{
     }
     //Called when train controller is created
     void initGUI(){
+        myGUI = new TrainControllerGUI();
         
     }
 
     //Called when train controller selected from main menu
-    void showGUI(){
-        myGUI = new TrainControllerGUI();
+    void showGUI(Stage primaryStage){
+        myGUI.start(primaryStage);
         // Scene scene = new Scene(GUI);
         // primaryStage.setScene(scene);
         // primaryStage.show();
