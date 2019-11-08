@@ -1,6 +1,4 @@
-
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -8,9 +6,9 @@ import javafx.stage.Stage;
 import java.net.URL;
 
 public class TrainController{
-    double currSpeed;
+    double currSpeed = 12;
     // Block authority;
-    String authority;
+    String authority = "test block";
     double auditedSpeed;   //CTC suggested speed limit
     double currTemp;
     boolean isUnderground;
@@ -27,41 +25,48 @@ public class TrainController{
     boolean eBrakeFailure;
     boolean serviceBreakFailure;
     boolean lightsOn;
-    Vbox GUI;
-    String trainName;
-    trainModel trainModel;
+    String trainName = "train1";
+    // trainModel TrainModel;
+    TrainController myGUI;
     
+    // //Train Controller Constructor
+    // public TrainController(String name, String authority, double speed, TrainModel tm){
+    //     auditedSpeed = speed;
+    //     authority = authority;
+    //     trainName = name;
+    //     trainModel = tm;
+    //     initGUI();
+    // }
+
     //Train Controller Constructor
-    public TrainController(String name, String authority, double speed, TrainModel tm){
+    public TrainController(String name, String a, double speed){
         auditedSpeed = speed;
-        authority = authority;
+        authority = a;
         trainName = name;
-        trainModel = tm;
+        //trainModel = tm;
         initGUI();
     }
-
     //Called when train controller is created
     void initGUI(){
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(new URL("ConjunctionJunction/ConjunctionJunction/src/TrainController/TrainControllerGUISceneBuilder.fxml"));
-        GUI = loader.<VBox>load();
+        
     }
 
     //Called when train controller selected from main menu
     void showGUI(){
-        Scene scene = new Scene(GUI);
-        primaryStage.setScene(scene);
-        primaryStage.show();
+        myGUI = new TrainControllerGUI();
+        // Scene scene = new Scene(GUI);
+        // primaryStage.setScene(scene);
+        // primaryStage.show();
     }
 
     //Updates train's audited speed limit from the train model
     void updateAuditedSpeed(){
-        currSpeed = trainModel.getAuditedSpeed();
+        // currSpeed = trainModel.getAuditedSpeed();
     }
 
     //Updates train's authority from the train model
     void updateAuthority(){
-        authority = trainModel.getAuthority();
+        // authority = trainModel.getAuthority();
     }
 
     //Driver sets train controller mode to automatic
