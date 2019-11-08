@@ -1,98 +1,112 @@
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
-import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
-
-import java.net.URL;
-
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage; 
 public class TrainController{
-    double currSpeed = 12;
-    // Block authority;
-    String authority = "test block";
-    double auditedSpeed;   //CTC suggested speed limit
-    double currTemp;
-    boolean isUnderground;
-    String beaconData;
-    boolean eBrake_isActive;
-    boolean serviceBrake_isActive;
-    boolean[] LeftDoors = new boolean[4];
-    boolean[] RightDoors = new boolean[4];
-    int powerCommand;
-    // Block currBlock;
+    static double currSpeed = 60;
+    static double driverSetSpeed;
+    static String authority = "test block";
+    static double auditedSpeed = 70;
+    boolean[] doors = new boolean[8];
+    double powerCommand;
     boolean isAutomaticMode;
     boolean engineFailure;
     boolean trackCircuitFailure;
     boolean eBrakeFailure;
     boolean serviceBreakFailure;
     boolean lightsOn;
-    String trainName = "train1";
-    // trainModel TrainModel;
-    TrainController myGUI;
+    static String trainName = "train1";
+    TrainControllerGUI myGUI;
+    boolean eBrakeON;
+    boolean sBrakeON;
     
-    // //Train Controller Constructor
-    // public TrainController(String name, String authority, double speed, TrainModel tm){
-    //     auditedSpeed = speed;
-    //     authority = authority;
-    //     trainName = name;
-    //     trainModel = tm;
-    //     initGUI();
-    // }
-
+    // Block authority;
+    
+    String beaconData;
+   
+    // Block currBlock;
+    
+    
+    // trainModel TrainModel;
+    
+    //Train Controller Constructor
+    public TrainController(){
+        auditedSpeed = 0.0;
+        authority = "";
+        trainName = "";
+        //trainModel = tm;
+        initGUI();
+    }
+ 
     //Train Controller Constructor
     public TrainController(String name, String a, double speed){
         auditedSpeed = speed;
         authority = a;
         trainName = name;
         //trainModel = tm;
+		System.out.println("Name: "+name+"Block: "+authority+"Speed: "+auditedSpeed);
         initGUI();
     }
     //Called when train controller is created
     void initGUI(){
+        myGUI = new TrainControllerGUI();
         
     }
 
     //Called when train controller selected from main menu
-    void showGUI(){
-        myGUI = new TrainControllerGUI();
+    void showGUI(Stage primaryStage){
+        myGUI.start(primaryStage);
         // Scene scene = new Scene(GUI);
         // primaryStage.setScene(scene);
         // primaryStage.show();
     }
 
-    //Updates train's audited speed limit from the train model
-    void updateAuditedSpeed(){
-        // currSpeed = trainModel.getAuditedSpeed();
-    }
-
-    //Updates train's authority from the train model
-    void updateAuthority(){
-        // authority = trainModel.getAuthority();
-    }
-
-    //Driver sets train controller mode to automatic
-    void setAutomaticMode(){
+   //Driver sets train controller mode to automatic
+    public void setAutomaticMode(){
         isAutomaticMode = true;
     }
 
     //Driver sets train controller mode to manual
-    void setManualMode(){
+    public void setManualMode(){
         isAutomaticMode = false;
     }
 
-    //Set speed of train to new driverSetSpeed, only if it not above
-    //speed limit
+    //Set speed of train to new driverSetSpeed, only if train is
+    //in manual mode
     void setNewSpeed(int driverSetSpeed){
-        currSpeed = driverSetSpeed;
+        if(!isAutomaticMode){
+            currSpeed = driverSetSpeed;
+        }
+        
     }
-
+    
     //@returns int calulcalatePower - power command to Train Model in kiloWatts 
     //Calculates power command based on current and desired speed
-    int calculatePower(int desiredSpeed, int currentSpeed){
+    double calculatePower(double desiredSpeed, double currentSpeed){
         int powerOut;   //power command output, in kiloWatts
 
         powerOut = 0;
         return powerOut;
     }
+
+    //Updates train's audited speed limit from the train model
+    public static double getAuditedSpeed(){
+        return currSpeed;
+    }
+
+    //Updates train's authority from the train model
+    public static String getAuthority(){
+        return authority;
+    }
+
+    //Updates train's authority from the train model
+    public static String getName(){
+        return trainName;
+    }
+
     
 }
-   
