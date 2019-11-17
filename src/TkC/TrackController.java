@@ -3,23 +3,29 @@ import javafx.stage.Stage;
 public class TrackController
 {
     String PLCProgram;
-    Block[] ControlledBlocks;
-    TkM tm = null;
+    ArrayList<Block> controlledBlocks;
 
+    TkM tm = null;
     TrackControllerGUI tkcg;
 
-    public TrackController() {
+    public TrackController(ArrayList<blocks> blocks) {
         PLCProgram = "";
-        ControlledBlocks = null;
+        controlledBlocks = null;
         initGUI();
     }
 
-    public TrackController(String plc, Block[] blocks, TkM tkm) {
-        PLCProgram = plc;
-        ControlledBlocks = blocks;
-        tm = tkm;
-        initGUI();
+    public void setControlledBlocks(ArrayList<Block> blocks) {
+        controlledBlocks = blocks;
+    }
 
+    public void setTrackModel(TkM trackmodel) {
+        tm = trackmodel;
+    }
+
+    public void setPLC(String plc) {
+        PLCProgram = plc;
+        // open plc and parse
+        runPLC();
     }
 
     public void initGUI() {
@@ -42,7 +48,7 @@ public class TrackController
         return;
     }
 
-    public void RunPLC() {
+    public void runPLC() {
         return;
     }
 
@@ -52,18 +58,6 @@ public class TrackController
 
     public boolean SetCrossingState(CrossingBlock s, boolean state) {
         return true;
-    }
-
-    public boolean SetBeaconData(StationBlock s, String data) {
-        return true;
-    }
-
-    public double AuditSpeed(double suggestedSpeed) {
-        return 0.0;
-    }
-
-    public double AuditAuthority(int suggestedAuthority) {
-        return 0.0;
     }
 
     public boolean dispatchTrainData(double speed, String authority) {
@@ -80,11 +74,11 @@ public class TrackController
         return true;
     }
 
-    public boolean SendSuggestedSpeed(int blockID, double speed) {
+    public boolean SendSuggestedSpeed(String blockID, double speed) {
         return true;
     }
 
-    public boolean SendSuggestedAuthority(int blockID, int blockIDAuthority) {
+    public boolean SendSuggestedAuthority(String blockID, String blockIDAuthority) {
         return true;
     }
 

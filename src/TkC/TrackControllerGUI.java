@@ -46,6 +46,7 @@ public class TrackControllerGUI extends Application {
     private String BlockStatus;
     private String PLCFile;
     private Boolean OverrideOccupied;
+    private Block currentBlock;
 
     private String BlockAuthority = "";
     private double BlockSpeed = 0.0;
@@ -95,7 +96,7 @@ public class TrackControllerGUI extends Application {
         root.getRowConstraints().addAll(row1,row2,row3);
 
 
-        String[] ControllerNames = {"G1","G2","G3"};
+        String[] ControllerNames = {"Tk0","Tk1","Tk2","Tk3","Tk4","Tk5"};
         ObservableList<String> ControllerOptions = FXCollections.observableArrayList();
         for (String option: ControllerNames) {
             ControllerOptions.addAll(option);
@@ -249,10 +250,22 @@ public class TrackControllerGUI extends Application {
     }
 
 
-    void update(String BlockAuthority,double BlockSpeed) {
-        AuthorityVal.setText(BlockAuthority);
-        SpeedVal.setText(String.valueOf(BlockSpeed));
-        OccupancyVal.setText("Occupied");
+    void update() {
+        AuthorityVal.setText(currentBlock.getAuthority());
+        SpeedVal.setText(String.valueOf(currentBlock.getSpeed()));
+        StatusVal.setText(currentBlock.getStatus());
+        OccupancyVal.setText(currentBlock.getOccupancy());
+
+        if (currentBlock.type == "switch") {
+            // update image accordingly
+        } else {
+            // grey out
+        }
+
+        if (currentBlock.type == "crossing" {
+        } else {
+            //grey out
+        }
     }
     public void ChangeSwitchState() {
         return;
