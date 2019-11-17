@@ -50,7 +50,7 @@ public class MainUI extends Application {
         tkm = new TkM(); // initialize track controller
 
         tkcm = new TrackControllerMain(); // should this be elsewhere?
-        tkc = tkcm.createTrackController("plc",null,tkm);
+        tkcm.createControllers();
 
 
         // Create button
@@ -97,11 +97,10 @@ public class MainUI extends Application {
 
                 // update all modules in succession
                 //ctc.update()
-                //tkc.update()
+                //tkcm.update()
                 //tkm.update()
                 //tnm.update()
                 //tnc.update()
-                //System.out.println("here");
             }
         }.start(); */
 
@@ -133,8 +132,7 @@ public class MainUI extends Application {
         @Override
         public void handle(ActionEvent event) {
             Stage newWindow = new Stage();
-            System.out.println(tkc.toString());
-            tkc.showGUI(newWindow);
+            tkcm.showGUI(newWindow);
         }
     }
 
