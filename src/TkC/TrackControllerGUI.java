@@ -22,13 +22,19 @@ import javafx.scene.layout.HBox;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+import javafx.scene.shape.Line;
+
 import javafx.stage.Stage;
 import javafx.stage.FileChooser;
+import javafx.stage.WindowEvent;
 
 import javafx.geometry.Pos;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.geometry.Insets;
+
+import java.util.ArrayList;
+
 
 public class TrackControllerGUI extends Application {
 
@@ -98,8 +104,11 @@ public class TrackControllerGUI extends Application {
         row3.setPercentHeight(33);
         root.getRowConstraints().addAll(row1,row2,row3);
 
+        Line MiddleDividerHigh = new Line(-100,0,50,50);
 
-        String[] ControllerNames = tckm.GetControllerNames();
+        root.getChildren().addAll(MiddleDividerHigh); // upper left
+
+        String[] ControllerNames = tkcm.GetControllerNames();
         ObservableList<String> ControllerOptions = FXCollections.observableArrayList();
         for (String option: ControllerNames) {
             ControllerOptions.addAll(option);
@@ -109,7 +118,7 @@ public class TrackControllerGUI extends Application {
         controllerBox.getSelectionModel().selectFirst();
 
 
-        String[] BlockNames = tkc.GetControlledBlocks();//,"2","3","4","5"};
+        String[] BlockNames = CurrentController.GetControlledBlocks();//,"2","3","4","5"};
         ObservableList<String> BoxOptions = FXCollections.observableArrayList();
         for (String option: BlockNames) {
             BoxOptions.addAll(option);
@@ -137,7 +146,7 @@ public class TrackControllerGUI extends Application {
 
         root.getChildren().addAll(MainControls); // upper left
 
-        Label LineInfo = new Label("Line: " + tkc.GetLine());
+        Label LineInfo = new Label("Line: " + CurrentController.GetLine());
         Label OccupancyLabel = new Label("Occupancy: ");
         OccupancyVal = new Label("Unoccupied");
 
@@ -174,8 +183,8 @@ public class TrackControllerGUI extends Application {
         root.getChildren().addAll(GeneralInfo); // upper right
 
 
-        String projectBaseDir = "file:"+System.getProperty("user.dir") + "/src"; // get base dir
-        String imgPath = projectBaseDir + "/TkC/switch-greyed-out.png";
+        String resourceBaseDir = "file:"+System.getProperty("user.dir") + "/imgs"; // get base dir
+        String imgPath = resourceBaseDir + "/switch-greyed-out.png";
         Image SwitchImage = new Image(imgPath);
 
         ImageView switchImageView = new ImageView(SwitchImage);
@@ -185,7 +194,7 @@ public class TrackControllerGUI extends Application {
 
         root.getChildren().addAll(switchImageView); // middle left
 
-        imgPath = projectBaseDir + "/TkC/crossing-greyed-out.png";
+        imgPath = resourceBaseDir + "/crossing-greyed-out.png";
         Image CrossingImage = new Image(imgPath);
         ImageView crossImageView = new ImageView(CrossingImage);
         crossImageView.setFitWidth(160);
@@ -234,14 +243,15 @@ public class TrackControllerGUI extends Application {
         if (scene == null)
             setup();
 
-        primaryStage.setTitle(tkc.GetName()); // container for all of it
+        primaryStage.setTitle(CurrentController.GetName()); // container for all of it
+        TrackControllerGUI thisGUI = this;
 
         primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent t) {
-                tkcm.remove(this); // remove this TrackControllerGUI
+                tkcm.removeGUI(thisGUI); // remove this TrackControllerGUI
             }
-        }
+        });
         
         primaryStage.setScene(scene); // content container
         primaryStage.show();
@@ -257,18 +267,27 @@ public class TrackControllerGUI extends Application {
 
 
     void update() {
-        AuthorityVal.setText(currentBlock.getAuthority());
-        SpeedVal.setText(String.valueOf(currentBlock.getSpeed()));
-        StatusVal.setText(currentBlock.getStatus());
-        OccupancyVal.setText(currentBlock.getOccupancy());
 
-        if (currentBlock.type == "switch") {
+        AuthorityVal.setText(currentBlock.getAuditedAuthority());
+        SpeedVal.setText(String.valueOf(currentBlock.getAuditedSpeed()));
+
+        if (currentBlock.getFailures().size() != 0) // if errors
+            StatusVal.setText("BROKEN");
+        else
+            StatusVal.setText("CLEAR");
+
+        if (currentBlock.getIsOccupied()) 
+            OccupancyVal.setText("OCCUPIED");
+        else 
+            OccupancyVal.setText("UNOCCUPIED");
+
+        if (currentBlock.getType() == BlockType.SWITCHBLOCK) {
             // update image accordingly
         } else {
             // grey out
         }
 
-        if (currentBlock.type == "crossing" {
+        if (currentBlock.getType() == BlockType.CROSSBLOCK) {
         } else {
             //grey out
         }

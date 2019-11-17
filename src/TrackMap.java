@@ -1,7 +1,7 @@
 import java.util.HashMap;
 
 public class TrackMap {
-  HashMap<Integer, Block> map = new HashMap<Integer, Block>();
+  HashMap<String, Block> map = new HashMap<String, Block>();
 
 
   public TrackMap() {
@@ -14,11 +14,11 @@ public class TrackMap {
     }
   }
 
-  public Block sendBlock(int blockID) {
+  public Block sendBlock(String blockID) {
     return map.get(blockID);
   }
 
-  public void updateTrack(HashMap<Integer, Block> track) {
+  public void updateTrack(HashMap<String, Block> track) {
 
   }
 

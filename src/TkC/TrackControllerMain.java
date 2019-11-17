@@ -1,16 +1,19 @@
 // Java includes
+import javafx.stage.Stage;
+
 import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.io.*; // IO
 
 public class TrackControllerMain
 {
-    private HashMap<TrackController,String> controllers;
+    private HashMap<String,TrackController> controllers;
     private ArrayList<TrackControllerGUI> guis;
-    private TrackModel tm;
+    private TkM tm;
 
     private String[] TkNames = {"Tk0","Tk1","Tk2","Tk3","Tk4","Tk5"};
-    public currentController = TkNames[0];
+    public String currentController = TkNames[0];
 
     // GREEN LINE
     String[] Tk0List = {"A","B","C","D","E","F","G","Z","Y"};
@@ -24,27 +27,37 @@ public class TrackControllerMain
     String[] Tk5List = {"I","J","N","M","L","K"};
 
     public TrackControllerMain() {
-        currentBlock = null;
-        controllers = new HashMap<TrackController,String>();
-        guis = null;
-        OccupiedBlocks = null;
-        TrainPositions = null;
+        controllers = new HashMap<String,TrackController>();
+        guis = new ArrayList<TrackControllerGUI>();
     }
 
     public void showGUI(Stage window) { // just make a new gui
         TrackController tkc = GetController();
-        TrackControllerGUI newgui = 
+        System.out.println(tkc);
+        TrackControllerGUI newgui = new TrackControllerGUI(this, tkc);
         guis.add(newgui);
-        return
+        newgui.start(window);
+    }
 
+    public void removeGUI(TrackControllerGUI gui) {
+        guis.remove(gui);
     }
 
     public String[] GetControllerNames() {
         return TkNames;
     }
 
+    public void update() {
+        for (TrackController tkc : controllers.values()) {
+            tkc.update();
+        }
+        for (TrackControllerGUI gui : guis) {
+            gui.update();
+        }
+    }
 
-    public TrackController SetController(String newController) { // updated by gui, this value is the controller for which the gui will be opened
+
+    public void SetController(String newController) { // updated by gui, this value is the controller for which the gui will be opened
         currentController = newController;
 
     }
@@ -57,36 +70,36 @@ public class TrackControllerMain
         // Create definitions of the controllers
         TrackController tk0,tk1,tk2,tk3,tk4,tk5;
 
-        ArrayList<Block> blocks0 = ArrayList<Block>();
+        ArrayList<Block> blocks0 = new ArrayList<Block>();
         for (String blockLetter : Tk0List)
-            blocks.append(tm.getBlocks(blockLetter,"GREEN"));
+            blocks0.add(new Block());//tm.getBlocks(blockLetter,"GREEN"));
 
-        ArrayList<Block> blocks1 = ArrayList<Block>();
+        ArrayList<Block> blocks1 = new ArrayList<Block>();
         for (String blockLetter : Tk1List)
-            blocks.append(tm.getBlocks(blockLetter,"GREEN"));
+            blocks1.add(new Block());//tm.getBlocks(blockLetter,"GREEN"));
 
-        ArrayList<Block> blocks2 = ArrayList<Block>();
+        ArrayList<Block> blocks2 = new ArrayList<Block>();
         for (String blockLetter : Tk2List)
-            blocks.append(tm.getBlocks(blockLetter,"GREEN"));
+            blocks2.add(new Block());//tm.getBlocks(blockLetter,"GREEN"));
 
-        ArrayList<Block> blocks3 = ArrayList<Block>();
+        ArrayList<Block> blocks3 = new ArrayList<Block>();
         for (String blockLetter : Tk3List)
-            blocks.append(tm.getBlocks(blockLetter,"RED"));
+            blocks3.add(new Block());//tm.getBlocks(blockLetter,"RED"));
 
-        ArrayList<Block> blocks4 = ArrayList<Block>();
+        ArrayList<Block> blocks4 = new ArrayList<Block>();
         for (String blockLetter : Tk4List)
-            blocks.append(tm.getBlocks(blockLetter,"RED"));
+            blocks4.add(new Block());//tm.getBlocks(blockLetter,"RED"));
 
-        ArrayList<Block> blocks5 = ArrayList<Block>();
+        ArrayList<Block> blocks5 = new ArrayList<Block>();
         for (String blockLetter : Tk5List)
-            blocks.append(tm.getBlocks(blockLetter,"RED"));
+            blocks5.add(new Block());//tm.getBlocks(blockLetter,"RED"));
 
-        tk0 = new TrackController("GREEN",TkNames[0],blocks0,tm);
-        tk1 = new TrackController("GREEN",TkNames[1],blocks1,tm);
-        tk2 = new TrackController("GREEN",TkNames[2],blocks2,tm);
-        tk3 = new TrackController("RED",  TkNames[3],blocks3,tm);
-        tk4 = new TrackController("RED",  TkNames[4],blocks4,tm);
-        tk5 = new TrackController("RED",  TkNames[5],blocks5,tm);
+        tk0 = new TrackController("GREEN",TkNames[0],blocks0,tm,this);
+        tk1 = new TrackController("GREEN",TkNames[1],blocks1,tm,this);
+        tk2 = new TrackController("GREEN",TkNames[2],blocks2,tm,this);
+        tk3 = new TrackController("RED",  TkNames[3],blocks3,tm,this);
+        tk4 = new TrackController("RED",  TkNames[4],blocks4,tm,this);
+        tk5 = new TrackController("RED",  TkNames[5],blocks5,tm,this);
 
         controllers.put(TkNames[0],tk0);
         controllers.put(TkNames[1],tk1);
@@ -154,9 +167,6 @@ public class TrackControllerMain
     }
 
     public boolean dispatchTrainData(double speed, String authority) {
-        if (controllers[0] == null)
-            createTrackController();
-        controllers[0].dispatchTrainData(speed,authority);
         return true;
     }
 

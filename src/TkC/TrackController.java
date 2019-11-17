@@ -1,4 +1,5 @@
 import javafx.stage.Stage;
+import java.util.ArrayList;
 
 public class TrackController
 {
@@ -10,7 +11,7 @@ public class TrackController
     TkM tm = null;
     TrackControllerMain tkcm;
 
-    public TrackController(String l, String n, ArrayList<blocks> blocks,
+    public TrackController(String l, String n, ArrayList<Block> blocks,
             TkM tkmodel,TrackControllerMain m) {
         PLCProgram = "";
         line = l;
@@ -18,20 +19,21 @@ public class TrackController
         controlledBlocks = blocks;
         tm = tkmodel;
         tkcm = m;
-        initGUI();
     }
 
     public boolean ControlsBlock(String blockID) {
-        for (String block : controlledBlocks) {
-            if (block.equals(blockID))
+        for (Block b: controlledBlocks) {
+            if (b.toString().equals(blockID))
                 return true;
+        }
         return false;
     }
 
     public String[] GetControlledBlocks() {
         String[] blks = new String[controlledBlocks.size()];
-        for (int i = 0; i < controlledBlocks.size(); i++)
+        for (int i = 0; i < controlledBlocks.size(); i++) {
             blks[i] = controlledBlocks.get(i).toString();
+        }
         return blks;
     }
 
@@ -47,20 +49,20 @@ public class TrackController
     public void SetPLC(String plc) {
         PLCProgram = plc;
         // open plc and parse
-        runPLC();
+        RunPLC();
     }
 
-    public void InitGUI() {
-        tkcg = new TrackControllerGUI();
-    }
+    //public void InitGUI() {
+        //tkcg = new TrackControllerGUI();
+    //}
 
-    public void ShowGUI(Stage newStage) {
-        tkcg.start(newStage);
-    }
+    //public void ShowGUI(Stage newStage) {
+        //tkcg.start(newStage);
+    //}
 
-    public void UpdateGUI(String BlockAuthority, double speed) {
-        tkcg.update(BlockAuthority,speed);
-    }
+    //public void UpdateGUI(String BlockAuthority, double speed) {
+        //tkcg.update(BlockAuthority,speed);
+    //}
 
     public boolean VerifySafeConditions() {
         return true;
@@ -87,11 +89,9 @@ public class TrackController
         tm.setSpeed(speed);
         tm.setAuthority(authority);
 
-        tkcg.setIsOccupied(true);
-        tkcg.setSpeed(speed);
-        tkcg.setAuthority(authority);
-
-        updateGUI(authority,speed);
+        //tkcg.setIsOccupied(true);
+        //tkcg.setSpeed(speed);
+        //tkcg.setAuthority(authority);
 
         return true;
     }
@@ -102,6 +102,13 @@ public class TrackController
 
     public boolean SendSuggestedAuthority(String blockID, String blockIDAuthority) {
         return true;
+    }
+
+    public void update() {
+    }
+
+    public String toString() {
+        return name;
     }
 
 }
