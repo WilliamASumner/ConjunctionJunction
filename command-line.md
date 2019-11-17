@@ -20,6 +20,7 @@
 - `git pull` - pulls code from the github repo to your local machine, be careful as this will try to merge changes with your current directory. Make sure all changes are commited before `git pull`ing.
 - `git push` - pushes changes to the github repo, make sure you pull before you push so that conflicts are resolved on your machine.
 - `git checkout -b <branch name>` - creates a new branch and switches to it
+- `git push -u origin <branch name>` - sets branch upstream to repo
 - `git branch` - lists all branches and the current is highlighted
 - `git status` - shows you what is going to be in the current commit and also gives hints about how to undo changes
 - `git merge <branch name>`  - merges a branch `<branch name>` to the current branch, conflicts can arise here and must be dealt with
