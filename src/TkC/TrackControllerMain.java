@@ -1,12 +1,16 @@
 // Java includes
 import java.util.HashMap;
+import java.util.Iterator;
 import java.io.*; // IO
 
 public class TrackControllerMain
 {
     private HashMap<TrackController,String> controllers;
-    private String currentController = "Tk0";
+    private ArrayList<TrackControllerGUI> guis;
     private TrackModel tm;
+
+    private String[] TkNames = {"Tk0","Tk1","Tk2","Tk3","Tk4","Tk5"};
+    public currentController = TkNames[0];
 
     // GREEN LINE
     String[] Tk0List = {"A","B","C","D","E","F","G","Z","Y"};
@@ -22,15 +26,30 @@ public class TrackControllerMain
     public TrackControllerMain() {
         currentBlock = null;
         controllers = new HashMap<TrackController,String>();
+        guis = null;
         OccupiedBlocks = null;
         TrainPositions = null;
     }
-    public TrackController setController(String newController) { // updated by gui
+
+    public void showGUI(Stage window) { // just make a new gui
+        TrackController tkc = GetController();
+        TrackControllerGUI newgui = 
+        guis.add(newgui);
+        return
+
+    }
+
+    public String[] GetControllerNames() {
+        return TkNames;
+    }
+
+
+    public TrackController SetController(String newController) { // updated by gui, this value is the controller for which the gui will be opened
         currentController = newController;
 
     }
 
-    public TrackController getController() {
+    public TrackController GetController() {
         return controllers.get(currentController);
     }
 
@@ -62,30 +81,31 @@ public class TrackControllerMain
         for (String blockLetter : Tk5List)
             blocks.append(tm.getBlocks(blockLetter,"RED"));
 
-        tk0 = new TrackController(blocks0);
-        tk1 = new TrackController(blocks1);
-        tk2 = new TrackController(blocks2);
-        tk3 = new TrackController(blocks3);
-        tk4 = new TrackController(blocks4);
-        tk5 = new TrackController(blocks5);
+        tk0 = new TrackController("GREEN",TkNames[0],blocks0,tm);
+        tk1 = new TrackController("GREEN",TkNames[1],blocks1,tm);
+        tk2 = new TrackController("GREEN",TkNames[2],blocks2,tm);
+        tk3 = new TrackController("RED",  TkNames[3],blocks3,tm);
+        tk4 = new TrackController("RED",  TkNames[4],blocks4,tm);
+        tk5 = new TrackController("RED",  TkNames[5],blocks5,tm);
 
-        controllers.put("Tk0",tk0);
-        controllers.put("Tk1",tk1);
-        controllers.put("Tk2",tk2);
-        controllers.put("Tk3",tk3);
-        controllers.put("Tk4",tk4);
-        controllers.put("Tk5",tk5);
+        controllers.put(TkNames[0],tk0);
+        controllers.put(TkNames[1],tk1);
+        controllers.put(TkNames[2],tk2);
+        controllers.put(TkNames[3],tk3);
+        controllers.put(TkNames[4],tk4);
+        controllers.put(TkNames[5],tk5);
     }
 
-    public boolean SendSuggestedSpeed(String BlockID,double speed) {
+    public boolean SendSuggestedSpeed(String blockID,double speed) {
         return true;
     }
 
-    public boolean SendSuggestedAuthority(String BlockID, String authorityID) {
+    public boolean SendSuggestedAuthority(String blockID, String authorityID) {
         return true;
     }
 
-    public boolean NotifyNewOccupancy(String BlockID, String trainName) {
+    public boolean NotifyNewOccupancy(String blockID, String trainName) {
+        //CTC.notifynewoccupancy TODO fix this
         return true;
     }
 
@@ -97,11 +117,19 @@ public class TrackControllerMain
         return true;
     }
 
-    private TrackController FindController(String trainName) {
-        return null;
+    private TrackController FindController(String blockID) {
+        TrackController controller = null;
+        for(TrackController tkc : controllers.values()) {
+            if (tkc.ControlsBlock(blockID)) {
+                controller = tkc;
+                break;
+            }
+
+        }
+        return controller;
     }
 
-    public TrackController BlockToTrackController(String BlockID) {
+    public TrackController BlockToTrackController(String blockID) {
         return null;
     }
 

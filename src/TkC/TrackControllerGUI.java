@@ -32,6 +32,7 @@ import javafx.geometry.Insets;
 
 public class TrackControllerGUI extends Application {
 
+    private TrackControllerMain tkcm;
     private TrackController CurrentController;
     private String CurrentBlock;
     private String Occupancy;
@@ -61,7 +62,9 @@ public class TrackControllerGUI extends Application {
     private Scene scene = null;
     private Stage currentStage = null;
 
-    public TrackControllerGUI() {
+    public TrackControllerGUI(TrackControllerMain m, TrackController tkc) {
+        tkcm = m;
+        CurrentController = tkc;
         setup();
     }
 
@@ -96,7 +99,7 @@ public class TrackControllerGUI extends Application {
         root.getRowConstraints().addAll(row1,row2,row3);
 
 
-        String[] ControllerNames = {"Tk0","Tk1","Tk2","Tk3","Tk4","Tk5"};
+        String[] ControllerNames = tckm.GetControllerNames();
         ObservableList<String> ControllerOptions = FXCollections.observableArrayList();
         for (String option: ControllerNames) {
             ControllerOptions.addAll(option);
@@ -106,7 +109,7 @@ public class TrackControllerGUI extends Application {
         controllerBox.getSelectionModel().selectFirst();
 
 
-        String[] BlockNames = {"K63"};//,"2","3","4","5"};
+        String[] BlockNames = tkc.GetControlledBlocks();//,"2","3","4","5"};
         ObservableList<String> BoxOptions = FXCollections.observableArrayList();
         for (String option: BlockNames) {
             BoxOptions.addAll(option);
@@ -134,21 +137,17 @@ public class TrackControllerGUI extends Application {
 
         root.getChildren().addAll(MainControls); // upper left
 
-        Label LineInfo = new Label("Line: Green");
+        Label LineInfo = new Label("Line: " + tkc.GetLine());
         Label OccupancyLabel = new Label("Occupancy: ");
         OccupancyVal = new Label("Unoccupied");
 
         CheckBox OccupancyCheckBox = new CheckBox("Override to Occupied");
         OccupancyCheckBox.setIndeterminate(false); // only true/false
 
-
-
-
         Label AuthorityLabel = new Label("Authority: ");
         Label SpeedLabel = new Label("Speed: ");
         AuthorityVal = new Label(BlockAuthority);
         SpeedVal = new Label(String.valueOf(BlockSpeed));
-
 
         Label StatusLabel = new Label("Status: ");
         StatusVal = new Label(status);
@@ -235,7 +234,14 @@ public class TrackControllerGUI extends Application {
         if (scene == null)
             setup();
 
-        primaryStage.setTitle("Track Controller GUI"); // container for all of it
+        primaryStage.setTitle(tkc.GetName()); // container for all of it
+
+        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent t) {
+                tkcm.remove(this); // remove this TrackControllerGUI
+            }
+        }
         
         primaryStage.setScene(scene); // content container
         primaryStage.show();

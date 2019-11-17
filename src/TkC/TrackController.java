@@ -3,40 +3,62 @@ import javafx.stage.Stage;
 public class TrackController
 {
     String PLCProgram;
+    String line;
+    String name;
     ArrayList<Block> controlledBlocks;
 
     TkM tm = null;
-    TrackControllerGUI tkcg;
+    TrackControllerMain tkcm;
 
-    public TrackController(ArrayList<blocks> blocks) {
+    public TrackController(String l, String n, ArrayList<blocks> blocks,
+            TkM tkmodel,TrackControllerMain m) {
         PLCProgram = "";
-        controlledBlocks = null;
+        line = l;
+        name = n;
+        controlledBlocks = blocks;
+        tm = tkmodel;
+        tkcm = m;
         initGUI();
     }
 
-    public void setControlledBlocks(ArrayList<Block> blocks) {
-        controlledBlocks = blocks;
+    public boolean ControlsBlock(String blockID) {
+        for (String block : controlledBlocks) {
+            if (block.equals(blockID))
+                return true;
+        return false;
     }
 
-    public void setTrackModel(TkM trackmodel) {
-        tm = trackmodel;
+    public String[] GetControlledBlocks() {
+        String[] blks = new String[controlledBlocks.size()];
+        for (int i = 0; i < controlledBlocks.size(); i++)
+            blks[i] = controlledBlocks.get(i).toString();
+        return blks;
     }
 
-    public void setPLC(String plc) {
+    public String GetLine() {
+        return line;
+    }
+
+    public String GetName() {
+        return name;
+    }
+
+
+    public void SetPLC(String plc) {
         PLCProgram = plc;
         // open plc and parse
         runPLC();
     }
 
-    public void initGUI() {
+    public void InitGUI() {
         tkcg = new TrackControllerGUI();
     }
 
-    public void showGUI(Stage newStage) {
+    public void ShowGUI(Stage newStage) {
         tkcg.start(newStage);
     }
 
-    public void updateGUI(String BlockAuthority, double speed) {
+    public void UpdateGUI(String BlockAuthority, double speed) {
         tkcg.update(BlockAuthority,speed);
     }
 
@@ -48,7 +70,7 @@ public class TrackController
         return;
     }
 
-    public void runPLC() {
+    public void RunPLC() {
         return;
     }
 
@@ -60,7 +82,7 @@ public class TrackController
         return true;
     }
 
-    public boolean dispatchTrainData(double speed, String authority) {
+    public boolean DispatchTrainData(double speed, String authority) {
         tm.setIsOccupied(true);
         tm.setSpeed(speed);
         tm.setAuthority(authority);
