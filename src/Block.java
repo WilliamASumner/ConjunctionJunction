@@ -5,13 +5,13 @@ public class Block
 {
     boolean isOccupied;
     String LineColor;
-    int BlockID;
+    String BlockID;
     double Grade;
     double Elevation;
     double SpeedLimit;
     String[] failures;
-    int nextBlockID;
-    int prevBlockID;
+    String nextBlockID;
+    String prevBlockID;
     Boolean IsBidirectional;
     double Length;
     double AuditedSpeed;
@@ -27,7 +27,7 @@ public class Block
         LineColor = newValue;
     }
 
-    public void setBlockID(int newValue) {
+    public void setBlockID(String newValue) {
         BlockID = newValue;
     }
 
@@ -47,11 +47,11 @@ public class Block
         failures[0] = newValue;
     }
 
-    public void setNextBlockID(int newValue) {
+    public void setNextBlockID(String newValue) {
         nextBlockID = newValue;
     }
 
-    public void setPrevBlockID(int newValue) {
+    public void setPrevBlockID(String newValue) {
         prevBlockID = newValue;
     }
 
@@ -87,7 +87,7 @@ public class Block
         return LineColor;
     }
 
-    int getBlockID() {
+    String getBlockID() {
         return BlockID;
     }
 
@@ -107,11 +107,11 @@ public class Block
         return failures;
     }
 
-    int getNextBlockID() {
+    String getNextBlockID() {
         return nextBlockID;
     }
 
-    int getPrevBlockID() {
+    String getPrevBlockID() {
         return prevBlockID;
     }
 
