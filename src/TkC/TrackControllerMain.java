@@ -8,9 +8,26 @@ public class TrackControllerMain
     TrackController[] controllers;
     Block[] OccupiedBlocks;
     HashMap TrainPositions;
+    public TrackControllerMain() {
+        currentBlock = null;
+        controllers = new TrackController[3];
+        OccupiedBlocks = null;
+        TrainPositions = null;
+    }
+    private void addController(TrackController tkc) {
+        controllers[0] = tkc;
+    }
+    public TrackController getController() { // TODO: change this into finding a controller
+        return controllers[0];
+    }
 
-    public static void updateOnTick() {
-        System.out.println("update");
+    public TrackController createTrackController() {
+        controllers[0] = new TrackController();
+        return controllers[0];
+    }
+    public TrackController createTrackController(String plc, Block[] blocks,TkM tkm ) {
+        controllers[0] = new TrackController(plc,blocks,tkm);
+        return controllers[0];
     }
 
     public boolean SendSuggestedSpeed(String trainName,double speed) {
@@ -57,11 +74,26 @@ public class TrackControllerMain
         return true;
     }
 
-    public TrackControllerMain() {
-        currentBlock = null;
-        controllers = null;
-        OccupiedBlocks = null;
-        TrainPositions = null;
+    public boolean SendSuggestedSpeedAndAuthority(int blockID, double speed, int blockIDAuthority) {
+        return true;
     }
+
+    public boolean SendSuggestedSpeed(int blockID, double speed) {
+        return true;
+    }
+
+    public boolean SendSuggestedAuthority(int blockID, int blockIDAuthority) {
+        return true;
+    }
+
+    public boolean dispatchTrainData(double speed, String authority) {
+        if (controllers[0] == null)
+            createTrackController();
+        controllers[0].dispatchTrainData(speed,authority);
+        return true;
+    }
+
+
+    
 
 }

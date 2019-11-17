@@ -11,6 +11,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.event.EventHandler;
 import javafx.event.ActionEvent;
+//import javafx.event.WindowEvent;
 
 import javafx.animation.AnimationTimer;
 
@@ -25,12 +26,17 @@ public class MainUI extends Application {
     private TextField trainName;
     private TextField speed;
 
-    private TrackControllerGUI tkcg = null;
+    private TrackControllerMain tkcm = null;
+    private TrackController tkc = null;
 
-    private TrackControllerMain tkc = null;
+    private TrainController tnc = null;
+
+    private TkM tkm = null;
     //private TrackModel tkm = null;
-    //private CTC ctc = null;
+    private CTC_GUI ctcg = null;
+    private CTC     ctc = null;
     //private CTC ctcg = null;
+    private TrainModel tnm = null;
     //
    public static void main(String[] args) {
         // launch CTC 
@@ -41,6 +47,11 @@ public class MainUI extends Application {
     
     @Override
     public void start(Stage stage) {
+        tkm = new TkM(); // initialize track controller
+
+        tkcm = new TrackControllerMain(); // should this be elsewhere?
+        tkc = tkcm.createTrackController("plc",null,tkm);
+
 
         // Create button
         Button CTC = new Button("CTC");
@@ -74,7 +85,7 @@ public class MainUI extends Application {
         vbox.setAlignment(Pos.CENTER);
 
         // Create a scene with the VBox as its root node
-        Scene scene = new Scene(vbox);
+        Scene scene = new Scene(vbox,300,200);
         stage.setTitle("Train Sim Home Page");
         stage.setScene(scene);
 
@@ -95,14 +106,9 @@ public class MainUI extends Application {
         }.start(); */
 
 
+        //stage.setOnCloseRequest(new closeWindowHandler());
         stage.show();
 
-    }
-
-    private void MainLoop() {
-        while(true) {
-            System.out.println("he");
-        }
     }
 
     /**
@@ -112,9 +118,11 @@ public class MainUI extends Application {
         @Override
         public void handle(ActionEvent event) {
             Stage newWindow = new Stage();
-            System.out.println("CTC Office");
-            //ctcg = new CTC_GUI();
-            //ctcg.start(newWindow);
+            if (ctc == null)
+                ctc = new CTC(tkcm);
+            if (ctcg == null)
+                ctcg = new CTC_GUI(ctc,newWindow);
+            ctcg.start(newWindow);
         }
     }
     
@@ -125,9 +133,8 @@ public class MainUI extends Application {
         @Override
         public void handle(ActionEvent event) {
             Stage newWindow = new Stage();
-            System.out.println("Track Controller");
-            tkcg = new TrackControllerGUI();
-            tkcg.start(newWindow);
+            System.out.println(tkc.toString());
+            tkc.showGUI(newWindow);
         }
     }
 
@@ -138,9 +145,9 @@ public class MainUI extends Application {
         @Override
         public void handle(ActionEvent event){
             Stage newWindow = new Stage();
-            System.out.println("Track Model");
-            //tkmg = new TrackControllerGUI();
-            //tkmg.start(newWindow);
+            if (tkm == null)
+                tkm = new TkM();
+            tkm.showGUI(newWindow);
 
         }
     }
@@ -152,9 +159,12 @@ public class MainUI extends Application {
         @Override
         public void handle(ActionEvent event){
              Stage newWindow = new Stage();
-            System.out.println("Train Model");
-            //tnmg = new TrackControllerGUI();
-            //tnmg.start(newWindow);
+            if (ctcg != null)
+                tnm = ctcg.getTrainModel();
+            if (tnm == null)
+                tnm = new TrainModel();
+            if (tnm != null)
+                tnm.showGUI(newWindow);
 
         }
     }
@@ -166,10 +176,20 @@ public class MainUI extends Application {
         @Override
         public void handle(ActionEvent event){
             Stage newWindow = new Stage();
-            System.out.println("Train Controller");
-            //tncg = new TrainControllerGUI();
-            //tncg.start(newWindow);
-
+            if (tnc == null && tnm == null)
+                tnc = new TrainController();
+            else if (tnc == null)
+                tnc = tnm.TNC;
+            if (tnc != null)
+                tnc.showGUI(newWindow);
         }
     }
+
+    /*
+    class closeWindowHandler implements EventHandler<WindowEvent> {
+        @Override
+        public void handle(WindowEvent event) {
+            stop();
+        }
+    }*/
 }

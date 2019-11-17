@@ -8,4 +8,3 @@ public class StationBlock extends Block {
         return BeaconData;
     }
 }
-

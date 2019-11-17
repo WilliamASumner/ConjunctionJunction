@@ -19,6 +19,8 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 import javafx.stage.Stage;
 import javafx.stage.FileChooser;
@@ -53,15 +55,21 @@ public class TrackControllerGUI extends Application {
     private Label AuthorityVal;
     private Label SpeedVal;
     private Label StatusVal;
+    private Label OccupancyVal;
+
+    private Scene scene = null;
+    private Stage currentStage = null;
+
+    public TrackControllerGUI() {
+        setup();
+    }
 
 
     public static void main(String[] args) {
         launch(args);
     }
 
-    @Override // not sure what this does?
-    public void start(Stage primaryStage) { // entry point for all apps
-        primaryStage.setTitle("Track Controller GUI"); // container for all of it
+    public void setup() {
 
         final FileChooser fileChooser = new FileChooser();
 
@@ -126,7 +134,8 @@ public class TrackControllerGUI extends Application {
         root.getChildren().addAll(MainControls); // upper left
 
         Label LineInfo = new Label("Line: Green");
-        Label OccupancyInfo = new Label("Occupancy: ");
+        Label OccupancyLabel = new Label("Occupancy: ");
+        OccupancyVal = new Label("Unoccupied");
 
         CheckBox OccupancyCheckBox = new CheckBox("Override to Occupied");
         OccupancyCheckBox.setIndeterminate(false); // only true/false
@@ -148,23 +157,41 @@ public class TrackControllerGUI extends Application {
         HBox SpeedBox = new HBox();
         SpeedBox.getChildren().addAll(SpeedLabel,SpeedVal);
 
+        HBox OccBox = new HBox();
+        OccBox.getChildren().addAll(OccupancyLabel,OccupancyVal);
+
         HBox StatusBox = new HBox();
         StatusBox.getChildren().addAll(StatusLabel,StatusVal);
 
         VBox GeneralInfo = new VBox();
         GeneralInfo.setPadding(new Insets(10));
         GeneralInfo.setSpacing(8);
-        GeneralInfo.getChildren().addAll(LineInfo,OccupancyInfo,OccupancyCheckBox); // upper left
-        GeneralInfo.getChildren().addAll(AuthBox,SpeedBox,StatusBox); // upper left
+        GeneralInfo.getChildren().addAll(LineInfo,OccBox,OccupancyCheckBox); // upper right
+        GeneralInfo.getChildren().addAll(AuthBox,SpeedBox,StatusBox); // upper right
 
         GridPane.setConstraints(GeneralInfo,1,0);
 
-        root.getChildren().addAll(GeneralInfo); // upper left
+        root.getChildren().addAll(GeneralInfo); // upper right
 
-        //root.getChildren().addAll(,l,l2); // upper right
 
-        //root.getChildren().addAll(,l,l2); // middle left
-        //root.getChildren().addAll(,l,l2); // middle right
+        String projectBaseDir = "file:"+System.getProperty("user.dir") + "/src"; // get base dir
+        String imgPath = projectBaseDir + "/TkC/switch-greyed-out.png";
+        Image SwitchImage = new Image(imgPath);
+
+        ImageView switchImageView = new ImageView(SwitchImage);
+        switchImageView.setFitWidth(160);
+        switchImageView.setFitHeight(120);
+        GridPane.setConstraints(switchImageView,0,1);
+
+        root.getChildren().addAll(switchImageView); // middle left
+
+        imgPath = projectBaseDir + "/TkC/crossing-greyed-out.png";
+        Image CrossingImage = new Image(imgPath);
+        ImageView crossImageView = new ImageView(CrossingImage);
+        crossImageView.setFitWidth(160);
+        crossImageView.setFitHeight(120);
+        GridPane.setConstraints(crossImageView,1,1);
+        root.getChildren().addAll(crossImageView); // middle right
 
         Button importButton = new Button("Import PLC");
         importButton.setPrefWidth(400);
@@ -180,7 +207,7 @@ public class TrackControllerGUI extends Application {
                         new FileChooser.ExtensionFilter("All Files","*.*")
                 );
 
-                File file = fileChooser.showOpenDialog(primaryStage);
+                File file = fileChooser.showOpenDialog(currentStage);
                 if (file != null) {
                     try {
                         Desktop.getDesktop().open(file);
@@ -194,18 +221,38 @@ public class TrackControllerGUI extends Application {
 
         root.getChildren().addAll(importButton); // lower left
 
-
+        scene = new Scene(root, 860,480);
 
         //root.getChildren().addAll(,l,l2); // lower right
 
+    }
 
-        primaryStage.setScene(new Scene(root, 860,480)); // content container
+
+    @Override // not sure what this does?
+    public void start(Stage primaryStage) { // entry point for all apps
+        currentStage = primaryStage;
+        if (scene == null)
+            setup();
+
+        primaryStage.setTitle("Track Controller GUI"); // container for all of it
+        
+        primaryStage.setScene(scene); // content container
         primaryStage.show();
     }
 
-    void update() {
+    public void setIsOccupied(boolean isOccupied) {
+        /// 
+    }
+    public void setSpeed(double speed) {
+    }
+    public void setAuthority(String authority) {
+    }
+
+
+    void update(String BlockAuthority,double BlockSpeed) {
         AuthorityVal.setText(BlockAuthority);
         SpeedVal.setText(String.valueOf(BlockSpeed));
+        OccupancyVal.setText("Occupied");
     }
     public void ChangeSwitchState() {
         return;
@@ -221,4 +268,3 @@ public class TrackControllerGUI extends Application {
         return;
     }
 }
-

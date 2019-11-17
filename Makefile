@@ -16,10 +16,10 @@ ifdef OS # windows
 	JAVAFX_PATH    = $(MAKE_DIR)/lib/javafx-sdk-11.0.2-windows/lib
 else
 	JAVAFX_PATH    = $(MAKE_DIR)/lib/javafx-sdk-11.0.2-unix/lib
-endif 
+endif
 
 #NOTE: must be comma separated
-JAVAFX_MODULES  = javafx.controls
+JAVAFX_MODULES  = javafx.controls,javafx.fxml
 JFLAGS         := --module-path=$(JAVAFX_PATH) --add-modules $(JAVAFX_MODULES)
 
 ############### MODULE VARS ##################
@@ -57,7 +57,7 @@ run: src.txt $(TARGET_CLASS)
 
 # java build text
 src.txt: ./src/
-	find ./src/ -name "*.java" > src.txt
+	find ./src -name "*.java" > src.txt
 
 
 #$(TARGET_CLASS):
@@ -83,3 +83,4 @@ $(TTARGET): $(TESTFILE)
 clean:
 	$(RM) $(BIN_DIR)/*.class
 	$(RM) *.class
+	$(RM) src.txt
