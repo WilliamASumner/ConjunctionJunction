@@ -79,7 +79,7 @@ src.txt: ./src/
 
 # Result is dependent on all files in src dir
 $(TARGET_CLASS): $(shell find ./src -type f)
-	$(CC) $(JFLAGS) -d $(BIN_DIR) @src.txt
+	$(CC) $(JFLAGS) -Xlint:unchecked -d $(BIN_DIR) @src.txt
 
 runtest: $(TTARGET)
 	$(RUNCMD) $(JFLAGS) $(TTARGET)
