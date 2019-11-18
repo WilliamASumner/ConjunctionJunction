@@ -9,7 +9,7 @@ public class Block
     double Grade;
     double Elevation;
     double SpeedLimit;
-    ArrayList<String> failures;
+    String[] failures;
     String nextBlockID;
     String prevBlockID;
     Boolean IsBidirectional;
@@ -69,10 +69,13 @@ public class Block
         failures = new ArrayList<String>();
     }
 
+<<<<<<< HEAD
     public void removeFailure(String failure) {
         failures.remove(failure);
     }
 
+=======
+>>>>>>> mainui
     public void setNextBlockID(String newValue) {
         nextBlockID = newValue;
     }
