@@ -32,7 +32,7 @@ public class TrackControllerMain
     }
 
     public void showGUI(Stage window) { // just make a new gui
-        TrackController tkc = GetController();
+        TrackController tkc = GetCurrController();
         System.out.println(tkc);
         TrackControllerGUI newgui = new TrackControllerGUI(this, tkc);
         guis.add(newgui);
@@ -62,8 +62,12 @@ public class TrackControllerMain
 
     }
 
-    public TrackController GetController() {
+    public TrackController GetCurrController() {
         return controllers.get(currentController);
+    }
+
+    public TrackController GetController(String name) {
+        return controllers.get(name);
     }
 
     public void createControllers() {
@@ -169,8 +173,5 @@ public class TrackControllerMain
     public boolean dispatchTrainData(double speed, String authority) {
         return true;
     }
-
-
-    
 
 }
