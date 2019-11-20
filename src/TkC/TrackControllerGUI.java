@@ -74,8 +74,13 @@ public class TrackControllerGUI extends Application {
     private HBox bStatusBox;
     private CheckBox OccupancyCheckBox;
 
+    // changable gui items
     private ImageView switchImageView;
     private ImageView crossImageView;
+
+    private Circle light1;
+    private Circle light2;
+    private Circle light3;
 
     // Images
     Image CrossingImageGrey = new Image(resourceBaseDir + "/crossing-greyed-out.png");
@@ -278,28 +283,37 @@ public class TrackControllerGUI extends Application {
         switchImageView.setFitWidth(160);
         switchImageView.setFitHeight(120);
         //GridPane.setConstraints(switchImageView,0,1); // middle left
-        Circle light1 = new Circle();
-        light1.setCenterX(100.0f);
-        light1.setCenterY(100.0f);
-        light1.setRadius(50.0f);
+        light1 = new Circle();
+        light1.setCenterX(0.0f);
+        light1.setCenterY(0.0f);
+        light1.setRadius(15.0f);
         light1.setFill(Color.GREEN);
+        light1.setStroke(Color.BLACK);
+        light1.setStrokeWidth(2.0);
 
-        Circle light2 = new Circle();
-        light2.setCenterX(100.0f);
-        light2.setCenterY(150.0f);
-        light2.setRadius(50.0f);
+        light2 = new Circle();
+        light2.setCenterX(0.0f);
+        light2.setCenterY(0.0f);
+        light2.setRadius(15.0f);
         light2.setFill(Color.RED);
+        light2.setStroke(Color.BLACK);
+        light2.setStrokeWidth(2.0);
+
+        Region lightSpacer = new Region();
+        VBox.setVgrow(lightSpacer,Priority.ALWAYS);
 
 
-        Circle light3 = new Circle();
-        light3.setCenterX(150.0f);
+        light3 = new Circle();
+        light3.setCenterX(0.0f);
         light3.setCenterY(100.0f);
-        light3.setRadius(50.0f);
+        light3.setRadius(15.0f);
         light3.setFill(Color.YELLOW);
+        light3.setStroke(Color.BLACK);
+        light3.setStrokeWidth(2.0);
 
-        VBox vertLights = new VBox(light2,light3);
+        VBox vertLights = new VBox(light2,lightSpacer,light3);
 
-        HBox LightsAndSwitch = new VBox(light1,switchImageView,light3);
+        HBox LightsAndSwitch = new HBox(light1,switchImageView,vertLights);
 
         //root.getChildren().addAll(switchImageView); // middle left
 
@@ -308,7 +322,7 @@ public class TrackControllerGUI extends Application {
         crossImageView.setFitHeight(120);
         //GridPane.setConstraints(crossImageView,1,1);
 
-        HBox middleHBox = new HBox(switchImageView,MiddleDivider,crossImageView);
+        HBox middleHBox = new HBox(LightsAndSwitch,MiddleDivider,crossImageView);
         middleHBox.setAlignment(Pos.CENTER);
         middleHBox.setSpacing(80);
 
