@@ -42,11 +42,11 @@ public class TkM {
     	  return trackmaps;
       }
 
-      public TrackMap getRed() {
+      public ArrayList<Block> getRed() {
         return trackmaps.get(0).map;
       }
 
-      public TrackMap getGreen() {
+      public ArrayList<Block> getGreen() {
         return trackmaps.get(1).map;
       }
 
