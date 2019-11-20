@@ -42,6 +42,7 @@ import java.util.ArrayList;
 
 public class SetupUI extends Application {
     private Scene scene = null;
+    private Stage currentStage = null;
 
     public SetupUI() {
         setup();
