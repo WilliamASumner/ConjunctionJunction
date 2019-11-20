@@ -11,6 +11,8 @@ public class CTC{
         dispatchedTrains = new TrainModel[1];
         trckCntrl = tkcm;
     }
+    public CTC() { // for testing
+    }
     
     public TrainModel addTrain(String trainName, String auth, String spd){
         // instantiate new train with given name, auth, and spd
