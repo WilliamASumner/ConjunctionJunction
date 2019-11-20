@@ -5,7 +5,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 
 public class TrackMap {
-  ArrayList<Block> map = new ArrayList<Block>();
+  public ArrayList<Block> map = new ArrayList<Block>();
 
 
   public TrackMap() {
@@ -13,9 +13,8 @@ public class TrackMap {
   }
 
   public void parseFile(String filename) {
-
-    if (!filename.substring(filename.length()-3,filename.length()).equals(".csv")) {
-      System.out.println(filename + ", " + filename.substring(filename.length()-3,filename.length()));
+    map.add(0, null);
+    if (!(filename.substring(filename.length()-3,filename.length()).equals("csv"))) {
       return;
     }
 
@@ -24,8 +23,9 @@ public class TrackMap {
       File file = new File(filename);
       Scanner sc = new Scanner(file);
       while (sc.hasNextLine()) {
-        csv+=sc.nextLine();
+        csv+=sc.nextLine()+"\n";
       }
+      //System.out.println(csv);
     }
     catch (FileNotFoundException e){
       return;
@@ -35,8 +35,17 @@ public class TrackMap {
     Block newBlock = new Block();
 
     // 11 rows
+
     for (int i = 1; i < csvrows.length; i++) {
-      String[] elements = csvrows[i].split(",");
+      if (csvrows[i].equals(" ,,,,,,,,,,,")) {
+        break;
+      }
+
+        String[] elements = csvrows[i].split(",");
+
+      // for (int j = 0; j <= 8; j++) {
+      //   System.out.print(elements[j] + " ");
+      // }
         newBlock.setLineColor(elements[0]);
         newBlock.setBlockID(elements[2]+elements[1]+"");
         newBlock.setLength(Double.parseDouble(elements[3]));
@@ -46,7 +55,10 @@ public class TrackMap {
           //set block type to specific type
         }
         newBlock.setElevation(Double.parseDouble(elements[8]));
-        map.add(Integer.parseInt(elements[2]), newBlock);
+        int index = Integer.parseInt(elements[2]);
+        //System.out.println(index);
+        map.add(index, newBlock);
+      //  System.out.println(newBlock.getBlockID() + ", " + newBlock.getLineColor());
 
 
 
@@ -77,6 +89,11 @@ public class TrackMap {
   }
 
 
+  // public static void main(String[] args) {
+  //   TrackMap t = new TrackMap();
+  //
+  //   t.parseFile("redFile.csv");
+  // }
 
 
 }
