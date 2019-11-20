@@ -63,7 +63,7 @@ public class TrackMap {
     }
   }
 
-  public Block sendBlock(String blockID) {
+  public Block sendBlock(int blockID) { // maybe rename this?
     return map.get(blockID);
   }
 
@@ -73,8 +73,5 @@ public class TrackMap {
   //  Block oldBlock = map.get(bid);
     map.set(bid, block);
   }
-
-
-
 
 }
