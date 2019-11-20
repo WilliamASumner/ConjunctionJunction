@@ -139,4 +139,8 @@ public class Block
         return type;
     }
 
+    public String toString() {
+      return this.getBlockID();
+    }
+
 }
