@@ -106,13 +106,13 @@ public class TrackMap {
   }
 
 
-  public static void main(String[] args) {
-    TrackMap t = new TrackMap();
-
-    t.parseFile("redFile.csv");
-    ArrayList<Block> aaa = t.getBlocksBySection("A");
-    System.out.println(aaa.size());
-  }
+  // public static void main(String[] args) {
+  //   TrackMap t = new TrackMap();
+  //
+  //   t.parseFile("redFile.csv");
+  //   ArrayList<Block> aaa = t.getBlocksBySection("A");
+  //   System.out.println(aaa.size());
+  // }
 
 
 }

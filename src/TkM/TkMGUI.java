@@ -26,17 +26,17 @@ public class TkMGUI extends Application {
     }
 
     private void tInit() {
-        Block b = t.red.map.get(67);
+        Block b = t.red.map.get(5);
         // b.setGrade(0);
         // b.setAuditedSpeed(70);
         // b.setLength(100);
         // b.setBlockID("K63");
         // b.setElevation(0);
         // b.setLineColor("Green");
-        // b.setIsOccupied(false);
-        b.setAuditedAuthority(t.line.map.get(70));
+        b.setIsOccupied(true);
+        b.setAuditedAuthority(t.line.map.get(20));
         //l = new Label(b.toString());
-        scene = new Scene(new StackPane(t.toString(t.red, "O67")), 640, 480);
+        scene = new Scene(new StackPane(t.toString(t.red, "B5")), 640, 480);
     }
 
 
@@ -53,7 +53,7 @@ public class TkMGUI extends Application {
            launch();
        }
        public void update(Stage stage) {
-           stage.setScene(new Scene(new StackPane(t.toString(t.red, "O67")),640,480));
+           stage.setScene(new Scene(new StackPane(t.toString(t.red, "B5")),640,480));
            stage.show();
            //l.setText(t.toString(t));
        }

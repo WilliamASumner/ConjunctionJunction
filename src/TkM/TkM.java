@@ -39,6 +39,14 @@ public class TkM {
 
       }
 
+      public TkM() {
+        this.buildTrackMaps("redFile.csv", "redFile.csv");
+
+        System.out.println(this.toString(red, red.map.get(5).getBlockID()));
+        //tkmg = new TkMGUI(this);
+
+      }
+
       public ArrayList<TrackMap> buildTrackMaps(String redFile, String greenFile) {
 
     	  red.parseFile(redFile);
@@ -99,7 +107,7 @@ public class TkM {
        t4l.setFont(Font.font("Verdana",  20));
        Text t5 = new Text("Speed Limit: ");
        t5.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
-       Text t5l = new Text(b.getAuditedSpeed() + "\n\n");
+       Text t5l = new Text(b.getSpeedLimit() + "\n\n");
        t5l.setFont(Font.font("Verdana",  20));
        Text t6 = new Text("Occupation: ");
        t6.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
@@ -117,21 +125,21 @@ public class TkM {
               return tf;
      }
 
-      public static void main(String[] args) {
-
-        TkM t = new TkM("red");
-      //  t.buildTrackMaps("redFile.csv", "redFile.csv");
-      //  ArrayList<Block> a = t.trackmaps.get(0).map;
-        System.out.println(t.red.map.size());
-      //  TrackMap r = t.trackmaps.get(0);
-        ArrayList<Block> aaa = t.red.getBlocksBySection("A");
-        System.out.println(aaa.size());
-        System.out.println(t.red.map.get(5).getIsOccupied());
-
-        //Block b = t.trackmaps.get(0).sendBlock(1);
-    	  //System.out.println(b.getBlockID() + ", " + b.getLineColor());
-
-      }
+      // public static void main(String[] args) {
+      //
+      //   TkM t = new TkM("red");
+      // //  t.buildTrackMaps("redFile.csv", "redFile.csv");
+      // //  ArrayList<Block> a = t.trackmaps.get(0).map;
+      //   System.out.println(t.red.map.size());
+      // //  TrackMap r = t.trackmaps.get(0);
+      //   ArrayList<Block> aaa = t.red.getBlocksBySection("A");
+      //   System.out.println(aaa.size());
+      //   System.out.println(t.red.map.get(5).getIsOccupied());
+      //
+      //   //Block b = t.trackmaps.get(0).sendBlock(1);
+    	//   //System.out.println(b.getBlockID() + ", " + b.getLineColor());
+      //
+      // }
 
 
 
