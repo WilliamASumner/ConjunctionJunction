@@ -7,7 +7,6 @@ import java.io.FileNotFoundException;
 public class TrackMap {
   public ArrayList<Block> map = new ArrayList<Block>();
 
-
   public TrackMap() {
 
   }
@@ -81,7 +80,7 @@ public class TrackMap {
     }
   }
 
-  public Block sendBlock(int blockID) {
+  public Block sendBlock(int blockID) { // maybe rename this?
     return map.get(blockID);
   }
 
@@ -98,7 +97,6 @@ public class TrackMap {
   }
 
 
-
   public void updateBlock(Block block) {
     int bid = Integer.parseInt(block.getBlockID().substring(1,block.getBlockID().length()-1));
   //  Block oldBlock = map.get(bid);
@@ -113,6 +111,4 @@ public class TrackMap {
   //   ArrayList<Block> aaa = t.getBlocksBySection("A");
   //   System.out.println(aaa.size());
   // }
-
-
 }
