@@ -72,13 +72,13 @@ public class MainUI extends Application {
         CTC = new Button("CTC");
         // Register the event handler
         CTC.setOnAction(new CTCButtonHandler());
-        CTC.setDisable(true);
+        //CTC.setDisable(true);
 
         // Create button
         trackController = new Button("Track Controller");
         // Register the event handler
         trackController.setOnAction(new TrackControllerButtonHandler());
-        trackController.setDisable(true);
+        //trackController.setDisable(true);
         // Create button
         trackModel = new Button("Track Model");
         // Register the event handler
@@ -88,11 +88,11 @@ public class MainUI extends Application {
         trainModel = new Button("Train Model");
         // Register the event handler
         trainModel.setOnAction(new TrainModelButtonHandler());
-        trainModel.setDisable(true);
+        //trainModel.setDisable(true);
 
         // Create button
         trainController = new Button("Train Controller");
-        trainController.setDisable(true);
+        //trainController.setDisable(true);
         // Register the event handler
         trainController.setOnAction(
                 new TrainControllerButtonHandler()
