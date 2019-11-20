@@ -42,6 +42,14 @@ public class TkM {
     	  return trackmaps;
       }
 
+      public ArrayList<Block> getRed() {
+        return trackmaps.get(0).map;
+      }
+
+      public ArrayList<Block> getGreen() {
+        return trackmaps.get(1).map;
+      }
+
 
 //      public void showGUI(Stage stage){
 //        tkmg.start(stage);
