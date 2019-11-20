@@ -26,7 +26,7 @@ public class TkM {
       TrackMap green = new TrackMap();
 
       public TkM(String lineColor) {
-        this.buildTrackMaps("redFile.csv", "redFile.csv");
+        this.buildTrackMaps("redFile.csv", "greenFile.csv");
 
         if (lineColor.equals("red")) {
           line = this.red;
@@ -40,9 +40,9 @@ public class TkM {
       }
 
       public TkM() {
-        this.buildTrackMaps("redFile.csv", "redFile.csv");
+        this.buildTrackMaps("redFile.csv", "greenFile.csv");
 
-        System.out.println(this.toString(red, red.map.get(5).getBlockID()));
+      //  System.out.println(this.toString(red, red.map.get(5).getBlockID()));
         //tkmg = new TkMGUI(this);
 
       }
