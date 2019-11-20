@@ -8,12 +8,13 @@ import java.io.*; // IO
 
 public class TrackControllerMain
 {
-    private HashMap<String,TrackController> controllers;
-    private ArrayList<TrackControllerGUI> guis;
-    private TkM tm;
+    private HashMap<String,TrackController> controllers = null;
+    private ArrayList<TrackControllerGUI> guis = null;
+    private TkM tm = null;
+    private CTC ctc = null;
 
     private String[] TkNames = {"Tk0","Tk1","Tk2","Tk3","Tk4","Tk5"};
-    public String currentController = TkNames[0];
+    public String CurrentController = TkNames[0];
 
     // GREEN LINE
     String[] Tk0List = {"A","B","C","D","E","F","G","Z","Y"};
@@ -29,6 +30,15 @@ public class TrackControllerMain
     public TrackControllerMain() {
         controllers = new HashMap<String,TrackController>();
         guis = new ArrayList<TrackControllerGUI>();
+    }
+
+    // Connection to other modules
+    public void addTrackModel(TkM trackModel) {
+        tm = trackModel;
+    }
+
+    public void addCTC(CTC ctcModule) {
+        ctc = ctcModule;
     }
 
     public void showGUI(Stage window) { // just make a new gui
@@ -57,17 +67,21 @@ public class TrackControllerMain
     }
 
 
-    public void SetController(String newController) { // updated by gui, this value is the controller for which the gui will be opened
-        currentController = newController;
+    public void Block(String newController) { // updated by gui, this value is the controller for which the gui will be opened
+        CurrentController = newController;
 
     }
 
     public TrackController GetCurrController() {
-        return controllers.get(currentController);
+        return controllers.get(CurrentController);
     }
 
     public TrackController GetController(String name) {
         return controllers.get(name);
+    }
+
+    public void SetController(String name) {
+        CurrentController = name;
     }
 
     public void createControllers() {
@@ -126,11 +140,11 @@ public class TrackControllerMain
         return true;
     }
 
-    public boolean SetSwitchState(SwitchBlock s, boolean SwitchState) {
+    public boolean SetSwitchState(Block s, boolean SwitchState) {
         return true;
     }
 
-    public boolean SetCrossingState(CrossingBlock c, boolean crossState) {
+    public boolean SetCrossingState(Block c, boolean crossState) {
         return true;
     }
 

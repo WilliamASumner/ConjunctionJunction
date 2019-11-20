@@ -22,6 +22,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.Priority;
 
+import javafx.scene.shape.Circle;
+import javafx.scene.paint.Color;
+
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -42,9 +45,12 @@ import java.util.ArrayList;
 
 public class TrackControllerGUI extends Application {
 
+    private String resourceBaseDir = "file:"+System.getProperty("user.dir") + "/imgs"; // get base dir
+
+
     private TrackControllerMain tkcm;
     private TrackController CurrentController;
-    private String CurrentBlock;
+    private Block CurrentBlock;
     private String Occupancy;
     private String Status;
     private String Line;
@@ -66,9 +72,22 @@ public class TrackControllerGUI extends Application {
     private HBox sStateBox;
     private HBox cStateBox;
     private HBox bStatusBox;
+    private CheckBox OccupancyCheckBox;
 
+    private ImageView switchImageView;
+    private ImageView crossImageView;
 
+    // Images
+    Image CrossingImageGrey = new Image(resourceBaseDir + "/crossing-greyed-out.png");
 
+    Image CrossingImageDown = new Image(resourceBaseDir + "/crossing-on.png");
+    Image CrossingImageUp = new Image(resourceBaseDir + "/crossing-off.png");
+
+    Image SwitchImageGrey = new Image(resourceBaseDir + "/switch-greyed-out.png");
+    Image SwitchImageMain = new Image(resourceBaseDir + "/switch-main.png");
+    Image SwitchImageFork = new Image(resourceBaseDir + "/switch-fork.png");
+
+    // changable labels
     private Label AuthorityVal;
     private Label SpeedVal;
     private Label StatusVal;
@@ -81,7 +100,7 @@ public class TrackControllerGUI extends Application {
     public TrackControllerGUI(TrackControllerMain m, TrackController tkc) {
         tkcm = m;
         CurrentController = tkc;
-        CurrentBlock = tkc.GetControlledBlocks()[0];
+        CurrentBlock = new Block();//tm.getBlock(tkc.GetControlledBlocks()[0]);
         setup();
         update(); // update GUI accordingly
     }
@@ -198,7 +217,7 @@ public class TrackControllerGUI extends Application {
         Label OccupancyLabel = new Label("Occupancy: ");
         OccupancyVal = new Label("Unoccupied");
 
-        CheckBox OccupancyCheckBox = new CheckBox("Override to Occupied");
+        OccupancyCheckBox = new CheckBox("Override to Occupied");
         OccupancyCheckBox.setIndeterminate(false); // only true/false
         OccupancyCheckBox.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -250,34 +269,41 @@ public class TrackControllerGUI extends Application {
         MiddleDivider.setHalignment(HPos.RIGHT);
         MiddleDivider.setOrientation(Orientation.VERTICAL);
 
-        //GridPane.setConstraints(MiddleDividerLow,0,1); // middle left
-        //GridPane.setConstraints(MiddleDividerHigh,0,1); // middle left
-        //GridPane.setConstraints(MiddleDivider,0,1); // middle left
-
         GridPane.setColumnSpan(MiddleDividerHigh,2);
         GridPane.setColumnSpan(MiddleDividerLow,2);
 
-        //root.getChildren().addAll(MiddleDividerHigh,MiddleDividerLow, MiddleDivider); // upper left
 
 
-
-
-        String resourceBaseDir = "file:"+System.getProperty("user.dir") + "/imgs"; // get base dir
-        String imgPath = resourceBaseDir + "/switch-greyed-out.png";
-        Image SwitchImage = new Image(imgPath);
-
-        ImageView switchImageView = new ImageView(SwitchImage);
+        ImageView switchImageView = new ImageView(SwitchImageGrey);
         switchImageView.setFitWidth(160);
         switchImageView.setFitHeight(120);
         //GridPane.setConstraints(switchImageView,0,1); // middle left
+        Circle light1 = new Circle();
+        light1.setCenterX(100.0f);
+        light1.setCenterY(100.0f);
+        light1.setRadius(50.0f);
+        light1.setFill(Color.GREEN);
+
+        Circle light2 = new Circle();
+        light2.setCenterX(100.0f);
+        light2.setCenterY(150.0f);
+        light2.setRadius(50.0f);
+        light2.setFill(Color.RED);
 
 
+        Circle light3 = new Circle();
+        light3.setCenterX(150.0f);
+        light3.setCenterY(100.0f);
+        light3.setRadius(50.0f);
+        light3.setFill(Color.YELLOW);
+
+        VBox vertLights = new VBox(light2,light3);
+
+        HBox LightsAndSwitch = new VBox(light1,switchImageView,light3);
 
         //root.getChildren().addAll(switchImageView); // middle left
 
-        imgPath = resourceBaseDir + "/crossing-greyed-out.png";
-        Image CrossingImage = new Image(imgPath);
-        ImageView crossImageView = new ImageView(CrossingImage);
+        ImageView crossImageView = new ImageView(CrossingImageGrey);
         crossImageView.setFitWidth(160);
         crossImageView.setFitHeight(120);
         //GridPane.setConstraints(crossImageView,1,1);
@@ -402,16 +428,6 @@ public class TrackControllerGUI extends Application {
         GridPane.setConstraints(lowerRight,1,2);
         root.getChildren().addAll(lowerRight); // lower right
 
-        //Hbox
-
-
-
-
-
-
-        //GridPane.setConstraints(,1,2); // lower right
-
-        //
         scene = new Scene(root, 600,500);
 
     }
@@ -438,52 +454,79 @@ public class TrackControllerGUI extends Application {
         primaryStage.show();
     }
 
-    public void setIsOccupied(boolean isOccupied) {
-        /// 
+    public void setManualMode() {
+
+        sStateBox.setDisable(true);
+        cStateBox.setDisable(true);
+        bStatusBox.setDisable(true);
     }
+
+    public void setAutomaticMode() {
+        sStateBox.setDisable(true);
+        cStateBox.setDisable(true);
+        bStatusBox.setDisable(true);
+    }
+
+    public void setIsOccupied(boolean isOccupied) {
+        //CurrentBlock.setIsOccupied(true)
+    }
+
     public void setSpeed(double speed) {
+        //CurrentBlock.setSpeed(speed);
     }
     public void setAuthority(String authority) {
+        //CurrentBlock.setAuthority(authority);
     }
 
-
-    void update() {
-
-        AuthorityVal.setText(currentBlock.getAuditedAuthority());
-        SpeedVal.setText(String.valueOf(currentBlock.getAuditedSpeed()));
-
-        if (currentBlock.getFailures().size() != 0) // if errors
+    public void checkUI(){ //disable/enable elements depending on block
+        /*
+        if (CurrentBlock.getFailures().size() != 0) // if errors
             StatusVal.setText("BROKEN");
         else
             StatusVal.setText("CLEAR");
 
-        if (currentBlock.getIsOccupied()) 
+        if (CurrentBlock.getIsOccupied() && !OverrideOccupied)  {
             OccupancyVal.setText("OCCUPIED");
-        else 
+            OccupancyCheckBox.setDisable(true); // cant change for train
+        }
+        else  {
             OccupancyVal.setText("UNOCCUPIED");
-
-        if (currentBlock.getType() == BlockType.SWITCHBLOCK) {
-
-                sStateBox.setDisable(false); // useful for turning off
-        } else {
-                sStateBox.setDisable(true); // useful for turning off
-            // grey out
+            OccupancyCheckBox.setDisable(false);
         }
 
-        if (currentBlock.getType() == BlockType.CROSSBLOCK) {
+        if (!mode.equals("AUTO") && CurrentBlock.getType() == BlockType.SWITCHBLOCK) {
+                sStateBox.setDisable(false);
+        } else {
+                sStateBox.setDisable(true);
+        }
+
+        if (!mode.equals("AUTO") && CurrentBlock.getType() == BlockType.CROSSBLOCK) {
             cStateBox.setDisable(false);
         } else {
             cStateBox.setDisable(true);
             //grey out
-        }
+        } */
     }
-    public void ChangeSwitchState() {
+
+    public void update() {
+
+        /*AuthorityVal.setText(CurrentBlock.getAuditedAuthority());
+        SpeedVal.setText(String.valueOf(CurrentBlock.getAuditedSpeed()));
+        checkUI();
+        */
+    }
+
+    public void ChangeSwitchState(SwitchState s) {
+        //CurrentBlock.setSwitchState(s);
+    }
+
+    public void ChangeBlockStatus(String failure) {
+        //CurrentBlock.addFailure(failure)
         return;
     }
-    public void ChangeBlockStatus() {
-        return;
-    }
-    public void ChangeCrossingState() {
+
+    public void ChangeCrossingState(CrossingState s) {
+        //CurrentBlock.setCrossingState(s);
         return;
     }
 

@@ -76,11 +76,11 @@ public class TrackController
         return;
     }
 
-    public boolean SetSwitchState(SwitchBlock s, boolean state) {
+    public boolean SetSwitchState(Block s, boolean state) {
         return true;
     }
 
-    public boolean SetCrossingState(CrossingBlock s, boolean state) {
+    public boolean SetCrossingState(Block s, boolean state) {
         return true;
     }
 
@@ -105,6 +105,7 @@ public class TrackController
     }
 
     public void update() {
+
     }
 
     public String toString() {
