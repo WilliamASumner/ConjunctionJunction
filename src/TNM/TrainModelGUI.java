@@ -51,14 +51,15 @@ public class TrainModelGUI extends Application {
 
 
         StackPane root = new StackPane();
-        StackPane mystackpane = new StackPane();
+        //StackPane mystackpane = new StackPane();
         root.getChildren().add(btn);
 
         Label myLabel = new Label(finalstring);
         root.getChildren().add(myLabel);
-        root.getChildren().add(EbrakeFailButton);
+        //mystackpane.getChildren().add(EbrakeFailButton);
 
         primaryStage.setScene(new Scene(root, 300 ,250)); // content container
+        //primaryStage.setScene(new Scene(mystackpane, 300 ,250)); // content container
 
         primaryStage.show();
     }
