@@ -126,40 +126,20 @@ public class TrainController{
         return trainName;
     }
 
-    public void setEngineFailure(){
-        if(engineFailure){
-            engineFailure = false;
-        }
-        else{
-            engineFailure = true;
-        }
+    public void setEngineFailure(boolean state){
+        engineFailure = state;
     }
 
-    public void setCircuitFailure(){
-        if(trackCircuitFailure){
-            trackCircuitFailure = false;
-        }
-        else{
-            trackCircuitFailure = true;
-        }
+    public void setCircuitFailure(boolean state){
+        trackCircuitFailure = state;
     }
 
-    public void setEBrakeFailure(){
-        if(eBrakeFailure){
-            eBrakeFailure = false;
-        }
-        else{
-            eBrakeFailure = true;
-        }
+    public void setEBrakeFailure(boolean state){
+        eBrakeFailure = state;
     }
 
-    public void setSBrakeFailure(){
-        if(serviceBreakFailure){
-            serviceBreakFailure = false;
-        }
-        else{
-            serviceBreakFailure = true;
-        }
+    public void setSBrakeFailure(boolean state){
+        sBrakeFailure = state;
     }
 
     //Driver sets train controller mode to automatic
