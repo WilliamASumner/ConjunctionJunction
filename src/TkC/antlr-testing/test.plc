@@ -1,12 +1,23 @@
-if (B1.occupancy == occupied) then
-    C1.switchstate=FORK;
+if (D13.occupancy == occupied and A1.occupancy == unoccupied) then // checking first switch main condition
+    C12.switchstate=MAIN;
 endif;
 
-if (C1.occupancy == occupied) then
-    C1.switchstate=FORK;
+if (A1.occupancy == occupied) then // checking first switch fork condition
+    C12.switchstate=FORK;
 endif;
 
-if (B32.occupancy == unoccupied) then
-    C2.occupancy=OCCUPIED;
-    C2.authority=A3;
+if (F28.occupancy == occupied) then
+    G29.switchstate=MAIN;
+endif;
+
+if (Z150.occupancy == occupied) then
+    G29.switchstate=FORK;
+endif;
+
+if(M75.occupancy == occupied) then
+    M76.switchstate=MAIN;
+endif;
+
+if(N85.occupancy == occupied) then
+    M76.switchstate=FORK;
 endif;
