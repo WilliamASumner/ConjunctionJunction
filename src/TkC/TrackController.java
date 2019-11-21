@@ -92,23 +92,18 @@ public class TrackController
     }
 
     public void RequestNewTrain(String name, double speed, String authority) {
-        ArrayList<Block> line = null;
         Block startBlock = null;
         if (line.equals("GREEN")) {
-            line = tm.getGreen();
-            startBlock = line.get(Block.blockIDToNum("J62"));
+            startBlock = lineBlocks.get(Block.blockIDToNum("J62"));
         }
         else {
-            line = tm.getRed();
-            startBlock = line.get(Block.blockIDToNum("C9"));
+            startBlock = lineBlocks.get(Block.blockIDToNum("C9"));
         }
         startBlock.setIsOccupied(true);
-        startBlock.setSpeed(speed);
-        startBlock.setAuthority(authority);
+        startBlock.setAuditedSpeed(speed);
+        startBlock.setAuditedAuthority(authority);
 
         tm.createTrain(name,authority,speed);
-
-        return true;
     }
 
     public boolean SendSuggestedSpeed(String blockID, double speed) {
