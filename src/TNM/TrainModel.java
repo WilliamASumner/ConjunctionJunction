@@ -74,20 +74,20 @@ public class TrainModel {
 		
 		currBlock = startBlock;
 		currBlock.isOccupied = true;
-		grade = currBlock.grade;
-		currBlockLength = currBlock.length;
+		grade = currBlock.getGrade();
+		currBlockLength = currBlock.getLength();
 		
         name = Stringname;
         AuthorityBlockID = ABlock;
         AuditedSpeed = ASpeed;
-        
+
         initTrainModelGUI();
     }
 	
 	private Block nextBlockFunc()
 	{
 		currBlock.isOccupied = false;
-		currBlock = currBlock.next;
+		currBlock = currBlock.getNextBlock();
 		currBlock.isOccupied = true;
 		grade = currBlock.grade;
 		currBlockLength = currBlock.length;
