@@ -3,9 +3,11 @@ import javafx.stage.Stage;
 public class TrainModel {
 
     String name = "test name";
+	
     String AuthorityBlockID = "test Block";
     double AuditedSpeed = 3.14;
 	Block AuditedAuthority;
+	
     TrainControllerMain TNC = null;
     TrainController singleTNC = null;
     TrainModelGUI myGUI;
@@ -173,7 +175,7 @@ public class TrainModel {
     public void update()
     {
         
-		AuthorityBlockID = currBlock.getAuditedAuthority();
+		AuditedAuthority = currBlock.getAuditedAuthority();
 		AuditedSpeed = currBlock.getAuditedSpeed();
 		if (Sbrake ==false && Ebrake==false)
         {
@@ -191,7 +193,7 @@ public class TrainModel {
         {
             distanceTraveled = distanceTraveled - currBlockLength;
             nextBlockFunc();
-			AuthorityBlockID = currBlock.getAuditedAuthority();
+			AuditedAuthority = currBlock.getAuditedAuthority();
 			AuditedSpeed = currBlock.getAuditedSpeed();
         }
         return;
