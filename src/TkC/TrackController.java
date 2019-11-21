@@ -1,38 +1,75 @@
 import javafx.stage.Stage;
+import java.util.ArrayList;
 
 public class TrackController
 {
     String PLCProgram;
-    Block[] ControlledBlocks;
+    String line;
+    ArrayList<Block> lineBlocks;
+    String name;
+    ArrayList<Block> controlledBlocks;
+
     TkM tm = null;
+    TrackControllerMain tkcm;
 
-    TrackControllerGUI tkcg;
-
-    public TrackController() {
+    public TrackController(String l, String n, ArrayList<Block> blocks,
+            TkM tkmodel,TrackControllerMain m) {
         PLCProgram = "";
-        ControlledBlocks = null;
-        initGUI();
+        line = l;
+        name = n;
+        controlledBlocks = blocks;
+        tm = tkmodel;
+        tkcm = m;
+        if (line.equals("GREEN")) {
+            lineBlocks = tm.getGreen();
+        }
+        else {
+            lineBlocks = tm.getRed();
+        }
     }
 
-    public TrackController(String plc, Block[] blocks, TkM tkm) {
+    public boolean ControlsBlock(String blockID) {
+        for (Block b: controlledBlocks) {
+            if (b.toString().equals(blockID))
+                return true;
+        }
+        return false;
+    }
+
+    public String[] GetControlledBlocks() {
+        String[] blks = new String[controlledBlocks.size()];
+        for (int i = 0; i < controlledBlocks.size(); i++) {
+            blks[i] = controlledBlocks.get(i).toString();
+        }
+        return blks;
+    }
+
+    public String GetLine() {
+        return line;
+    }
+
+    public String GetName() {
+        return name;
+    }
+
+
+    public void SetPLC(String plc) {
         PLCProgram = plc;
-        ControlledBlocks = blocks;
-        tm = tkm;
-        initGUI();
-
+        // open plc and parse
+        RunPLC();
     }
 
-    public void initGUI() {
-        tkcg = new TrackControllerGUI();
-    }
+    //public void InitGUI() {
+        //tkcg = new TrackControllerGUI();
+    //}
 
-    public void showGUI(Stage newStage) {
-        tkcg.start(newStage);
-    }
+    //public void ShowGUI(Stage newStage) {
+        //tkcg.start(newStage);
+    //}
 
-    public void updateGUI(String BlockAuthority, double speed) {
-        tkcg.update(BlockAuthority,speed);
-    }
+    //public void UpdateGUI(String BlockAuthority, double speed) {
+        //tkcg.update(BlockAuthority,speed);
+    //}
 
     public boolean VerifySafeConditions() {
         return true;
@@ -46,46 +83,52 @@ public class TrackController
         return;
     }
 
-    public boolean SetSwitchState(SwitchBlock s, boolean state) {
+    public boolean SetSwitchState(Block s, boolean state) {
         return true;
     }
 
-    public boolean SetCrossingState(CrossingBlock s, boolean state) {
+    public boolean SetCrossingState(Block s, boolean state) {
         return true;
     }
 
-    public boolean SetBeaconData(StationBlock s, String data) {
-        return true;
-    }
+    public void RequestNewTrain(String name, double speed, String authority) {
+        ArrayList<Block> line = null;
+        Block startBlock = null;
+        if (line.equals("GREEN")) {
+            line = tm.getGreen();
+            startBlock = line.get(Block.blockIDToNum("J62"));
+        }
+        else {
+            line = tm.getRed();
+            startBlock = line.get(Block.blockIDToNum("C9"));
+        }
+        startBlock.setIsOccupied(true);
+        startBlock.setSpeed(speed);
+        startBlock.setAuthority(authority);
 
-    public double AuditSpeed(double suggestedSpeed) {
-        return 0.0;
-    }
-
-    public double AuditAuthority(int suggestedAuthority) {
-        return 0.0;
-    }
-
-    public boolean dispatchTrainData(double speed, String authority) {
-        tm.setIsOccupied(true);
-        tm.setSpeed(speed);
-        tm.setAuthority(authority);
-
-        tkcg.setIsOccupied(true);
-        tkcg.setSpeed(speed);
-        tkcg.setAuthority(authority);
-
-        updateGUI(authority,speed);
+        tm.createTrain(name,authority,speed);
 
         return true;
     }
 
-    public boolean SendSuggestedSpeed(int blockID, double speed) {
+    public boolean SendSuggestedSpeed(String blockID, double speed) {
         return true;
     }
 
-    public boolean SendSuggestedAuthority(int blockID, int blockIDAuthority) {
+    public boolean SendSuggestedAuthority(String blockID, String blockIDAuthority) {
         return true;
+    }
+
+    public double getSpeedLimit(String blockID) {
+        return line.get(Block.blockIDToNum(blockID)).getSpeedLimit();
+    }
+
+    public void update() {
+
+    }
+
+    public String toString() {
+        return name;
     }
 
 }

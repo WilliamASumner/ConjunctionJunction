@@ -17,6 +17,8 @@ public class CTC{
         dispatchedTrains = new TrainModel[1];
         trckCntrl = tkcm;
     }
+    public CTC() { // for testing
+    }
     
 	public void repairBlock(String block){
 		

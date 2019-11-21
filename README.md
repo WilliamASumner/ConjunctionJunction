@@ -3,6 +3,7 @@ Train Simulator for Team Conjunction Junction
 
 ## To run test javafx app
 * Make sure you have [OpenJDK-13](https://jdk.java.net/13)
+
 ### On Unix or Windows running Cyginwin
 * run `make runtest` to see if the sample application will work on your computer
 * run `make clean` to cleanup the working directory
