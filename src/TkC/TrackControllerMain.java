@@ -197,7 +197,7 @@ public class TrackControllerMain
     public void requestNewTrain(String name, double speed, String authority, Block startBlock) {
         startBlock.setIsOccupied(true);
         startBlock.setAuditedSpeed(speed);
-        startBlock.setAuditedAuthority(tm.getBlock(authority,"green"));
+        startBlock.setAuditedAuthority(tm.getBlock(authority,startBlock.getLineColor()));
         tm.createTrain(name,authority,startBlock,speed,tm.tnC);
     }
 
