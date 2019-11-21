@@ -1,6 +1,5 @@
 import java.io.*; // IO
 import java.util.*; // Scanner and BufferedReader Class
-import org.antlr.v4.runtime.*; // antlr4
 
 public class plcParseModule
 {
