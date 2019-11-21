@@ -150,7 +150,7 @@ public class TrainModel {
 
         initTrainModelGUI();
     }
-    
+	
     private void nextBlockFunc() // 
     {
         currBlock.isOccupied = false;
@@ -161,7 +161,69 @@ public class TrainModel {
         grade = currBlock.getGrade();
         currBlockLength = currBlock.getLength();
         trackModel.updateOccupancy(currBlock);
+		return;
     }
+	
+	private double CalcAcceleration()
+	{
+		if (velocity == 0)
+		{
+			velocity = altvelocity;
+		}
+		if (engineFail)
+		{
+			powerCommand = 0;
+		}
+		else
+		{
+			powerCommand = singleTNC.calculatePower();
+		}
+		double retval = 1000 * powerCommand / (estimatedmass * velocity);
+		double frictionforce = 0.5 * velocity * velocity
+		retval = retval - (frictionforce);
+		return retval;
+	}
+	
+	public void update()
+	{
+		if (Sbrake ==false && Ebrake==false)
+		{
+			acceleration = CalcAcceleration();
+		}
+		System.out.println("Acceleration of Train "+name+": "+acceleration);
+		
+		velocity = velocity + acceleration * timePerUpdate;
+		if ((Sbrake || Ebrake) && velocity <=0) velocity =0;
+		
+		distanceTraveled = distanceTraveled + velocity * timePerUpdate;
+		
+		if (distanceTraveled > currBlockLength)
+		{
+			distanceTraveled = distanceTraveled - currBlockLength;
+			nextBlockFunc();
+		}
+		return;
+	}
+	
+	public void setDoorStatus(boolean[] input)
+	{
+		Doors = input;
+	}
+	
+	public void toggleLights()
+	{
+		if (lights)
+			lights = false;
+		else
+			lights = true;
+		return;
+	}
+	
+	public void setTemperature(double inputTemp)
+	{
+		temperature = inputTemp;
+	}
+
     
     public void toggleEBrake()
     {
@@ -198,60 +260,11 @@ public class TrainModel {
         }
         return;// false;
     }
-        
-    private double CalcAcceleration()
-    {
-        if (velocity == 0)
-        {
-            velocity = altvelocity;
-        }
-        if (engineFail)
-        {
-            powerCommand = 0;
-        }
-        else
-        {
-            powerCommand = singleTNC.calculatePower();
-        }
-        double retval = 1000 * powerCommand / (estimatedmass * velocity);
-        return retval;
-    }
     
-    public void update()
-    {
-        if (Sbrake ==false && Ebrake==false)
-        {
-            acceleration = CalcAcceleration();
-        }
-        velocity = velocity + acceleration * timePerUpdate;
-        distanceTraveled = distanceTraveled + velocity * timePerUpdate;
-        
-        if (distanceTraveled > currBlockLength)
-        {
-            distanceTraveled = distanceTraveled - currBlockLength;
-            nextBlockFunc();
-        }
-        return;
-    }
+   
     
-    public void setDoorStatus(boolean[] input)
-    {
-        Doors = input;
-    }
     
-    public void toggleLights()
-    {
-        if (lights)
-            lights = false;
-        else
-            lights = true;
-        return;
-    }
-    
-    public void setTemperature(double inputTemp)
-    {
-        temperature = inputTemp;
-    }
+>>>>>>> 56faffd2de71ec7a99bb92155325311f25ccc3fd
 
     public void showGUI(Stage newStage) {
         myGUI.start(newStage);
