@@ -219,7 +219,7 @@ public class TrainControllerGUI extends Application implements EventHandler<Acti
             }
             else if(event.getSource()==sBrake){
                 boolean currentState;
-                currentState = tnc.toggleSBrake();
+                currentState = tnc.toggleServiceBrake();
                 if(currentState){
                     eBrake.setText("S Brake: Currently ON");
                 }

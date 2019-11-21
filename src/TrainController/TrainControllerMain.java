@@ -25,7 +25,8 @@ public class TrainControllerMain{
     //function for each train controller object
     public void update(){
         for(int i = 0; i < tncArray.length; i++){
-            tncArray[i].update();
+            if (tncArray[i] != null)
+                tncArray[i].update();
         }
     }
 

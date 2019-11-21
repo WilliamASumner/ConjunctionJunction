@@ -33,12 +33,14 @@ public class TrackControllerMain
     }
 
     // Connection to other modules
-    public void addTrackModel(TkM trackModel) {
+    public void setTrackModel(TkM trackModel) {
         tm = trackModel;
     }
 
-    public void addCTC(CTC ctcModule) {
+    public void setCTC(CTC ctcModule) {
         ctc = ctcModule;
+        System.out.println("CTC after set: " + ctc);
+        System.out.println("this module ctc: " + this);
     }
 
     public void showGUI(Stage window) { // just make a new gui
@@ -128,23 +130,23 @@ public class TrackControllerMain
     }
 
     public boolean SendSuggestedSpeed(String blockID,double speed) {
+        TrackController t = FindController(BlockID);
+        // add stuff
         return true;
     }
 
     public boolean SendSuggestedAuthority(String blockID, String authorityID) {
+        TrackController t = FindController(BlockID);
         return true;
     }
 
-    public boolean NotifyNewOccupancy(String blockID, String trainName) {
-        //CTC.notifynewoccupancy TODO fix this
+    public boolean SetSwitchState(String BlockID, boolean SwitchState) {
+        TrackController t = FindController(BlockID);
         return true;
     }
 
-    public boolean SetSwitchState(Block s, boolean SwitchState) {
-        return true;
-    }
-
-    public boolean SetCrossingState(Block c, boolean crossState) {
+    public boolean SetCrossingState(String BlockID, boolean crossState) {
+        TrackController t = FindController(BlockID);
         return true;
     }
 
@@ -184,8 +186,21 @@ public class TrackControllerMain
         return true;
     }
 
-    public void requestNewTrain(String name, double speed, String authority, Block startBlock) {
+    public void updateOccupancy(Block blockID) {
+        System.out.println("this module occupancy: " + this);
+        System.out.println("BlockID" + blockID.getBlockID());
+        ctc.updateOccupancy(blockID.getBlockID());
+    }
 
+    /*public void requestNewTrain(String name, double speed, String authority, Block startBlock) {
+
+
+    }*/
+    public void requestNewTrain(String name, double speed, String authority, Block startBlock) {
+        startBlock.setIsOccupied(true);
+        startBlock.setAuditedSpeed(speed);
+        startBlock.setAuditedAuthority(tm.getBlock(authority,"green"));
+        tm.createTrain(name,authority,startBlock,speed,tm.tnC);
     }
 
 }

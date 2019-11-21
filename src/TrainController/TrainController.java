@@ -130,7 +130,7 @@ public class TrainController{
         engineFailure = state;
     }
 
-    public void setCircuitFailure(boolean state){
+    public void setSignalFailure(boolean state){
         trackCircuitFailure = state;
     }
 
@@ -195,7 +195,7 @@ public class TrainController{
     }
 
     //Toggle the service brake, called from TrainControllerGUI
-    public boolean toggleSBrake(){
+    public boolean toggleServiceBrake(){
         boolean currentState;
         if(sBrakeOn){
             eBrakeOn = false;
@@ -231,10 +231,11 @@ public class TrainController{
     }
     //@returns dobule calculatePower - power command to Train Model in kiloWatts 
     //Calculates power command based on current and desired speed
-    private double calculatePower(){
+    public double calculatePower(){
         double powerOut;   //power command output, in kiloWatts
         //Power.calcPowerCommand(this);
         powerOut = Power.calcPowerCommand(this);
+        powerOut = 0.01; // TODO FIXME
         return powerOut;
     }
 

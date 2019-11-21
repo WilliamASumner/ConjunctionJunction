@@ -51,7 +51,7 @@ public class TrainControllerMainGUI extends Application implements EventHandler<
     PowerGUI powerGUI;
     TrainControllerGUI[] tncGUIArray = new TrainControllerGUI[20];
     TrainController[] tncArray;
-
+    FlowPane  flowpane;
     Button powerConfigButton;
     Button tncButton;
 
@@ -72,21 +72,21 @@ public class TrainControllerMainGUI extends Application implements EventHandler<
         authority = TrainController.getAuthority();
         name = TrainController.getName();
         */
+        initGUI();
       }
 
       //Called from TrainControllerMain every time a train is created
       public void updateList(){
         tncArray = tncMain.getTrains();
         for(int i = 0; i < tncArray.length; i++){
-            trainMenu.getItems().addAll(tncArray[i].getName());
+            if (tncArray[i] != null)
+                trainMenu.getItems().addAll(tncArray[i].getName());
         }
       }
-      
-    @Override
-       public void start(Stage primaryStage) {
-           primaryStage.setTitle("Train Controller Module");  
 
-           FlowPane flowpane = new FlowPane();
+      private void initGUI() {
+
+           flowpane = new FlowPane();
            flowpane.setHgap(25); 
 
            powerConfigButton = new Button("Power Configuration");
@@ -130,6 +130,12 @@ public class TrainControllerMainGUI extends Application implements EventHandler<
            flowpane.setMargin(powerConfigButton, new Insets(20, 100, 20, 20)); 
            flowpane.setMargin(tncButton, new Insets(20, 20, 20, 20)); 
 
+
+      }
+      
+    @Override
+       public void start(Stage primaryStage) {
+           primaryStage.setTitle("Train Controller Module");  
            Scene scene = new Scene(flowpane, 300, 125);
            primaryStage.setScene(scene);
            primaryStage.show();

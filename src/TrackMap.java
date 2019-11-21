@@ -12,7 +12,7 @@ public class TrackMap {
 
   }
 
-  public ArrayList<Block> parseFile(String filename) {
+  public ArrayList<Block> parseFile(String filename)  {
     map.add(0, new Block());
     System.out.println(filename + ", " + filename.substring(filename.length()-3,filename.length()));
     if (!(filename.substring(filename.length()-3,filename.length()).equals("csv"))) {
@@ -30,7 +30,9 @@ public class TrackMap {
       //System.out.println(csv);
     }
     catch (FileNotFoundException e){
-      return map;
+        System.out.println("FILENOT FOUND");
+        System.out.println(e);
+        System.exit(1);
     }
 
     String[] csvrows = csv.split("\n");
@@ -86,17 +88,17 @@ public class TrackMap {
     // System.out.println(map.get(3).getBlockID());
     System.out.println(map.get(1).getLineColor().equals("Red"));
     if (map.get(1).getLineColor().equals("Red")) {
-      this.orderTrack("redOrder.csv");
+      this.orderTrack("rsrc/redOrder.csv");
     }
     else if (map.get(1).getLineColor().equals("Green")) {
-      this.orderTrack("greenOrder.csv");
+      this.orderTrack("rsrc/greenOrder.csv");
     }
 
     return map;
 
   }
 
-  public void orderTrack(String filename) {
+  public void orderTrack(String filename) { 
     if (!(filename.substring(filename.length()-3,filename.length()).equals("csv"))) {
       return;
     }
@@ -110,7 +112,9 @@ public class TrackMap {
       }
     }
     catch (FileNotFoundException e){
-      return;
+        System.out.println("FILE NOT FOUND");
+        System.out.println(e);
+        System.exit(1);
     }
     String[] csvrows = csv.split("\n");
     for (int i = 0; i < csvrows.length-1; i++) {
@@ -184,7 +188,7 @@ public class TrackMap {
   }
 
 
-  public static void main(String[] args) {
+  /*public static void main(String[] args) {
     TrackMap t = new TrackMap();
 
     t.parseFile("redFile.csv");
@@ -193,7 +197,7 @@ public class TrackMap {
    Block b = t.map.get(10);
    Block next = b.getNextBlock();
     System.out.println(next.getBlockID());
-  }
+  }*/
 
 
 }

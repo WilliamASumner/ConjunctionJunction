@@ -8,37 +8,37 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 public class TrainModelGUI extends Application {
-    
-	String myName = "wowee";
-	String myAuthority = "A1";//Audited Authority Block
-	double mydubSpeed = 0.0;
-	TrainModel tnm;
-	
-	Button EbrakeFailButton = new Button("EBrake Fail");
-	
-	public TrainModelGUI(TrainModel TNM)// String inName, String inBlock, double inSpeed)
-	{
-		/*
-		myName = inName;
-		myAuthority = inBlock;
-		mydubSpeed = inSpeed;
-		*/
-		tnm = TNM;
-		myName = TNM.name;
-		myAuthority = TNM.AuthorityBlockID;
-		mydubSpeed = TNM.AuditedSpeed;
-	}
+
+    String myName = "wowee";
+    String myAuthority = "A1";//Audited Authority Block
+    double mydubSpeed = 0.0;
+    TrainModel tnm;
+
+    Button EbrakeFailButton = new Button("EBrake Fail");
+
+    public TrainModelGUI(TrainModel TNM)// String inName, String inBlock, double inSpeed)
+    {
+        /*
+           myName = inName;
+           myAuthority = inBlock;
+           mydubSpeed = inSpeed;
+           */
+        tnm = TNM;
+        myName = TNM.name;
+        myAuthority = TNM.AuthorityBlockID;
+        mydubSpeed = TNM.AuditedSpeed;
+    }
 
     @Override // not sure what this does?
     public void start(Stage primaryStage) { // entry point for all apps
-         primaryStage.setTitle("Train Model GUI"); // container for all of it
-        
-		
-		 int num = 0;
-		
-		 String finalstring = "Train Name: " + myName + "\nAudited Authority: " + myAuthority + "\nAudited Speed: " + mydubSpeed;
-		
-		 Button btn = new Button();
+        primaryStage.setTitle("Train Model GUI"); // container for all of it
+
+
+        int num = 0;
+
+        String finalstring = "Train Name: " + myName + "\nAudited Authority: " + myAuthority + "\nAudited Speed: " + mydubSpeed;
+
+        Button btn = new Button();
         btn.setText("Say 'NUMBER'");
         btn.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -47,29 +47,29 @@ public class TrainModelGUI extends Application {
                 System.out.println(num);
             }
         });
-		
-		
+
+
 
         StackPane root = new StackPane();
-		StackPane mystackpane = new StackPane();
+        StackPane mystackpane = new StackPane();
         root.getChildren().add(btn);
-		
-		Label myLabel = new Label(finalstring);
+
+        Label myLabel = new Label(finalstring);
         root.getChildren().add(myLabel);
-		root.getChildren().add(EbrakeFailButton);
-		
-         primaryStage.setScene(new Scene(root, 300 ,250)); // content container
-		
-         primaryStage.show();
+        root.getChildren().add(EbrakeFailButton);
+
+        primaryStage.setScene(new Scene(root, 300 ,250)); // content container
+
+        primaryStage.show();
     }
-	
-	//Action Listeners
-	public void handle(ActionEvent event)
-	{
-		if(event.getSource()==EbrakeFailButton)
-		{
-			tnm.toggleEbrakeFail();
-		}
-	}
+
+    //Action Listeners
+    public void handle(ActionEvent event)
+    {
+        if(event.getSource()==EbrakeFailButton)
+        {
+            tnm.toggleEBrakeFail();
+        }
+    }
 }
 
