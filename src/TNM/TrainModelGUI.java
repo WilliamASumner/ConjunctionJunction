@@ -12,6 +12,9 @@ public class TrainModelGUI extends Application {
     String myName = "wowee";
     String myAuthority = "A1";//Audited Authority Block
     double mydubSpeed = 0.0;
+	
+	
+    boolean[] Doors = new boolean[8];
     TrainModel tnm;
 
     Button EbrakeFailButton = new Button("EBrake Fail");
@@ -36,7 +39,9 @@ public class TrainModelGUI extends Application {
 
         int num = 0;
 
-        String finalstring = "Train Name: " + myName + "\nAudited Authority: " + myAuthority + "\nAudited Speed: " + mydubSpeed;
+        String finalstring = "Train Name: " + myName + "\nAudited Authority: " + myAuthority + "\nAudited Speed: " + mydubSpeed
+		+ "\nDoor 0: " + Doors[0]+ "\nDoor 1: " + Doors[0]+ "\nDoor 2: " + Doors[0]+ "\nDoor 3: " + Doors[0]
+		+ "\nDoor 4: " + Doors[0]+ "\nDoor 5: " + Doors[0]+ "\nDoor 6: " + Doors[0]+ "\nDoor 7: " + Doors[0];
 
         Button btn = new Button();
         btn.setText("Say 'NUMBER'");

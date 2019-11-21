@@ -215,6 +215,7 @@ public class TrainModel {
     public void setDoorStatus(boolean[] input)
     {
         Doors = input;
+		myGUI.Doors = input;
     }
 
     public void toggleLights()
