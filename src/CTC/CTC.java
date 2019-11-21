@@ -35,7 +35,17 @@ public class CTC{
         stationToBlockGreen.put("OVERBROOK2","W123");
         stationToBlockGreen.put("INGLEWOOD2","W132");
         stationToBlockGreen.put("CENTRAL2","W141");
-    }
+		stationToBlockGreen.put("yard","a0");
+		
+		stationToBlockRed.put("SHADYSIDE", "C7");
+		stationToBlockRed.put("HERRON AVE", "F16");
+		stationToBlockRed.put("SWISSVILLE", "G21");
+		stationToBlockRed.put("PENN STATION", "H25");
+		stationToBlockRed.put("STEEL PLAZA", "H35");
+		stationToBlockRed.put("FIRST AVE", "H45");
+		stationToBlockRed.put("STATION SQUARE", "I48");
+		stationToBlockRed.put("SOUTH HILLS JUNCTION", "L60");
+	}
 
     
     ArrayList<CTCTrain> dT = new ArrayList<CTCTrain>(5);
@@ -50,11 +60,25 @@ public class CTC{
     public void update() {
         // Update train locations
         if(dT != null && dT.size() != 0){
+			//check if cur block of a train is yard...if so remove
+			for(int i = 0; i < dT.size(); i++)
+				if(dT.get(i).getCurBlkID().equals("a0"))
+					dT.remove(i);
+			// Remove the table items	
             gui.table.getItems().removeAll(gui.table.getItems());
-            for(int i = 0; i < dT.size(); i++)
+			// Add the table items
+            for(int i = 0; i < dT.size(); i++){
+				// update dispatched trains viewer
                 gui.table.getItems().add(dT.get(i));
+				// check if dispatched trains cur authority == cur block
+				CTCTrain tempT = dT.get(i);
+				if(tempT.getCurBlkID().equals(tempT.getAuthority())){
+					tempT.setAuthority(tempT.getNextscheduleStop());
+					// Send authority to track controller
+					trckCntrl.sendSuggestedAuthority(tempT.getCurBlkID(), tempT.getAuthority());
+				}
+			}
         }
-        //gui.XXX
     }
 
     public void showGUI(Stage primaryStage) {
@@ -131,9 +155,6 @@ public class CTC{
      */       
     public void dispatchQueuedTrain(CTCTrain tempT){
         dT.add(tempT);
-        System.out.println("TRACK CONTROL IS" + trckCntrl);
-        System.out.println("TEMPT CONTROL IS" + tempT);
-        
         trckCntrl.requestNewTrain(tempT.getName(), tempT.getSpeed(), tempT.getAuthority(), tempT.getCurrentBlock());
     }
 /*    
