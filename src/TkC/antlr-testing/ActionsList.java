@@ -40,7 +40,7 @@ public class ActionsList {
         public String getAction() {
             return action;
         }
-    
+
         public String getAttrib() {
             return attrib;
         }
@@ -51,8 +51,8 @@ public class ActionsList {
 
         public boolean equals(Action other) {
             return other.getAction().equals(action) &&
-                   other.getAttrib().equals(attrib) &&
-                   other.getValue().equals(value);
+                other.getAttrib().equals(attrib) &&
+                other.getValue().equals(value);
         }
 
         public void perform() {
@@ -65,42 +65,43 @@ public class ActionsList {
                         b.setIsOccupied(false);
                 } else if (attrib.toLowerCase().equals("authority")) {
                     // TODO TO CHECK VALID
-                    b.setAuditedAuthority(tkc.getBlockID(value);
+                    b.setAuditedAuthority(tkc.getBlock(value));
                 } else if (attrib.toLowerCase().equals("switchstate")) {
-                    if (value.toLowerCase().equals("fork") {
-                        b.setSwitchState(SwitchState.FORK);
+                    if (value.toLowerCase().equals("fork")) {
+                        b.setSwitchState(SwitchState.FORK);;
                     } else {
                         b.setSwitchState(SwitchState.MAIN);
                     }
                 } else if (attrib.toLowerCase().equals("crossingstate")) {
-                    if (value.toLowerCase().equals("up") {
-                        b.setSwitchState(SwitchState.UP);
+                    if (value.toLowerCase().equals("up")) {
+                        b.setCrossingState(CrossingState.UP);
                     } else {
-                        b.setSwitchState(SwitchState.DOWN);
+                        b.setCrossingState(CrossingState.DOWN);
                     }
                 }
             }
 
             else if (action.toLowerCase().equals("if")) {
                 if (attrib.toLowerCase().equals("occupancy"))  {
-                    if (value.toLowerCase().equals("occupied") {
+                    if (value.toLowerCase().equals("occupied")) {
                         accumulator = b.getIsOccupied();
                     } else{ 
-                        accumulator = not(b.getIsOccupied());
+                        accumulator = !(b.getIsOccupied());
                     }
-                } else if (attrib.toLowerCase().equals("switchstate") {
+                } else if (attrib.toLowerCase().equals("switchstate")) {
                     if (value.toLowerCase().equals("fork")) {
-                        accumulator = b.getSwitchState.toString().equals("FORK");
+                        accumulator = b.getSwitchState().toString().equals("FORK");
                     } else {
-                        accumulator = b.getSwitchState.toString().equals("MAIN");
+                        accumulator = b.getSwitchState().toString().equals("MAIN");
                     }
                 }
+            }
         }
-    }
 
-    public void execute() {
-        for (Action a : actions) {
-            a.perform();
+        public void execute() {
+            for (Action a : actions) {
+                a.perform();
+            }
         }
     }
 }
