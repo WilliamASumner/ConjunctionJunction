@@ -49,11 +49,13 @@ public class TrainControllerMainGUI extends Application implements EventHandler<
 
     TrainControllerMain tncMain;
     PowerGUI powerGUI;
+    TrainController tnc;
     TrainControllerGUI[] tncGUIArray = new TrainControllerGUI[20];
     TrainController[] tncArray;
     FlowPane  flowpane;
     Button powerConfigButton;
     Button tncButton;
+    Power power;
 
     ComboBox trainMenu;
 
@@ -77,10 +79,14 @@ public class TrainControllerMainGUI extends Application implements EventHandler<
 
       //Called from TrainControllerMain every time a train is created
       public void updateList(){
+        trainMenu.getItems().removeAll(trainMenu.getItems());
+        TrainController[] tncTempArray;
         tncArray = tncMain.getTrains();
         for(int i = 0; i < tncArray.length; i++){
-            if (tncArray[i] != null)
-                trainMenu.getItems().addAll(tncArray[i].getName());
+            if (tncArray[i] != null){    
+              trainMenu.getItems().addAll(tncArray[i].getName());
+            }
+                
         }
       }
 
@@ -136,20 +142,48 @@ public class TrainControllerMainGUI extends Application implements EventHandler<
     @Override
        public void start(Stage primaryStage) {
            primaryStage.setTitle("Train Controller Module");  
+           powerConfigButton.setOnAction(new powerConfigHandler());
+           tncButton.setOnAction(new tncHandler());
            Scene scene = new Scene(flowpane, 300, 125);
            primaryStage.setScene(scene);
            primaryStage.show();
        }
 
+
+       class powerConfigHandler implements EventHandler<ActionEvent>{
+        @Override
+        public void handle(ActionEvent event){
+          Stage newWindow = new Stage();
+          tncMain.initPower().showGUI(newWindow);
+        }
+      }
+
+      class tncHandler implements EventHandler<ActionEvent>{
+      @Override
+      public void handle(ActionEvent event){
+        Stage newWindow = new Stage();
+        for(int i = 0; i < tncArray.length; i++){
+          if(trainMenu.getValue().equals(tncArray[i].getName())){
+            System.out.println("OBJECT = " + tncArray[i]);
+              tncArray[i].showGUI(newWindow);
+          }
+        }
+      }
+    }
+
+
        public void handle(ActionEvent event){
-        Stage primaryStage = new Stage();
+       Stage primaryStage = new Stage();
 
         //if train controller button is pressed, find the specific
         //train controller object and then open its GUI
         if(event.getSource() == tncButton){
+          //System.out.println("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
           for(int i = 0; i < tncArray.length; i++){
             if(trainMenu.getValue().equals(tncArray[i].getName())){
-                tncMain.showGUI(primaryStage, tncArray[i]);
+                //tncMain.showGUI(primaryStage, tncArray[i]);
+               // System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXX");
+                tncArray[i].showGUI(primaryStage);
             }
           }
         }

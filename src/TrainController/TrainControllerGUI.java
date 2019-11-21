@@ -1,3 +1,20 @@
+import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage; 
+import javafx.application.Application; 
+
+import javafx.stage.Stage; 
+
+import javafx.geometry.*; 
+
+import javafx.scene.*; 
+import java.io.*; 
+import javafx.scene.image.*; 
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
@@ -26,23 +43,7 @@ import javafx.scene.paint.*;
 import javafx.scene.*; 
 import java.io.*; 
 import javafx.scene.image.*; 
-import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.layout.StackPane;
-import javafx.stage.Stage; 
-import javafx.application.Application; 
 
-import javafx.stage.Stage; 
-
-import javafx.geometry.*; 
-
-import javafx.scene.*; 
-import java.io.*; 
-import javafx.scene.image.*; 
 
 public class TrainControllerGUI extends Application implements EventHandler<ActionEvent> {
     double speed;
@@ -95,6 +96,7 @@ public class TrainControllerGUI extends Application implements EventHandler<Acti
       tnc = tc;
 	  
     }
+    
 
     @Override
        public void start(Stage primaryStage) {
@@ -102,13 +104,11 @@ public class TrainControllerGUI extends Application implements EventHandler<Acti
         //speed = tnc.getAuditedSpeed();
         //authority = tnc.getAuthority();
         //name = tnc.getName();
+        autoRadioButton = new RadioButton("Automatic");
+        setTempButton = new Button("Set Temp");
+        
 
-        setSpeedButton.setOnAction(this);
-        eBrake.setOnAction(this);
-        sBrake.setOnAction(this);
-        lights.setOnAction(this);
-
-        primaryStage.setTitle(name + " - Train Controller UI");
+        //primaryStage.setTitle(name + " - Train Controller UI");
 
         eBrake.setStyle("-fx-text-fill: red");
         eBrake.setMinWidth(400);
@@ -117,20 +117,21 @@ public class TrainControllerGUI extends Application implements EventHandler<Acti
         eBrake.setMaxWidth(100);
            
 
-        Label output = new Label("Train Name: " + name + "\nAudited Authority: " + authority + "\nAudited Speed Limit: " + speed); 
+        //Label output = new Label("Train Name: " + name + "\nAudited Authority: " + authority + "\nAudited Speed Limit: " + speed); 
           
         Label modeSelectLabel = new Label("Select a Mode: "); 
         Label doorLabel = new Label("Door Status Control: "); 
 
         Label failureList = new Label("Track Circuit Failure: NOT Detected\nEmergency Brake Failure: NOT Detected\nService Brake Failure: NOT Detected\nEngine Failure: NOT Detected");
         Label failureTitle = new Label("Track Failure Status: ");
-        autoRadioButton = new RadioButton("Automatic");
+        
         autoRadioButton.setSelected(true);
         manualRadioButton = new RadioButton("Manual");
    
         ToggleGroup radioGroup = new ToggleGroup();
 
-        speedSlider = new Slider(0, speed, 0);
+        //speedSlider = new Slider(0, speed, 0);
+        speedSlider = new Slider(0, 80, 0);
         speedSlider.setShowTickLabels(true);
 
         tempSlider = new Slider(0, 80, 0);
@@ -144,14 +145,14 @@ public class TrainControllerGUI extends Application implements EventHandler<Acti
            
         FlowPane flowpane = new FlowPane();
 
-        setTempButton = new Button("Set Temp");
+        
  
 
         //Panel for output for iteration 2
         FlowPane flowpane1 = new FlowPane();
         flowpane1.setStyle("-fx-border-color: black");
         flowpane.getChildren().add(flowpane1);
-        flowpane1.getChildren().add(output);
+       // flowpane1.getChildren().add(output);
         flowpane1.getChildren().add(speedSlider);
         flowpane1.getChildren().add(setSpeedButton);
         flowpane1.getChildren().add(tempSlider);  
@@ -195,19 +196,41 @@ public class TrainControllerGUI extends Application implements EventHandler<Acti
         doorStatus.getChildren().add(lDoor3);
         doorStatus.getChildren().add(lDoor4);
         flowpane.getChildren().add(doorStatus);
+        
+        setSpeedButton.setOnAction(new setSpeedHandler());
+        eBrake.setOnAction(new eBrakeHandler());
+        sBrake.setOnAction(new sBrakeHandler());
+        lights.setOnAction(new lightsHandler());
+        rDoor1.setOnAction(new rDoor1Handler());
+        rDoor2.setOnAction(new rDoor2Handler());
+        rDoor3.setOnAction(new rDoor3Handler());
+        rDoor4.setOnAction(new rDoor4Handler());
+        lDoor1.setOnAction(new lDoor1Handler());
+        lDoor2.setOnAction(new lDoor2Handler());
+        lDoor3.setOnAction(new lDoor3Handler());
+        lDoor4.setOnAction(new lDoor4Handler());
+        setTempButton.setOnAction(new tempHandler());
+        autoRadioButton.setOnAction(new autoModeHandler());
+        manualRadioButton.setOnAction(new manualModeHandler());
 
         Scene scene = new Scene(flowpane, 500, 300);
         primaryStage.setScene(scene);
         primaryStage.show();
        }
 
-       //Action Listeners for our button
-       public void handle(ActionEvent event){
-            if(event.getSource()==setSpeedButton){
-                tnc.newDriverSetSpeed(speedSlider.getValue());
-            }
-            else if(event.getSource()==eBrake){
-                boolean currentState;
+
+      public class setSpeedHandler implements EventHandler<ActionEvent>{
+        @Override
+        public void handle(ActionEvent event){
+            tnc.newDriverSetSpeed(speedSlider.getValue());
+        }
+      }
+
+      
+      class eBrakeHandler implements EventHandler<ActionEvent>{
+        @Override
+        public void handle(ActionEvent event){
+            boolean currentState;
                 currentState = tnc.toggleEBrake();
                 if(currentState){
                     eBrake.setText("E Brake: Currently ON");
@@ -216,9 +239,13 @@ public class TrainControllerGUI extends Application implements EventHandler<Acti
                     eBrake.setText("E Brake: Currently OFF");
 
                 }
-            }
-            else if(event.getSource()==sBrake){
-                boolean currentState;
+        }
+      }
+
+      class sBrakeHandler implements EventHandler<ActionEvent>{
+        @Override
+        public void handle(ActionEvent event){
+            boolean currentState;
                 currentState = tnc.toggleServiceBrake();
                 if(currentState){
                     eBrake.setText("S Brake: Currently ON");
@@ -227,108 +254,161 @@ public class TrainControllerGUI extends Application implements EventHandler<Acti
                     eBrake.setText("S Brake: Currently OFF");
 
                 }
+        }
+      }
+      class lightsHandler implements EventHandler<ActionEvent>{
+        @Override
+        public void handle(ActionEvent event){
+            boolean currentState;
+            currentState = tnc.setLights();
+            if (currentState){
+                lights.setText("Lights Currently ON");
             }
-            else if(event.getSource()==lights){
-                boolean currentState;
-                currentState = tnc.setLights();
-                if (currentState){
-                    lights.setText("Lights Currently ON");
-                }
-                else{
-                    lights.setText("Lights Currently OFF");
-                }
+            else{
+                lights.setText("Lights Currently OFF");
             }
-            else if(event.getSource()==rDoor1){
-                boolean currentState;
-                currentState = tnc.toggleDoor(0);
-                if(currentState){
-                    rDoor1.setText("Right Door 1 Currently Open");
-                }
-                else{
-                    rDoor1.setText("Right Door 1 Currently Closed");
-                }
+        }
+      }
+
+      class rDoor1Handler implements EventHandler<ActionEvent>{
+        @Override
+        public void handle(ActionEvent event){
+            boolean currentState;
+            currentState = tnc.toggleDoor(0);
+            if(currentState){
+                rDoor1.setText("Right Door 1 Currently Open");
             }
-            else if(event.getSource()==rDoor2){
-                boolean currentState;
-                currentState = tnc.toggleDoor(1);
-                if(currentState){
-                    rDoor2.setText("Right Door 2 Currently Open");
-                }
-                else{
-                    rDoor2.setText("Right Door 2 Currently Closed");
-                }
+            else{
+                rDoor1.setText("Right Door 1 Currently Closed");
             }
-            else if(event.getSource()==rDoor3){
-                boolean currentState;
-                currentState = tnc.toggleDoor(2);
-                if(currentState){
-                    rDoor3.setText("Right Door 3 Currently Open");
-                }
-                else{
-                    rDoor3.setText("Right Door 3 Currently Closed");
-                }
+        }
+      }
+
+      class rDoor2Handler implements EventHandler<ActionEvent>{
+        @Override
+        public void handle(ActionEvent event){
+            boolean currentState;
+            currentState = tnc.toggleDoor(1);
+            if(currentState){
+                rDoor2.setText("Right Door 2 Currently Open");
             }
-            else if(event.getSource()==rDoor4){
-                boolean currentState;
-                currentState = tnc.toggleDoor(3);
-                if(currentState){
-                    rDoor4.setText("Right Door 4 Currently Open");
-                }
-                else{
-                    rDoor4.setText("Right Door 4 Currently Closed");
-                }
+            else{
+                rDoor2.setText("Right Door 2 Currently Closed");
             }
-            else if(event.getSource()==lDoor1){
-                boolean currentState;
-                currentState = tnc.toggleDoor(4);
-                if(currentState){
-                    lDoor1.setText("Left Door 1 Currently Open");
-                }
-                else{
-                    lDoor1.setText("Left Door 1 Currently Closed");
-                }
+        }
+      }
+
+      class rDoor3Handler implements EventHandler<ActionEvent>{
+        @Override
+        public void handle(ActionEvent event){
+            boolean currentState;
+            currentState = tnc.toggleDoor(2);
+            if(currentState){
+                rDoor3.setText("Right Door 3 Currently Open");
             }
-            else if(event.getSource()==lDoor2){
-                boolean currentState;
-                currentState = tnc.toggleDoor(5);
-                if(currentState){
-                    lDoor2.setText("Left Door 2 Currently Open");
-                }
-                else{
-                    lDoor2.setText("Left Door 2 Currently Closed");
-                }
+            else{
+                rDoor3.setText("Right Door 3 Currently Closed");
             }
-            else if(event.getSource()==lDoor3){
-                boolean currentState;
-                currentState = tnc.toggleDoor(6);
-                if(currentState){
-                    lDoor3.setText("Left Door 3 Currently Open");
-                }
-                else{
-                    lDoor3.setText("Left Door 3 Currently Closed");
-                }
+        }
+      }
+
+      class rDoor4Handler implements EventHandler<ActionEvent>{
+        @Override
+        public void handle(ActionEvent event){
+            boolean currentState;
+            currentState = tnc.toggleDoor(3);
+            if(currentState){
+                rDoor4.setText("Right Door 4 Currently Open");
             }
-            else if(event.getSource()==lDoor4){
-                boolean currentState;
-                currentState = tnc.toggleDoor(7);
-                if(currentState){
-                    lDoor4.setText("Left Door 4 Currently Open");
-                }
-                else{
-                    lDoor4.setText("Left Door 4 Currently Closed");
-                }
+            else{
+                rDoor4.setText("Right Door 4 Currently Closed");
             }
-            //If set temp button is pressed, set temp to temp slider value
-            else if(event.getSource()==setTempButton){
-                tnc.setTemp(tempSlider.getValue());
+        }
+      }
+
+      class lDoor1Handler implements EventHandler<ActionEvent>{
+        @Override
+        public void handle(ActionEvent event){
+            boolean currentState;
+            currentState = tnc.toggleDoor(4);
+            if(currentState){
+                lDoor1.setText("Left Door 1 Currently Open");
             }
-            else if(autoRadioButton.isSelected()){
-                tnc.setAutomaticMode();
+            else{
+                lDoor1.setText("Left Door 1 Currently Closed");
             }
-            else if(manualRadioButton.isSelected()){
-                tnc.setManualMode();
+        }
+      }
+
+      class lDoor2Handler implements EventHandler<ActionEvent>{
+        @Override
+        public void handle(ActionEvent event){
+            boolean currentState;
+            currentState = tnc.toggleDoor(5);
+            if(currentState){
+                lDoor2.setText("Left Door 2 Currently Open");
             }
-       }
+            else{
+                lDoor2.setText("Left Door 2 Currently Closed");
+            }
+        }
+      }
+
+      class lDoor3Handler implements EventHandler<ActionEvent>{
+        @Override
+        public void handle(ActionEvent event){
+            boolean currentState;
+            currentState = tnc.toggleDoor(6);
+            if(currentState){
+                lDoor3.setText("Left Door 3 Currently Open");
+            }
+            else{
+                lDoor3.setText("Left Door 3 Currently Closed");
+            }
+        }
+      }
+
+      class lDoor4Handler implements EventHandler<ActionEvent>{
+        @Override
+        public void handle(ActionEvent event){
+            boolean currentState;
+            currentState = tnc.toggleDoor(7);
+            if(currentState){
+                lDoor4.setText("Left Door 4 Currently Open");
+            }
+            else{
+                lDoor4.setText("Left Door 4 Currently Closed");
+            }
+        }
+      }
+
+      class tempHandler implements EventHandler<ActionEvent>{
+          @Override
+          public void handle(ActionEvent event){
+            tnc.setTemp(tempSlider.getValue());
+          }
+      }
+      
+
+      class autoModeHandler implements EventHandler<ActionEvent>{
+        @Override
+        public void handle(ActionEvent event){
+            tnc.setAutomaticMode();
+        }
+    }
+
+    class manualModeHandler implements EventHandler<ActionEvent>{
+        @Override
+        public void handle(ActionEvent event){
+            tnc.setManualMode();
+        }
+    }
+
+    public void handle(ActionEvent event){
+        
+
+    }
+      
 
        public static void main(String[] args) {
            launch();
@@ -336,3 +416,5 @@ public class TrainControllerGUI extends Application implements EventHandler<Acti
 
 
 }
+
+

@@ -130,13 +130,13 @@ public class TrackControllerMain
     }
 
     public boolean SendSuggestedSpeed(String blockID,double speed) {
-        TrackController t = FindController(BlockID);
+        TrackController t = FindController(blockID);
         // add stuff
         return true;
     }
 
     public boolean SendSuggestedAuthority(String blockID, String authorityID) {
-        TrackController t = FindController(BlockID);
+        TrackController t = FindController(blockID);
         return true;
     }
 

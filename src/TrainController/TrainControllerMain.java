@@ -56,8 +56,9 @@ public class TrainControllerMain{
 
   
 
-    void initPower(){
+    public Power initPower(){
         Power p = new Power();
+        return p;
     }
 
     //Called when train controller selected from main menu
