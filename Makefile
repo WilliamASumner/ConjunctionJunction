@@ -11,11 +11,14 @@ MAKE_DIR        = $(PWD)
 MAKE_DIR        = .
 BIN_DIR         = $(addsuffix /bin,$(MAKE_DIR))
 BIN_DIR         = ./bin
+SEP             =;
 
 ifdef OS # windows
 	JAVAFX_PATH    = $(MAKE_DIR)/lib/javafx-sdk-11.0.2-windows/lib
+	SEP            = ;
 else
 	JAVAFX_PATH    = $(MAKE_DIR)/lib/javafx-sdk-11.0.2-unix/lib
+	SEP            = :
 endif
 
 #NOTE: must be comma separated
@@ -61,7 +64,7 @@ $(TESTCLASSFILES): $(TESTFILE)
 	$(CC) $(JFLAGS) -d $(BIN_DIR) $(TESTFILE)
 
 run: src.txt $(TARGET_CLASS)
-	$(RUNCMD) $(JFLAGS) -cp "$(BIN_DIR):$(ANTLRPATH)" $(TARGET)
+	$(RUNCMD) $(JFLAGS) -cp "$(BIN_DIR)$(SEP)$(ANTLRPATH)" $(TARGET)
 #	$(RUNCMD) $(JFLAGS) -cp "$(BIN_DIR)" $(TARGET)
 
 # java build text
@@ -81,7 +84,7 @@ src.txt: ./src/
 # Result is dependent on all files in src dir
 $(TARGET_CLASS): $(shell find ./src -type f)
 #	$(CC) $(JFLAGS) -d $(BIN_DIR) @src.txt
-	$(CC) $(JFLAGS) -Xlint:unchecked  -cp "$(BIN_DIR):$(ANTLRPATH)" -d $(BIN_DIR) @src.txt
+	$(CC) $(JFLAGS) -Xlint:unchecked  -cp "$(BIN_DIR)$(SEP)$(ANTLRPATH)" -d $(BIN_DIR) @src.txt
 
 runtest: $(TTARGET)
 	$(RUNCMD) $(JFLAGS) $(TTARGET)
