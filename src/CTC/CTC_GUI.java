@@ -89,6 +89,7 @@ public class CTC_GUI extends Application {
     String chosenBlock = "";
     private String currentLine = "green";
     
+    @SuppressWarnings("unchecked")
     public CTC_GUI(CTC nctc, Stage stage) {
         newStage = stage;
         newCTC = nctc;
@@ -363,7 +364,6 @@ public class CTC_GUI extends Application {
         speedCol.setCellValueFactory(new PropertyValueFactory<>("curSpeed"));   
         
         // Add all cols to the table
-        //@SuppressWarnings("unchecked")
         table.getColumns().addAll(trainNameCol, curBlockCol, authCol, speedCol);
         
         // When no trains are dispatched, set a label indicator
@@ -700,6 +700,7 @@ public class CTC_GUI extends Application {
     /**
      * Event handler class for dispatchT button.
      */
+    @SuppressWarnings("unchecked")
     class DispatchButtonHandler implements EventHandler<ActionEvent>{
         @Override
         public void handle(ActionEvent event){

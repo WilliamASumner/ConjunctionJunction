@@ -46,6 +46,7 @@ public class CTC{
         init();
     }
 
+    @SuppressWarnings("unchecked")
     public void update() {
         // Update train locations
         if(dT != null && dT.size() != 0){
