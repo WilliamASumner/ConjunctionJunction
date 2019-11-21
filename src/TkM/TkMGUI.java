@@ -99,7 +99,7 @@ public class TkMGUI extends Application {
             lineOptions.addAll(option);
         }
         ComboBox<String> lineBox = new ComboBox<String>(lineOptions);
-        GridPane.setConstraints(lineBox, 100, 2);
+        GridPane.setConstraints(lineBox, 95, 0);
         lineBox.getSelectionModel().select("green");
         lineBox.setOnAction(new EventHandler<ActionEvent>() {
 
