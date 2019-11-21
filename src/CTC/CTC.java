@@ -72,11 +72,11 @@ public class CTC{
     public void dispatchQueuedTrain(CTCTrain tempT){
         dT.add(tempT);
 		
-		trckCntrl.requestNewTrain(tempT.getName(), tempT.getSpeed(), tempT.getAuthority());
+		trckCntrl.requestNewTrain(tempT.getName(), tempT.getSpeed(), tempT.getAuthority(), tempT.getCurrentBlock());
     }
 /*    
     public int sendSpeedAuthority(int trainsCurBlockID, int newAuthorityBlkID){
-        
+
     }
 */  
 	/**
