@@ -225,6 +225,11 @@ public class TrainModel {
     Block getAuditedAuthority() {
         return AuditedAuthority;
     }
+	
+	public double getVelocity()
+	{
+		return velocity;
+	}
 
     public void toggleEBrake()
     {
