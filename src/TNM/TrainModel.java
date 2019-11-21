@@ -261,11 +261,6 @@ public class TrainModel {
         return;// false;
     }
     
-   
-    
-    
->>>>>>> 56faffd2de71ec7a99bb92155325311f25ccc3fd
-
     public void showGUI(Stage newStage) {
         myGUI.start(newStage);
     }
