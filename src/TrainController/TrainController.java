@@ -29,7 +29,7 @@ public class TrainController{
     boolean engineFailure;
     boolean trackCircuitFailure;
     boolean eBrakeFailure;
-    boolean serviceBreakFailure;
+    boolean serviceBrakeFailure;
     boolean lightsOn = false;
     String trainName = "train1";
     TrainModel tm;
@@ -60,7 +60,7 @@ public class TrainController{
         auditedSpeed = speed;
         authority = a;
         trainName = name;
-        trainModel = tm;
+        tm = trainModel;
 		//System.out.println("Name: "+name+"Block: "+authority+"Speed: "+auditedSpeed);
         initGUI();
     }
@@ -139,7 +139,7 @@ public class TrainController{
     }
 
     public void setSBrakeFailure(boolean state){
-        sBrakeFailure = state;
+        serviceBrakeFailure = state;
     }
 
     //Driver sets train controller mode to automatic
