@@ -55,10 +55,15 @@ public class TrainModel {
 	public void toggleEbrakeFail()
 	{
 		if (EbrakeFail)
+		{
+			
 			EbrakeFail=false;
+			TNC.setSbrakeFailure(false);
+		}
 		else
 		{
 			EbrakeFail=true;
+			TNC.setSbrakeFailure(true);
 			Ebrake = false;
 		}
 		return;
@@ -67,33 +72,45 @@ public class TrainModel {
 	public void toggleSbrakeFail()
 	{
 		if (SbrakeFail)
+		{
 			SbrakeFail=false;
+			TNC.setSbrakeFailure(false);
+		}
 		else
 		{
 			SbrakeFail=true;
 			Sbrake = false;
+			TNC.setSbrakeFailure(true);
 		}
 		return;
 	}
-	
-
 	public void toggleSignalFail()
 	{
 		if (signalFail)
+		{
 			signalFail=false;
+			TNC.setSignalFailure(false);
+		}
+			
 		else
 		{
 			signalFail=true;
+			TNC.setSignalFailure(true);
 		}
 		return;
 	}
 	public void toggleEngineFail()
 	{
 		if (engineFail)
+		{
 			engineFail=false;
+			TNC.setEngineFailure(false);
+		}
+			
 		else
 		{
 			engineFail=true;
+			TNC.setEngineFailure(true);
 			powerCommand = 0;
 		}
 		return;
@@ -111,7 +128,7 @@ public class TrainModel {
         initTrainModelGUI();
     }
     //constructor
-    public TrainModel(String Stringname, String ABlock, Block startBlock, double ASpeed)
+    public TrainModel(String Stringname, String ABlock, Block startBlock, double ASpeed, TrainControllerMain TNCMain_input)
     {
         initTrainController(Stringname, ABlock, ASpeed);
         
@@ -121,6 +138,7 @@ public class TrainModel {
 		currBlock.isOccupied = true;
 		grade = currBlock.getGrade();
 		currBlockLength = currBlock.getLength();
+		TNC_Main = TNCMain_input;
 		
         name = Stringname;
         AuthorityBlockID = ABlock;
@@ -241,7 +259,7 @@ public class TrainModel {
     
     public void initTrainController(String Stringname, String ABlock, double ASpeed)
     {
-        TNC = new TrainController(Stringname, ABlock, ASpeed);
+        TNC = TNC_Main.createTrain(name, AuthorityBlockID, AuditedSpeed,this);// new TrainController(Stringname, ABlock, ASpeed);
     }
 
 }
