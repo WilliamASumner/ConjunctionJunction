@@ -19,6 +19,8 @@ public class Block
     boolean IsUnderground;
     BlockType type;
     String stationName;
+    SwitchState switchState;
+    CrossingState crossingState;
 
     public Block() {
         isOccupied = false;
@@ -182,6 +184,23 @@ public class Block
 
     public static int blockIDToNum(String id){
         return (Integer.parseInt(id.substring(1,id.length())));
+    }
+
+    public SwitchState getSwitchState() {
+        return switchState;
+    }
+
+    public void setSwitchState(SwitchState s) {
+        switchState = s;
+    }
+
+    public CrossingState getCrossingState() {
+        return crossingState;
+    }
+
+    
+    public void setCrossingState(CrossingState c) {
+         crossingState = c;
     }
 
 }
