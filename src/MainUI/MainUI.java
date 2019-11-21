@@ -137,7 +137,7 @@ public class MainUI extends Application {
         public void handle(ActionEvent event) {
             Stage newWindow = new Stage();
             if (ctc == null)
-                ctc = new CTC(tkcm);
+                ctc = new CTC();
             if (ctcg == null)
                 ctcg = new CTC_GUI(ctc,newWindow);
             ctcg.start(newWindow);

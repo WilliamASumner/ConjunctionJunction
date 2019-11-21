@@ -184,7 +184,8 @@ public class TrackControllerMain
         return true;
     }
 
-    public void requestNewTrain(double speed, String authority) {
+    public void requestNewTrain(String name, double speed, String authority, Block startBlock) {
+
     }
 
 }
