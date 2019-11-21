@@ -134,8 +134,8 @@ public class TrainModel {
 		currBlock.isOccupied = false;
 		currBlock = currBlock.getNextBlock();
 		currBlock.isOccupied = true;
-		grade = currBlock.grade;
-		currBlockLength = currBlock.length;
+		grade = currBlock.getGrade();
+		currBlockLength = currBlock.getLength();
 		return;
 	}
 	
