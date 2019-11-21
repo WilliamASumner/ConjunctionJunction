@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 public class TrackMap {
   public ArrayList<Block> map = new ArrayList<Block>();
 
+
   public TrackMap() {
 
   }
@@ -83,8 +84,70 @@ public class TrackMap {
     // System.out.println(map.get(1).getBlockID());
     // System.out.println(map.get(2).getBlockID());
     // System.out.println(map.get(3).getBlockID());
+    System.out.println(map.get(1).getLineColor().equals("Red"));
+    if (map.get(1).getLineColor().equals("Red")) {
+      this.orderTrack("redOrder.csv");
+    }
+    else if (map.get(1).getLineColor().equals("Green")) {
+      this.orderTrack("greenOrder.csv");
+    }
 
     return map;
+
+  }
+
+  public void orderTrack(String filename) {
+    if (!(filename.substring(filename.length()-3,filename.length()).equals("csv"))) {
+      return;
+    }
+
+    String csv = "";
+    try {
+      File file = new File(filename);
+      Scanner sc = new Scanner(file);
+      while (sc.hasNextLine()) {
+        csv+=sc.nextLine()+"\n";
+      }
+    }
+    catch (FileNotFoundException e){
+      return;
+    }
+    String[] csvrows = csv.split("\n");
+    for (int i = 0; i < csvrows.length-1; i++) {
+      if (csvrows[i].equals("")) {
+        break;
+      }
+
+        String[] curr = csvrows[i].split(",");
+        String[] next = csvrows[i+1].split(",");
+        int bid= Integer.parseInt(curr[1]);
+        String section = curr[0];
+
+        if (i==0) {
+
+          int n = Integer.parseInt(next[1]);
+          int c = Integer.parseInt(curr[1]);
+            map.get(c).setPrevBlock(null);
+            map.get(c).setNextBlock(map.get(n));
+        }
+        else {
+          String[] prev = csvrows[i-1].split(",");
+          int p = Integer.parseInt(prev[1]);
+          int n = Integer.parseInt(next[1]);
+          int c = Integer.parseInt(curr[1]);
+          map.get(c).setPrevBlock(map.get(p));
+          map.get(c).setNextBlock(map.get(n));
+        }
+
+
+
+
+
+
+      }
+
+
+
 
   }
 
@@ -96,7 +159,7 @@ public class TrackMap {
     }
   }
 
-  public Block sendBlock(int blockID) { // maybe rename this?
+  public Block sendBlock(int blockID) {
     return map.get(blockID);
   }
 
@@ -113,6 +176,7 @@ public class TrackMap {
   }
 
 
+
   public void updateBlock(Block block) {
     int bid = Integer.parseInt(block.getBlockID().substring(1,block.getBlockID().length()-1));
   //  Block oldBlock = map.get(bid);
@@ -120,11 +184,16 @@ public class TrackMap {
   }
 
 
-  // public static void main(String[] args) {
-  //   TrackMap t = new TrackMap();
-  //
-  //   t.parseFile("redFile.csv");
-  //   ArrayList<Block> aaa = t.getBlocksBySection("A");
-  //   System.out.println(aaa.size());
-  // }
+  public static void main(String[] args) {
+    TrackMap t = new TrackMap();
+
+    t.parseFile("redFile.csv");
+    ArrayList<Block> aaa = t.getBlocksBySection("A");
+    //System.out.println(aaa.size());
+   Block b = t.map.get(10);
+   Block next = b.getNextBlock();
+    System.out.println(next.getBlockID());
+  }
+
+
 }
