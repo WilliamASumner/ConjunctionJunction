@@ -39,6 +39,8 @@ public class Block
         IsUnderground = false;
         type = BlockType.REGBLOCK;
         stationName = "Uninitialized";
+        switchState = SwitchState.MAIN;
+        crossingState = CrossingState.UP;
     }
 
 
