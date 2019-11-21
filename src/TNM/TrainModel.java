@@ -5,6 +5,7 @@ public class TrainModel {
     String name = "test name";
     String AuthorityBlockID = "test Block";
     double AuditedSpeed = 3.14;
+	Block AuditedAuthority;
     TrainControllerMain TNC = null;
     TrainController singleTNC = null;
     TrainModelGUI myGUI;
@@ -117,7 +118,7 @@ public class TrainModel {
         return;
     }
 
-    //constructor
+    /////constructor
     public TrainModel(String Stringname, String ABlock, Block startBlock, double ASpeed, TrainControllerMain TNCMain_input,TkM tm)
     {
 
@@ -138,7 +139,7 @@ public class TrainModel {
         initTrainModelGUI();
     }
 
-    private void nextBlockFunc() // 
+    private void nextBlockFunc()  
     {
         currBlock.isOccupied = false;
         currBlock = currBlock.getNextBlock();
@@ -214,7 +215,14 @@ public class TrainModel {
     {
         temperature = inputTemp;
     }
+	
+	double getAuditedSpeed() {
+        return AuditedSpeed;
+    }
 
+    Block getAuditedAuthority() {
+        return AuditedAuthority;
+    }
 
     public void toggleEBrake()
     {
@@ -251,6 +259,9 @@ public class TrainModel {
         }
         return;// false;
     }
+	
+	
+	/////// SOFTWARE STUFF ///////////
 
     public void showGUI(Stage newStage) {
         myGUI.start(newStage);
