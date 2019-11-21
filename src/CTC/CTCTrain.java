@@ -4,11 +4,13 @@ import java.lang.Math;
 import java.util.HashMap; 
 import java.util.Map;  
 public class CTCTrain{
+        private String line;
 		private String trainName;
 		private double curSpeed;
 		private String departTime;
-		private String curBlkNum;
+		private String curBlkID;
 		private String curAuthority;
+		private TkM tkm;
 		ArrayList<String> schedule;
 /*		HashMap<String, String> mapStationBlocks = new HashMap<>();
 		private String[] stationNames = {
@@ -29,15 +31,30 @@ public class CTCTrain{
 		/**
 		 * Default constructor.
 		 */
-		public CTCTrain(){
+		public CTCTrain(TkM trackmodel){
 			trainName = null;
 			curSpeed = 0.0;
-			curBlkNum = null;
+			curBlkID = null;
 			curAuthority = null;
 			schedule = null;
+            tkm = trackmodel;
 //			for(int i = 0; i < 21; i++)
 //				mapStationBlocks.put()
 		}
+
+        /**
+         * Set Line color
+         */
+        public void setLine(String l) {
+            line = l;
+        }
+
+        /**
+         * Get Line color
+         */
+        public String getLine() {
+            return line;
+        }
 		
 		/**
 		 * Set Train name.
@@ -46,6 +63,10 @@ public class CTCTrain{
 			trainName = newName;
 		}
 
+        public String getName() {
+            return trainName;
+        }
+
 		/**
 		 * Set Train speed.
 		 */			
@@ -53,18 +74,33 @@ public class CTCTrain{
 			curSpeed = Double.parseDouble(newSpeed);
 		}
 
+		public double getSpeed(){
+            return curSpeed;
+		}
+
 		/**
 		 * Set Train cur block num.
 		 */	
-		public void setCurBlkNum(String newBlkNum){
-			curBlkNum = newBlkNum;
+		public void setCurBlkID(String newBlkID){
+			curBlkID = newBlkID;
 		}
+
+        /**
+         * Get Block object from current block ID
+         */
+        public Block getCurrentBlock() {
+            return tkm.getBlock(curBlkID,line);
+        }
 
 		/**
 		 * Set Train authority.
 		 */			
 		public void setAuthority(String authority){
 			curAuthority = authority;
+		}
+
+		public String getAuthority(){
+            return curAuthority;
 		}
 
 		/**
@@ -84,8 +120,8 @@ public class CTCTrain{
 		/**
 		 * Get Train's current block num.
 		 */			
-		public String getCurBlkNum(){
-			return curBlkNum;
+		public String getCurBlkID(){
+			return curBlkID;
 		}
 
 		/**
@@ -106,7 +142,7 @@ public class CTCTrain{
 			boolean isAdjacent = false;
 			// extract number portion from string
 			int newNum = Integer.parseInt(newBlkNum.replaceAll("[^0-9]", ""));
-			int curNum = Integer.parseInt(curBlkNum.replaceAll("[^0-9]", ""));
+			int curNum = Integer.parseInt(curBlkID.replaceAll("[^0-9]", ""));
 			// if is the same, or adjacent
 			if(Math.abs(newNum - curNum) == 0 || Math.abs(newNum - curNum) == 1)
 				isAdjacent = true;

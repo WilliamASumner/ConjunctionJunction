@@ -8,16 +8,29 @@ public class CTC{
     int throughput;
     int currentTime;
     TrackControllerMain trckCntrl;
+    TkM tkm;
 	
 	ArrayList<CTCTrain> dT = new ArrayList<CTCTrain>(5);
 	CTCTrain nT, tempT;
 	ArrayList<CTCTrain> qT = new ArrayList<CTCTrain>(5);
 
-    public CTC(TrackControllerMain tkcm){
-        dispatchedTrains = new TrainModel[1];
-        trckCntrl = tkcm;
-    }
     public CTC() { // for testing
+    }
+
+    public void addTrackController(TrackControllerMain tkc) {
+        trckCntrl = tkc;
+    }
+
+    public void addTrackModel(TkM t) {
+        tkm = t;
+    }
+
+    public TrackControllerMain getTrckCntrl() {
+        return trckCntrl;
+    }
+
+    public TkM getTkM() {
+        return tkm;
     }
     
 	public void repairBlock(String block){
@@ -72,11 +85,11 @@ public class CTC{
     public void dispatchQueuedTrain(CTCTrain tempT){
         dT.add(tempT);
 		
-		//trckCntrl.requestNewTrain();
+		trckCntrl.requestNewTrain(tempT.getName(), tempT.getSpeed(), tempT.getAuthority(), tempT.getCurrentBlock());
     }
 /*    
     public int sendSpeedAuthority(int trainsCurBlockID, int newAuthorityBlkID){
-        
+
     }
 */  
 	/**
@@ -89,7 +102,7 @@ public class CTC{
 		for(int i = 0; i < dT.size(); i++){
 			CTCTrain tempTrain = dT.get(i);
 			if(tempTrain.isAdjacentBlock(newBlkNum))
-				tempTrain.setCurBlkNum(newBlkNum);
+				tempTrain.setCurBlkID(newBlkNum);
 		}
 	}
 /*	

@@ -54,9 +54,9 @@ public class CTC_GUI extends Application {
                    "-fx-border-insets: 0;\n" +
                    "-fx-border-width: 0.5;\n";
 				   
-	private ObservableList namesGreenLine = FXCollections.observableArrayList(), namesRedLine = FXCollections.observableArrayList();
-    private ObservableList data = FXCollections.observableArrayList(), dataSelectedQueuedTrain = FXCollections.observableArrayList();
-	private ListView stopsListView, selectedTrain = new ListView(dataSelectedQueuedTrain);
+	private ObservableList<String> namesGreenLine = FXCollections.observableArrayList(), namesRedLine = FXCollections.observableArrayList();
+    private ObservableList<String> data = FXCollections.observableArrayList(), dataSelectedQueuedTrain = FXCollections.observableArrayList();
+	private ListView<String> stopsListView, selectedTrain = new ListView<String>(dataSelectedQueuedTrain);
 	
 	private VBox vboxMaintain, vboxAdd, vboxQueued, rightVbox, leftVbox;
 	private HBox hboxAdd1, hboxAdd2, hboxAdd3, bottomControlOfModule;
@@ -79,7 +79,7 @@ public class CTC_GUI extends Application {
 	private Scene scene;
 	
     private CTC newCTC;
-	
+
 	private CTCTrain tempQueuedTrain = null;
 	
 	BorderPane borderPane;
@@ -87,6 +87,7 @@ public class CTC_GUI extends Application {
 	
 	//Fields for interface comms
 	String chosenBlock = "";
+    private String currentLine = "green";
     
     public CTC_GUI(CTC nctc, Stage stage) {
 		newStage = stage;
@@ -213,7 +214,7 @@ public class CTC_GUI extends Application {
         comboChooseTrack.setPromptText("Choose Track");
        
 		// Create view for inputting schedule
-		stopsListView = new ListView(data);
+		stopsListView = new ListView<String>(data);
         stopsListView.setPrefSize(160, 70);
         for (int i = 0; i < 15; i++)
             data.add("Add Stop");
@@ -362,6 +363,7 @@ public class CTC_GUI extends Application {
 		speedCol.setCellValueFactory(new PropertyValueFactory<>("curSpeed"));	
 		
 		// Add all cols to the table
+        //@SuppressWarnings("unchecked")
         table.getColumns().addAll(trainNameCol, curBlockCol, authCol, speedCol);
 		
 		// When no trains are dispatched, set a label indicator
@@ -376,6 +378,7 @@ public class CTC_GUI extends Application {
 */
 
 		// Add listener to populate leftmost bottom-GUI pane with selected queued train's schedule 
+        //@SuppressWarnings("unchecked")
 		table.getSelectionModel().selectedItemProperty().addListener(
             new ChangeListener<Object>() {
                 public void changed(ObservableValue<? extends Object> ov, 
@@ -553,6 +556,8 @@ public class CTC_GUI extends Application {
 	
 	public void addLineStations(String selection){
 		if(selection.equals("Green Line")){
+            //Set current line for dispatched trains to green
+            currentLine = "green";
 			// Add green line station names
 			namesGreenLine.addAll(
 				"PIONEER","EDGEBROOK","STATION", "WHITED", 
@@ -575,6 +580,8 @@ public class CTC_GUI extends Application {
 				});	*/				
 		}
 		else if(selection.equals("Red Line")){
+            //Current line for trains to red
+            currentLine = "red";
 			// Add red line station names
 			namesRedLine.addAll(
 				"SHADYSIDE","HERRON AVE","SWISSVILLE", "PENN STATION", 
@@ -655,13 +662,16 @@ public class CTC_GUI extends Application {
             String speedMPH = speed.getText();
 			
 			// Create temporary CTCTrain to add to queued train viewer
-			CTCTrain tempTrain = new CTCTrain();
+			CTCTrain tempTrain = new CTCTrain(newCTC.getTkM());
 			// Set CTCTrain's schedule
 			System.out.println("SCHED=" + sched);
 			tempTrain.setSchedule(sched);
 			sched.clear();
 			// Set name
 			tempTrain.setName(tName);
+
+            //Set line
+			tempTrain.setLine(currentLine);
 			
 			// Determine if speed is at or under limit
 //			newCTC.getBlockSpeed();
