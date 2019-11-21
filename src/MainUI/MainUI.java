@@ -216,9 +216,9 @@ public class MainUI extends Application {
         @Override
         public void handle(ActionEvent event){
             if (updateBoolean)
-                stopButton.setText("Stop");
-            else
                 stopButton.setText("Start");
+            else
+                stopButton.setText("Stop");
             updateBoolean = !updateBoolean;
         }
     }

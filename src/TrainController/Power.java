@@ -24,6 +24,7 @@ public class Power{
     }
 
     public void showGUI(Stage primaryStage){
+        powerGUI = new PowerGUI(this);
         powerGUI.start(primaryStage);
     }
 
