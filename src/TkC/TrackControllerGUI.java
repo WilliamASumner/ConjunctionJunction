@@ -1,5 +1,6 @@
 import java.awt.Desktop;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 
 import javafx.application.Application;
@@ -383,13 +384,13 @@ public class TrackControllerGUI extends Application {
                 File file = fileChooser.showOpenDialog(currentStage);
                 if (file != null) {
                     try {
-                        Desktop.getDesktop().open(file);
+                        //Desktop.getDesktop().open(file);
+                        System.out.println("opening file: " + file);
+                        currentController.setPLC(new FileInputStream(file));
 
                     } catch (IOException ex) {
                         System.out.println("Error: could not open file");
-                    } /*catch (ParsingException p) {
-                        System.out.println(p);
-                    } */ // TODO add this
+                    }
                 }
                 currPLC.setText(file.getName());
             }

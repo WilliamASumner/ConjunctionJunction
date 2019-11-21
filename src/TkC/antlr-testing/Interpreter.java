@@ -1,15 +1,16 @@
-public class MyListener //extends TkcBaseListener
+public class Interpreter extends TkcBaseListener
 {
     ActionsList actionList;
     TrackController tkc;
 
-    public MyListener(TrackController trkcc) {
+    public Interpreter(TrackController trkcc) {
         tkc = trkcc;
         actionList = new ActionsList(tkc);
     }
 
-
-    /*
+    public ActionsList getList() {
+        return actionList;
+    }
 
     @Override
     public void enterProgram(TkcParser.ProgramContext ctx) {
@@ -82,5 +83,5 @@ public class MyListener //extends TkcBaseListener
     @Override
     public void exitValue(TkcParser.ValueContext ctx) {
 
-    } */
+    }
 }

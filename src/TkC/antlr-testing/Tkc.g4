@@ -17,7 +17,14 @@ ifsequence
 
 ifstatement
 :
-    If '(' condition ')' Then statementlist Endif ';'
+    If '(' conditionlist ')' Then statementlist Endif ';'
+;
+
+conditionlist
+:
+      condition
+    | condition OR  conditionlist
+    | condition AND conditionlist
 ;
 
 condition
@@ -188,6 +195,20 @@ OCCUPIED
 UNOCCUPIED
 :    'UNOCCUPIED'
     |'unoccupied'
+;
+
+OR
+:   'or'
+   |'OR'
+;
+
+AND
+:   'and'
+   |'AND'
+;
+
+LineComment
+: '//' ~[\r\n]* -> channel(HIDDEN)
 ;
 
 fragment LParen
