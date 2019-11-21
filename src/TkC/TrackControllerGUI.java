@@ -49,30 +49,22 @@ public class TrackControllerGUI extends Application {
 
 
     private TrackControllerMain tkcm;
-    private TrackController CurrentController;
-    private Block CurrentBlock;
-    private String Occupancy;
-    private String Status;
-    private String Line;
+    private TrackController currentController;
+    private Block currentBlock;
+    private String status;
     private String mode;
-    private Boolean Light1;
-    private Boolean Light2;
-    private Boolean Light3;
-    private String SwitchState;
-    private String CrossState;
-    private String BlockStatus;
+    private String blockStatus;
     private String PLCFile;
-    private Boolean OverrideOccupied;
+    private boolean overrideOccupied;
 
-    private String BlockAuthority = "";
-    private double BlockSpeed = 0.0;
-    String status = "";
+    private String blockAuthority = "";
+    private double blockSpeed = 0.0;
 
     //disable-able gui items
     private HBox sStateBox;
     private HBox cStateBox;
     private HBox bStatusBox;
-    private CheckBox OccupancyCheckBox;
+    private CheckBox occupancyCheckBox;
 
     // changable gui items
     private ImageView switchImageView;
@@ -82,21 +74,25 @@ public class TrackControllerGUI extends Application {
     private Circle light2;
     private Circle light3;
 
+    private ComboBox<String> blockBox;
+    private ComboBox<String> crossBox;
+    private ComboBox<String> switchBox;
+
     // Images
-    Image CrossingImageGrey = new Image(resourceBaseDir + "/crossing-greyed-out.png");
+    Image crossImageGrey = new Image(resourceBaseDir + "/crossing-greyed-out.png");
 
-    Image CrossingImageDown = new Image(resourceBaseDir + "/crossing-on.png");
-    Image CrossingImageUp = new Image(resourceBaseDir + "/crossing-off.png");
+    Image crossImageDown = new Image(resourceBaseDir + "/crossing-on.png");
+    Image crossImageUp = new Image(resourceBaseDir + "/crossing-off.png");
 
-    Image SwitchImageGrey = new Image(resourceBaseDir + "/switch-greyed-out.png");
-    Image SwitchImageMain = new Image(resourceBaseDir + "/switch-main.png");
-    Image SwitchImageFork = new Image(resourceBaseDir + "/switch-fork.png");
+    Image switchImageGrey = new Image(resourceBaseDir + "/switch-greyed-out.png");
+    Image switchImageMain = new Image(resourceBaseDir + "/switch-main.png");
+    Image switchImageFork = new Image(resourceBaseDir + "/switch-fork.png");
 
     // changable labels
-    private Label AuthorityVal;
-    private Label SpeedVal;
-    private Label StatusVal;
-    private Label OccupancyVal;
+    private Label authorityVal;
+    private Label speedVal;
+    private Label statusVal;
+    private Label occupancyVal;
     private Label currPLC;
 
     private Scene scene = null;
@@ -104,8 +100,8 @@ public class TrackControllerGUI extends Application {
 
     public TrackControllerGUI(TrackControllerMain m, TrackController tkc) {
         tkcm = m;
-        CurrentController = tkc;
-        CurrentBlock = new Block();//tm.getBlock(tkc.GetControlledBlocks()[0]);
+        currentController = tkc;
+        currentBlock = tkcm.tm.getBlock(currentController.getControlledBlocks()[0],tkc.getLine());
         setup();
         update(); // update GUI accordingly
     }
@@ -142,56 +138,83 @@ public class TrackControllerGUI extends Application {
 
         
 
-        String[] ControllerNames = tkcm.GetControllerNames();
+        String[] ControllerNames = tkcm.getControllerNames();
         ObservableList<String> ControllerOptions = FXCollections.observableArrayList();
         for (String option: ControllerNames) {
             ControllerOptions.addAll(option);
         }
         ComboBox<String> controllerBox = new ComboBox<String>(ControllerOptions);
-        controllerBox.getSelectionModel().select(CurrentController.toString());
+        controllerBox.getSelectionModel().select(currentController.toString());
         controllerBox.setOnAction(new EventHandler<ActionEvent>() {
 
             @Override
             public void handle(ActionEvent event) {
                 String newTkc = controllerBox.getSelectionModel().getSelectedItem();
-                CurrentController = tkcm.GetController(newTkc);
-                tkcm.SetController(newTkc);
+                currentController = tkcm.getController(newTkc);
+                tkcm.setController(newTkc);
+
+                String[] BlockNames = currentController.getControlledBlocks();//,"2","3","4","5"};
+                ObservableList<String> BoxOptionsNew = FXCollections.observableArrayList();
+                for (String option: BlockNames) {
+                    BoxOptionsNew.addAll(option);
+                }
+                blockBox.setItems(BoxOptionsNew);
+                blockBox.getSelectionModel().selectFirst();
+                if (occupancyCheckBox.isSelected()) { // disable
+
+                    occupancyCheckBox.setSelected(false);
+                    currentBlock.setIsOccupied(false);
+                    overrideOccupied = false;
+                }
+
             }
         });
 
-
-        String[] BlockNames = CurrentController.GetControlledBlocks();//,"2","3","4","5"};
+        String[] BlockNames = currentController.getControlledBlocks();//,"2","3","4","5"};
         ObservableList<String> BoxOptions = FXCollections.observableArrayList();
         for (String option: BlockNames) {
             BoxOptions.addAll(option);
         }
 
-        ComboBox<String> blockBox = new ComboBox<String>(BoxOptions);
+        blockBox = new ComboBox<String>(BoxOptions);
         blockBox.getSelectionModel().selectFirst();
         blockBox.setOnAction(new EventHandler<ActionEvent>() {
-
             @Override
             public void handle(ActionEvent event) {
-                System.out.println("selected new block: " + blockBox.getSelectionModel().getSelectedItem());
+                if (blockBox.getSelectionModel().getSelectedItem() != null) {
+                    //System.out.println(blockBox.getSelectionModel().getSelectedItem());
+                    //System.out.println(currentController.getLine());
+                    currentBlock = tkcm.tm.getBlock(blockBox.getSelectionModel().getSelectedItem(),currentController.getLine());
+                    if (currentBlock.getBlockID().equals("C12")) { // switch
+                        //System.out.println("Here");
+                        currentBlock.setType(BlockType.SWITCHBLOCK);
+                        currentBlock.setSwitchState(SwitchState.FORK);
+                    }
+                    checkUI();
+                }
             }
         });
 
 
         ObservableList<String> ModeOptions = FXCollections.observableArrayList("Automatic","Manual");
         ComboBox<String> modeBox = new ComboBox<String>(ModeOptions);
-        modeBox.getSelectionModel().selectFirst();
+        modeBox.getSelectionModel().select(currentController.getMode());
+        mode = currentController.getMode();
         modeBox.setOnAction(new EventHandler<ActionEvent>() {
 
             @Override
             public void handle(ActionEvent event) {
-                System.out.println("selected new mode: " + modeBox.getSelectionModel().getSelectedItem());
+                //System.out.println("selected new mode: " + modeBox.getSelectionModel().getSelectedItem());
+                mode = modeBox.getSelectionModel().getSelectedItem();
+                currentController.setMode(mode);
+                checkUI();
             }
         });
 
 
         Label ctrl = new Label("Controller: ");
         Label blk = new Label( "Block: ");
-        Label mode = new Label("Mode: ");
+        Label modeLabel = new Label("Mode: ");
 
         Region spacer1 = new Region();
         Region spacer2 = new Region();
@@ -202,7 +225,7 @@ public class TrackControllerGUI extends Application {
 
         HBox controllerHBox = new HBox(ctrl,spacer1,controllerBox);
         HBox blockHBox = new HBox(blk,spacer2,blockBox);
-        HBox modeHBox = new HBox(mode,spacer3,modeBox);
+        HBox modeHBox = new HBox(modeLabel,spacer3,modeBox);
 
 
         /*GridPane.setConstraints(controllerBox,0,0);
@@ -218,17 +241,20 @@ public class TrackControllerGUI extends Application {
 
         root.getChildren().addAll(MainControls); // upper left
 
-        Label LineInfo = new Label("Line: " + CurrentController.GetLine());
+        Label LineInfo = new Label("Line: " + currentController.getLine());
         Label OccupancyLabel = new Label("Occupancy: ");
-        OccupancyVal = new Label("Unoccupied");
+        occupancyVal = new Label("UNOCCUPIED");
 
-        OccupancyCheckBox = new CheckBox("Override to Occupied");
-        OccupancyCheckBox.setIndeterminate(false); // only true/false
-        OccupancyCheckBox.setOnAction(new EventHandler<ActionEvent>() {
+        occupancyCheckBox = new CheckBox("Override to Occupied");
+        occupancyCheckBox.setIndeterminate(false); // only true/false
+        occupancyCheckBox.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                System.out.println(OccupancyCheckBox.isSelected() ? "checked" : "unchecked");
+                //System.out.println(occupancyCheckBox.isSelected() ? "checked" : "unchecked");
+                currentBlock.setIsOccupied(occupancyCheckBox.isSelected());
+                overrideOccupied = !overrideOccupied;
                 //controllerHBox.setDisable(true); // useful for turning off
+                checkUI();
             }
         });
 
@@ -236,27 +262,27 @@ public class TrackControllerGUI extends Application {
 
         Label AuthorityLabel = new Label("Authority: ");
         Label SpeedLabel = new Label("Speed: ");
-        AuthorityVal = new Label(BlockAuthority);
-        SpeedVal = new Label(String.valueOf(BlockSpeed));
+        authorityVal = new Label(blockAuthority);
+        speedVal = new Label(String.valueOf(blockSpeed));
 
         Label StatusLabel = new Label("Status: ");
-        StatusVal = new Label(status);
+        statusVal = new Label("CLEAR");
 
         HBox AuthBox = new HBox();
-        AuthBox.getChildren().addAll(AuthorityLabel,AuthorityVal);
+        AuthBox.getChildren().addAll(AuthorityLabel,authorityVal);
         HBox SpeedBox = new HBox();
-        SpeedBox.getChildren().addAll(SpeedLabel,SpeedVal);
+        SpeedBox.getChildren().addAll(SpeedLabel,speedVal);
 
         HBox OccBox = new HBox();
-        OccBox.getChildren().addAll(OccupancyLabel,OccupancyVal);
+        OccBox.getChildren().addAll(OccupancyLabel,occupancyVal);
 
         HBox StatusBox = new HBox();
-        StatusBox.getChildren().addAll(StatusLabel,StatusVal);
+        StatusBox.getChildren().addAll(StatusLabel,statusVal);
 
         VBox GeneralInfo = new VBox();
         GeneralInfo.setPadding(new Insets(10));
         GeneralInfo.setSpacing(8);
-        GeneralInfo.getChildren().addAll(LineInfo,OccBox,OccupancyCheckBox); // upper right
+        GeneralInfo.getChildren().addAll(LineInfo,OccBox,occupancyCheckBox); // upper right
         GeneralInfo.getChildren().addAll(AuthBox,SpeedBox,StatusBox); // upper right
 
         GridPane.setConstraints(GeneralInfo,1,0);
@@ -279,7 +305,7 @@ public class TrackControllerGUI extends Application {
 
 
 
-        ImageView switchImageView = new ImageView(SwitchImageGrey);
+        switchImageView = new ImageView(switchImageGrey);
         switchImageView.setFitWidth(160);
         switchImageView.setFitHeight(120);
         //GridPane.setConstraints(switchImageView,0,1); // middle left
@@ -317,7 +343,7 @@ public class TrackControllerGUI extends Application {
 
         //root.getChildren().addAll(switchImageView); // middle left
 
-        ImageView crossImageView = new ImageView(CrossingImageGrey);
+        crossImageView = new ImageView(crossImageGrey);
         crossImageView.setFitWidth(160);
         crossImageView.setFitHeight(120);
         //GridPane.setConstraints(crossImageView,1,1);
@@ -358,6 +384,7 @@ public class TrackControllerGUI extends Application {
                 if (file != null) {
                     try {
                         Desktop.getDesktop().open(file);
+
                     } catch (IOException ex) {
                         System.out.println("Error: could not open file");
                     } /*catch (ParsingException p) {
@@ -380,13 +407,20 @@ public class TrackControllerGUI extends Application {
         for (String option: SwitchStates) {
             SwStates.addAll(option);
         }
-        ComboBox<String> SwitchBox = new ComboBox<String>(SwStates);
-        SwitchBox.getSelectionModel().selectFirst();
-        SwitchBox.setOnAction(new EventHandler<ActionEvent>() {
+        switchBox = new ComboBox<String>(SwStates);
+        switchBox.getSelectionModel().selectFirst();
+        switchBox.setOnAction(new EventHandler<ActionEvent>() {
 
             @Override
             public void handle(ActionEvent event) {
-                System.out.println("selected new switch state: " + SwitchBox.getSelectionModel().getSelectedItem());
+                //System.out.println("selected new switch state: " + switchBox.getSelectionModel().getSelectedItem());
+                String s = switchBox.getSelectionModel().getSelectedItem();
+                if (s.equals("FORK"))
+                    currentBlock.setSwitchState(SwitchState.FORK);
+                else
+                    currentBlock.setSwitchState(SwitchState.MAIN);
+
+                checkUI();
             }
         });
 
@@ -395,13 +429,20 @@ public class TrackControllerGUI extends Application {
         for (String option: CrossingStates) {
             CrStates.addAll(option);
         }
-        ComboBox<String> CrossBox = new ComboBox<String>(CrStates);
-        CrossBox.getSelectionModel().selectFirst();
-        CrossBox.setOnAction(new EventHandler<ActionEvent>() {
+        crossBox = new ComboBox<String>(CrStates);
+        crossBox.getSelectionModel().selectFirst();
+        crossBox.setOnAction(new EventHandler<ActionEvent>() {
 
             @Override
             public void handle(ActionEvent event) {
-                System.out.println("selected new crossing state: " + CrossBox.getSelectionModel().getSelectedItem());
+                //System.out.println("selected new crossing state: " + crossBox.getSelectionModel().getSelectedItem());
+                String s = crossBox.getSelectionModel().getSelectedItem();
+                if (s.equals("UP"))
+                    currentBlock.setCrossingState(CrossingState.UP);
+                else
+                    currentBlock.setCrossingState(CrossingState.DOWN);
+
+                checkUI();
             }
         });
 
@@ -416,14 +457,14 @@ public class TrackControllerGUI extends Application {
 
             @Override
             public void handle(ActionEvent event) {
-                System.out.println("selected new block status: " + BlockBox.getSelectionModel().getSelectedItem());
+                //System.out.println("selected new block status: " + BlockBox.getSelectionModel().getSelectedItem());
             }
         });
 
 
         Label sw = new Label("  Switch:");
         Label cr = new Label("  Crossing:");
-        Label status = new Label("  Block Status:");
+        Label statusBoxLabel = new Label("  Block Status:");
 
         Region spacer4 = new Region();
         Region spacer5 = new Region();
@@ -432,9 +473,9 @@ public class TrackControllerGUI extends Application {
         HBox.setHgrow(spacer5,Priority.ALWAYS);
         HBox.setHgrow(spacer6,Priority.ALWAYS);
 
-        sStateBox = new HBox(sw,spacer4,SwitchBox);
-        cStateBox = new HBox(cr,spacer5,CrossBox);
-        bStatusBox = new HBox(status,spacer6,BlockBox);
+        sStateBox = new HBox(sw,spacer4,switchBox);
+        cStateBox = new HBox(cr,spacer5,crossBox);
+        bStatusBox = new HBox(statusBoxLabel,spacer6,BlockBox);
 
         VBox lowerRight = new VBox(sStateBox,cStateBox,bStatusBox);
         lowerRight.setSpacing(8);
@@ -453,7 +494,7 @@ public class TrackControllerGUI extends Application {
         if (scene == null)
             setup();
 
-        primaryStage.setTitle(CurrentController.GetName()); // container for all of it
+        primaryStage.setTitle(currentController.getName()); // container for all of it
         primaryStage.setResizable(false);
         TrackControllerGUI thisGUI = this;
 
@@ -482,65 +523,110 @@ public class TrackControllerGUI extends Application {
     }
 
     public void setIsOccupied(boolean isOccupied) {
-        //CurrentBlock.setIsOccupied(true)
+        //currentBlock.setIsOccupied(true)
     }
 
     public void setSpeed(double speed) {
-        //CurrentBlock.setSpeed(speed);
+        //currentBlock.setSpeed(speed);
     }
     public void setAuthority(String authority) {
-        //CurrentBlock.setAuthority(authority);
+        //currentBlock.setAuthority(authority);
     }
 
     public void checkUI(){ //disable/enable elements depending on block
-        /*
-        if (CurrentBlock.getFailures().size() != 0) // if errors
-            StatusVal.setText("BROKEN");
+        if (currentBlock.getFailures() != null && currentBlock.getFailures().length != 0) // if errors
+            statusVal.setText("BROKEN");
         else
-            StatusVal.setText("CLEAR");
+            statusVal.setText("CLEAR");
 
-        if (CurrentBlock.getIsOccupied() && !OverrideOccupied)  {
-            OccupancyVal.setText("OCCUPIED");
-            OccupancyCheckBox.setDisable(true); // cant change for train
+        if (currentBlock.getIsOccupied() && !overrideOccupied)  {
+            occupancyVal.setText("OCCUPIED");
+            occupancyCheckBox.setDisable(true); // cant change for train
+        }
+        else if (currentBlock.getIsOccupied()) {
+            occupancyVal.setText("OCCUPIED");
         }
         else  {
-            OccupancyVal.setText("UNOCCUPIED");
-            OccupancyCheckBox.setDisable(false);
+            occupancyVal.setText("UNOCCUPIED");
+            occupancyCheckBox.setDisable(false);
         }
 
-        if (!mode.equals("AUTO") && CurrentBlock.getType() == BlockType.SWITCHBLOCK) {
+        if (currentBlock.getType() == BlockType.SWITCHBLOCK) {
+            switchBox.getSelectionModel().select(currentBlock.getSwitchState().toString());
+        }
+
+        if (currentBlock.getType() == BlockType.CROSSBLOCK) {
+            crossBox.getSelectionModel().select(currentBlock.getCrossingState().toString());
+        }
+
+        if (!mode.equals("Automatic") && currentBlock.getType() == BlockType.SWITCHBLOCK) {
                 sStateBox.setDisable(false);
         } else {
                 sStateBox.setDisable(true);
         }
 
-        if (!mode.equals("AUTO") && CurrentBlock.getType() == BlockType.CROSSBLOCK) {
+        if (!mode.equals("Automatic") && currentBlock.getType() == BlockType.CROSSBLOCK) {
             cStateBox.setDisable(false);
         } else {
             cStateBox.setDisable(true);
             //grey out
-        } */
+        }
+
+        // UI greying out
+        //System.out.println("Current block type is" + currentBlock.getType());
+        if (currentBlock.getType() == BlockType.SWITCHBLOCK) {
+            if (currentBlock.getSwitchState() == SwitchState.MAIN) {
+                switchImageView.setImage(switchImageMain);
+                light1.setFill(Color.GREEN);
+                light2.setFill(Color.GREEN);
+                light3.setFill(Color.RED);
+            }
+            else {
+                switchImageView.setImage(switchImageFork);
+                light1.setFill(Color.GREEN);
+                light2.setFill(Color.RED);
+                light3.setFill(Color.GREEN);
+            }
+            crossImageView.setImage(crossImageGrey);
+        } else if (currentBlock.getType() == BlockType.CROSSBLOCK) {
+            if (currentBlock.getCrossingState() == CrossingState.UP)
+                crossImageView.setImage(crossImageUp);
+            else
+                crossImageView.setImage(crossImageDown);
+            switchImageView.setImage(switchImageGrey);
+            light1.setFill(Color.GREY);
+            light2.setFill(Color.GREY);
+            light3.setFill(Color.GREY);
+        } else {
+            crossImageView.setImage(crossImageGrey);
+            switchImageView.setImage(switchImageGrey);
+            light1.setFill(Color.GREY);
+            light2.setFill(Color.GREY);
+            light3.setFill(Color.GREY);
+        }
+
     }
 
     public void update() {
-
-        /*AuthorityVal.setText(CurrentBlock.getAuditedAuthority());
-        SpeedVal.setText(String.valueOf(CurrentBlock.getAuditedSpeed()));
+        if (currentBlock.getAuditedAuthority() == null) {
+            currentBlock.setAuditedAuthority(currentBlock);
+        }
+        authorityVal.setText(currentBlock.getAuditedAuthority().getBlockID());
+        speedVal.setText(String.valueOf(currentBlock.getAuditedSpeed()));
         checkUI();
-        */
     }
 
     public void ChangeSwitchState(SwitchState s) {
-        //CurrentBlock.setSwitchState(s);
+        //currentBlock.setSwitchState(s);
     }
 
     public void ChangeBlockStatus(String failure) {
-        //CurrentBlock.addFailure(failure)
+        //currentBlock.addFailure(failure)
         return;
     }
 
     public void ChangeCrossingState(CrossingState s) {
-        //CurrentBlock.setCrossingState(s);
+        //currentBlock.setCrossingState(s);
         return;
     }
 

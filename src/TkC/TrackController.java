@@ -8,6 +8,7 @@ public class TrackController
     ArrayList<Block> lineBlocks;
     String name;
     ArrayList<Block> controlledBlocks;
+    String mode = "";
 
     TkM tm = null;
     TrackControllerMain tkcm;
@@ -15,6 +16,7 @@ public class TrackController
     public TrackController(String l, String n, ArrayList<Block> blocks,
             TkM tkmodel,TrackControllerMain m) {
         PLCProgram = "";
+        mode = "Automatic";
         line = l;
         name = n;
         controlledBlocks = blocks;
@@ -28,7 +30,7 @@ public class TrackController
         }
     }
 
-    public boolean ControlsBlock(String blockID) {
+    public boolean controlsBlock(String blockID) {
         for (Block b: controlledBlocks) {
             if (b.toString().equals(blockID))
                 return true;
@@ -36,7 +38,7 @@ public class TrackController
         return false;
     }
 
-    public String[] GetControlledBlocks() {
+    public String[] getControlledBlocks() {
         String[] blks = new String[controlledBlocks.size()];
         for (int i = 0; i < controlledBlocks.size(); i++) {
             blks[i] = controlledBlocks.get(i).toString();
@@ -44,72 +46,54 @@ public class TrackController
         return blks;
     }
 
-    public String GetLine() {
+    public String getLine() {
         return line;
     }
 
-    public String GetName() {
+    public String getName() {
         return name;
     }
 
+    public void setMode(String m) {
+        mode = m;
+    }
+    public String getMode(){
+        return mode;
+    }
 
-    public void SetPLC(String plc) {
+
+    public void setPLC(String plc) {
         PLCProgram = plc;
         // open plc and parse
-        RunPLC();
+        runPLC();
     }
 
-    //public void InitGUI() {
-        //tkcg = new TrackControllerGUI();
-    //}
-
-    //public void ShowGUI(Stage newStage) {
-        //tkcg.start(newStage);
-    //}
-
-    //public void UpdateGUI(String BlockAuthority, double speed) {
-        //tkcg.update(BlockAuthority,speed);
-    //}
-
-    public boolean VerifySafeConditions() {
-        return true;
-    }
-
-    public void UpdateOnTick() {
+    public void runPLC() {
         return;
     }
 
-    public void RunPLC() {
-        return;
-    }
-
-    public boolean SetSwitchState(Block s, boolean state) {
+    public boolean setSwitchState(String blockID, SwitchState s) {
+        Block b = tkcm.tm.getBlock(blockID,line);
+        b.setSwitchState(s);
         return true;
     }
 
-    public boolean SetCrossingState(Block s, boolean state) {
+    public boolean setCrossingState(String blockID, CrossingState c) {
+        Block b = tkcm.tm.getBlock(blockID,line);
+        b.setCrossingState(c);
         return true;
     }
 
-    public void RequestNewTrain(String name, double speed, String authority, Block startBlock) {
-        if (line.equals("GREEN")) {
-            startBlock = lineBlocks.get(Block.blockIDToNum("J62"));
-        }
-        else {
-            startBlock = lineBlocks.get(Block.blockIDToNum("C9"));
-        }
-        startBlock.setIsOccupied(true);
-        startBlock.setAuditedSpeed(speed);
-        startBlock.setAuditedAuthority(authority);
-
-        tm.createTrain(name,authority,startBlock,speed);
-    }
-
-    public boolean SendSuggestedSpeed(String blockID, double speed) {
+    public boolean sendSuggestedSpeed(String blockID, double speed) {
+        Block b = tkcm.tm.getBlock(blockID,line);
+        b.setAuditedSpeed(speed);
         return true;
     }
 
-    public boolean SendSuggestedAuthority(String blockID, String blockIDAuthority) {
+    public boolean sendSuggestedAuthority(String blockID, String blockIDAuthority) {
+        Block b = tkcm.tm.getBlock(blockID,line);
+        Block a = tkcm.tm.getBlock(blockIDAuthority,line);
+        b.setAuditedAuthority(a);
         return true;
     }
 
@@ -118,6 +102,7 @@ public class TrackController
     }
 
     public void update() {
+        //run plc
 
     }
 

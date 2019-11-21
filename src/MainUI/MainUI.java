@@ -14,6 +14,7 @@ import javafx.event.ActionEvent;
 //import javafx.event.WindowEvent;
 
 import javafx.animation.AnimationTimer;
+import java.io.FileNotFoundException;
 
 public class MainUI extends Application {
     // fields
@@ -29,15 +30,16 @@ public class MainUI extends Application {
     private TextField speed;
 
     private TrackControllerMain tkcm = null;
-    private TrackController tkc = null;
 
-    private TrainController tnc = null;
+    private TrainControllerMain tnc = null;
     private Button CTC = null;
     private Button trackModel = null;
     private Button trainModel = null;
     private Button trainController = null;
     private Button trackController = null;
+    private Button stopButton = null;
 
+    private boolean updateBoolean = true;
 
     private TkM tkm = null;
     //private TrackModel tkm = null;
@@ -61,12 +63,21 @@ public class MainUI extends Application {
    }
     
     @Override
-    public void start(Stage stage) {
-
-        tkm = new TkM(); // initialize track model
+    public void start(Stage stage)  {
+        tnc = new TrainControllerMain();
+        tkm = new TkM(tnc); // initialize track model
         tkcm = new TrackControllerMain();
+        tkcm.setTrackModel(tkm);
         tkcm.createControllers();
         ctc = new CTC();
+        ctc.addTrackModel(tkm);
+        ctc.addTrackController(tkcm);
+        tkm.addTrackController(tkcm);
+        tkcm.setCTC(ctc);
+
+        Label programTitle = new Label("Conjunction Junction");
+        Label programTitle2= new Label("Train Simulation Software");
+        programTitle.setAlignment(Pos.CENTER);
 
         // Create button
         CTC = new Button("CTC");
@@ -98,30 +109,42 @@ public class MainUI extends Application {
                 new TrainControllerButtonHandler()
         );
 
+        stopButton = new Button("Stop");
+        stopButton.setOnAction(
+                new stopHandler()
+        );
+
         // Put the HBox, dispatchT, and myLabel in a VBox
-        VBox vbox = new VBox(10, CTC, trackController, trackModel, trainModel, trainController);
+        VBox vbox = new VBox(10,programTitle,programTitle2, CTC, trackController, trackModel, trainModel, trainController,stopButton);
         // set the VBox's alignment to center
         vbox.setAlignment(Pos.CENTER);
 
         // Create a scene with the VBox as its root node
-        Scene scene = new Scene(vbox,300,200);
+        Scene scene = new Scene(vbox,300,500);
         stage.setTitle("Train Sim Home Page");
         stage.setScene(scene);
 
         //final long startNanoTime = System.nanoTime();
 
-        /*new AnimationTimer() { // anonymous animation timer
+        new AnimationTimer() { // anonymous animation timer
             public void handle(long currentNanoTime) {
-                double deltaT = (currentNanoTime - startNanoTime)/1000000000.0;
+                //double deltaT = (currentNanoTime - startNanoTime)/1000000000.0;
+                if (updateBoolean) {
 
-                // update all modules in succession
-                //ctc.update()
-                //tkcm.update()
-                //tkm.update()
-                //tnm.update()
-                //tnc.update()
+                    // update all modules in succession
+                    ctc.update();
+                    tkcm.update();
+                    tkm.update();
+                    //tnm.update();
+                    tnc.update();
+                    try {
+                        Thread.sleep(1);
+                    } catch (Exception e) {
+                        System.out.println(e);
+                    }
+                }
             }
-        }.start(); */
+        }.start();
 
 
         //stage.setOnCloseRequest(new closeWindowHandler());
@@ -136,11 +159,7 @@ public class MainUI extends Application {
         @Override
         public void handle(ActionEvent event) {
             Stage newWindow = new Stage();
-            if (ctc == null)
-                ctc = new CTC();
-            if (ctcg == null)
-                ctcg = new CTC_GUI(ctc,newWindow);
-            ctcg.start(newWindow);
+            ctc.showGUI(newWindow);
         }
     }
     
@@ -160,10 +179,10 @@ public class MainUI extends Application {
      */
     class TrackModelButtonHandler implements EventHandler<ActionEvent>{
         @Override
-        public void handle(ActionEvent event){
+        public void handle(ActionEvent event) {
             Stage newWindow = new Stage();
             if (tkm == null)
-                tkm = new TkM();
+                tkm = new TkM(tnc);
             tkm.showGUI(newWindow);
 
         }
@@ -176,12 +195,14 @@ public class MainUI extends Application {
         @Override
         public void handle(ActionEvent event){
              Stage newWindow = new Stage();
-            if (ctcg != null)
-                tnm = ctcg.getTrainModel();
-            if (tnm == null)
-                tnm = new TrainModel();
-            if (tnm != null)
-                tnm.showGUI(newWindow);
+             //tkm.
+
+            //if (ctcg != null)
+                //tnm = ctcg.getTrainModel();
+            //if (tnm == null)
+                //tnm = new TrainModel();
+            //if (tnm != null)
+                //tnm.showGUI(newWindow);
 
         }
     }
@@ -193,12 +214,18 @@ public class MainUI extends Application {
         @Override
         public void handle(ActionEvent event){
             Stage newWindow = new Stage();
-            if (tnc == null && tnm == null)
-                tnc = new TrainController();
-            else if (tnc == null)
-                tnc = tnm.TNC;
-            if (tnc != null)
-                tnc.showGUI(newWindow);
+            tnc.showGUI(newWindow);
+        }
+    }
+
+    class stopHandler implements EventHandler<ActionEvent>{
+        @Override
+        public void handle(ActionEvent event){
+            if (updateBoolean)
+                stopButton.setText("Stop");
+            else
+                stopButton.setText("Start");
+            updateBoolean = !updateBoolean;
         }
     }
 

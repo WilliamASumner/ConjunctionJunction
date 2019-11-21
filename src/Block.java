@@ -19,6 +19,29 @@ public class Block
     boolean IsUnderground;
     BlockType type;
     String stationName;
+    SwitchState switchState;
+    CrossingState crossingState;
+
+    public Block() {
+        isOccupied = false;
+        LineColor = "green";
+        BlockID = "A1";
+        Grade = 0.0;
+        Elevation = 0.0;
+        SpeedLimit = 50.0;
+        failures = null;
+        nextBlockID = null;
+        prevBlockID = null;
+        IsBidirectional = false;
+        Length = 0.0;
+        AuditedSpeed = 0.0;
+        AuditedAuthority = null;
+        IsUnderground = false;
+        type = BlockType.REGBLOCK;
+        stationName = "Uninitialized";
+    }
+
+
 
     public String getStationName() {
       if (this.type == BlockType.STATIONBLOCK) {
@@ -157,6 +180,27 @@ public class Block
 
     public String toString() {
       return this.getBlockID();
+    }
+
+    public static int blockIDToNum(String id){
+        return (Integer.parseInt(id.substring(1,id.length())));
+    }
+
+    public SwitchState getSwitchState() {
+        return switchState;
+    }
+
+    public void setSwitchState(SwitchState s) {
+        switchState = s;
+    }
+
+    public CrossingState getCrossingState() {
+        return crossingState;
+    }
+
+    
+    public void setCrossingState(CrossingState c) {
+         crossingState = c;
     }
 
 }

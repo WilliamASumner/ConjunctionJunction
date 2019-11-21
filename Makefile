@@ -62,6 +62,7 @@ $(TESTCLASSFILES): $(TESTFILE)
 
 run: src.txt $(TARGET_CLASS)
 	$(RUNCMD) $(JFLAGS) -cp "$(BIN_DIR);$(ANTLRPATH)" $(TARGET)
+#	$(RUNCMD) $(JFLAGS) -cp "$(BIN_DIR)" $(TARGET)
 
 # java build text
 src.txt: ./src/
@@ -79,8 +80,8 @@ src.txt: ./src/
 
 # Result is dependent on all files in src dir
 $(TARGET_CLASS): $(shell find ./src -type f)
-	$(CC) $(JFLAGS) -d $(BIN_DIR) @src.txt
-#	$(CC) $(JFLAGS) -Xlint:unchecked -d $(BIN_DIR) @src.txt
+#	$(CC) $(JFLAGS) -d $(BIN_DIR) @src.txt
+	$(CC) $(JFLAGS) -Xlint:unchecked  -cp "$(BIN_DIR):$(ANTLRPATH)" -d $(BIN_DIR) @src.txt
 
 runtest: $(TTARGET)
 	$(RUNCMD) $(JFLAGS) $(TTARGET)

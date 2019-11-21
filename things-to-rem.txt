@@ -1,0 +1,7 @@
+1) Hashmap for redline in CTC
+2) David - pls do stuff - maybe add friction to counter power?
+3) GUI - Track Model, move drop down
+4) TrainController-  fix power command
+5) Fix authority bug (***)
+6) TrackController - implement setAuthority/setSpeed functions
+7) 
