@@ -132,7 +132,6 @@ public class TrainModel {
     public TrainModel(String Stringname, String ABlock, Block startBlock, double ASpeed, TrainControllerMain TNCMain_input,TkM tm)
     {
 
-        System.out.println("not touching this");
         //---- Do not touch this vvvvv
 
         currBlock = startBlock;
@@ -140,7 +139,6 @@ public class TrainModel {
         grade = currBlock.getGrade();
         currBlockLength = currBlock.getLength();
         TNC_Main = TNCMain_input;
-        System.out.println("hey" + TNCMain_input);
         initTrainController(Stringname, ABlock, ASpeed);
 
         trackModel = tm;
@@ -154,8 +152,6 @@ public class TrainModel {
     private void nextBlockFunc() // 
     {
         currBlock.isOccupied = false;
-        System.out.println("curr block" + currBlock.getBlockID());
-        System.out.println("curr block next" + currBlock.getNextBlock().getBlockID());
         currBlock = currBlock.getNextBlock();
         currBlock.isOccupied = true;
         grade = currBlock.getGrade();
@@ -191,6 +187,7 @@ public class TrainModel {
             acceleration = CalcAcceleration();
         }
         System.out.println("Acceleration of Train "+name+": "+acceleration);
+        System.out.println("Velocity of Train "+name+": "+velocity);
 
         velocity = velocity + acceleration * timePerUpdate;
         if ((Sbrake || Ebrake) && velocity <=0) velocity =0;
