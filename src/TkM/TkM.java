@@ -177,7 +177,7 @@ public class TkM {
     public void updateTkM() {
       for (int i = 0; i < trains.size(); i++) {
         Block b = trains.get(i).getCurrBlock();
-        if (b.getBlockID.equals("A0")) {
+        if (b.getBlockID().equals("A0")) {
           trains.remove(i);
         }
       }
