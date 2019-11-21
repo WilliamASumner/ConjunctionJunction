@@ -1,0 +1,8 @@
+if (B1.occupancy == occupied) then
+    C1.switchstate=FORK;
+endif;
+
+if (B32.occupancy == unoccupied) then
+    C2.occupancy=OCCUPIED;
+    C2.authority=A3;
+endif;
