@@ -208,6 +208,8 @@ public class TrainModel {
 			powerCommand = TNC.calculatePower();
 		}
 		double retval = 1000 * powerCommand / (estimatedmass * velocity);
+		double frictionforce = 0.5 * velocity * velocity
+		retval = retval - (frictionforce);
 		return retval;
 	}
 	
@@ -217,7 +219,11 @@ public class TrainModel {
 		{
 			acceleration = CalcAcceleration();
 		}
+		System.out.println("Acceleration of Train "+name+": "+acceleration);
+		
 		velocity = velocity + acceleration * timePerUpdate;
+		if ((Sbrake || Ebrake) && velocity <=0) velocity =0;
+		
 		distanceTraveled = distanceTraveled + velocity * timePerUpdate;
 		
 		if (distanceTraveled > currBlockLength)
