@@ -11,8 +11,9 @@ public class Block
     double SpeedLimit;
     String[] failures;
     Block nextBlockID;
+    Block nextBlockIDFork;
     Block prevBlockID;
-    Boolean IsBidirectional;
+    boolean IsBidirectional;
     double Length;
     double AuditedSpeed;
     Block AuditedAuthority;
@@ -39,6 +40,8 @@ public class Block
         IsUnderground = false;
         type = BlockType.REGBLOCK;
         stationName = "Uninitialized";
+        switchState = SwitchState.MAIN;
+        crossingState = CrossingState.UP;
     }
 
 

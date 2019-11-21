@@ -135,16 +135,19 @@ public class TrackControllerMain
 
     public boolean sendSuggestedAuthority(String blockID, String authorityID) {
         TrackController t = findController(blockID);
+        t.sendSuggestedAuthority(blockID,authorityID);
         return true;
     }
 
-    public boolean setSwitchState(String blockID, boolean SwitchState) {
+    public boolean setSwitchState(String blockID, SwitchState s) {
         TrackController t = findController(blockID);
+        t.setSwitchState(blockID,s);
         return true;
     }
 
-    public boolean setCrossingState(String blockID, boolean crossState) {
+    public boolean setCrossingState(String blockID, CrossingState c) {
         TrackController t = findController(blockID);
+        t.setCrossingState(blockID,c);
         return true;
     }
 
