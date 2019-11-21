@@ -174,6 +174,16 @@ public class TkM {
         tkc.updateOccupancy(b);
     }
 
+    public void updateTkM() {
+      for (int i = 0; i < trains.size(); i++) {
+        Block b = trains.get(i).getCurrBlock();
+        if (b.getBlockID.equals("A0")) {
+          trains.remove(i);
+        }
+      }
+
+    }
+
     // public static void main(String[] args) {
     //
     //   TkM t = new TkM("Red");
