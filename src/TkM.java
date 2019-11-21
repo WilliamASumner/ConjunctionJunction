@@ -24,12 +24,13 @@ public class TkM {
       TrackMap line = new TrackMap();
       TrackMap red = new TrackMap();
       TrackMap green = new TrackMap();
+      TrainControllerMain tnC;
       TrackControllerMain tkc = new TrackControllerMain();
 
       public TkM(String lineColor) {
+        tnC = newtnC;
         this.buildTrackMaps("redFile.csv", "greenFile.csv");
-
-        if (lineColor.equals("red")) {
+        if (lineColor.equals("Red")) {
           line = this.red;
         }
         else {
@@ -40,13 +41,14 @@ public class TkM {
 
       }
 
-      public TkM() {
+      public TkM(TrainControllerMain newtnC) {
+        tnC = newtnC;
         this.buildTrackMaps("redFile.csv", "greenFile.csv");
 
-      //  System.out.println(this.toString(red, red.map.get(5).getBlockID()));
-        tkmg = new TkMGUI(this);
+       System.out.println(this.toString(red, red.map.get(5).getBlockID()));
+       tkmg = new TkMGUI(this);
 
-      }
+     }
 
       public void addTrackController(TrackControllerMain newtkc) {
         tkc = newtkc;
@@ -74,8 +76,8 @@ public class TkM {
       }
 
 
-      public void createTrain(String name, String authority, Block b, double speed) {
-        TrainModel newTrain = new TrainModel(name, authority, b, speed);
+      public void createTrain(String name, String authority, Block b, double speed, TrainControllerMain TnC) {
+        TrainModel newTrain = new TrainModel(name, authority, b, speed, TnC);
       }
 
 
@@ -127,7 +129,7 @@ public class TkM {
        t6l.setFont(Font.font("Verdana",  20));
        Text t7 = new Text("\nAuthority:");
        t7.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
-       Text t7l = new Text(b.getAuditedAuthority() + "\n\n\n");
+       Text t7l = new Text(b.getNextBlock() + "\n\n\n");
        t7l.setFont(Font.font("Verdana",  20));
 
 
@@ -140,10 +142,10 @@ public class TkM {
      public Block getBlock(String blockID, String lineColor) {
        lineColor = lineColor.toLowerCase();
        int bid = Integer.parseInt(blockID.substring(1, blockID.length()));
-       if (lineColor.equals("red")) {
+       if (lineColor.equals("Red")) {
          return red.map.get(bid);
        }
-       else if (lineColor.equals("green")) {
+       else if (lineColor.equals("Green")) {
          return green.map.get(bid);
        }
        else {
@@ -151,21 +153,25 @@ public class TkM {
        }
      }
 
-      public static void main(String[] args) {
-
-        TkM t = new TkM("red");
+      // public static void main(String[] args) {
+      //
+      //   TkM t = new TkM("Red");
       //  t.buildTrackMaps("redFile.csv", "redFile.csv");
       //  ArrayList<Block> a = t.trackmaps.get(0).map;
-        System.out.println(t.red.map.size());
-      //  TrackMap r = t.trackmaps.get(0);
-        ArrayList<Block> aaa = t.red.getBlocksBySection("A");
-        System.out.println(aaa.size());
-        System.out.println(t.red.map.get(5).getIsOccupied());
-
-        //Block b = t.trackmaps.get(0).sendBlock(1);
-    	  //System.out.println(b.getBlockID() + ", " + b.getLineColor());
-
-      }
+      //   System.out.println(t.red.map.size());
+      // //  TrackMap r = t.trackmaps.get(0);
+      //   ArrayList<Block> aaa = t.red.getBlocksBySection("A");
+      //   System.out.println(aaa.size());
+      //   System.out.println(t.red.map.get(5).getIsOccupied());
+      //
+      // Block b = t.red.map.get(10);
+      // Block next = b.getNextBlock();
+      // System.out.println(next.getBlockID());
+      //
+      //   //Block b = t.trackmaps.get(0).sendBlock(1);
+    	//   //System.out.println(b.getBlockID() + ", " + b.getLineColor());
+      //
+      // }
 
 
 
