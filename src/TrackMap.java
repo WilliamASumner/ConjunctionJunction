@@ -62,9 +62,10 @@ public class TrackMap {
            if (elements[6].toUpperCase().contains("STATION")) {
              newBlock.setType(BlockType.STATIONBLOCK);
              String[] info = elements[6].split(";");
-             System.out.println(elements[6]);
-             if (info.length == 2)
+             if (info.length == 2) {
+             System.out.println(info[1]);
                  newBlock.setStationName(info[1]);
+             }
              else
                  newBlock.setStationName(info[0]);
            }
