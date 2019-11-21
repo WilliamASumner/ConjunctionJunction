@@ -137,6 +137,20 @@ public class TkM {
               return tf;
      }
 
+     public Block getBlock(String blockID, String lineColor) {
+       lineColor = lineColor.toLowerCase();
+       int bid = Integer.parseInt(blockID.substring(1, blockID.length()));
+       if (lineColor.equals("red")) {
+         return red.map.get(bid);
+       }
+       else if (lineColor.equals("green")) {
+         return green.map.get(bid);
+       }
+       else {
+         return null;
+       }
+     }
+
       public static void main(String[] args) {
 
         TkM t = new TkM("red");
