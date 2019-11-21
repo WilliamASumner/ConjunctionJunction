@@ -10,7 +10,7 @@ public class TrackControllerMain
 {
     private HashMap<String,TrackController> controllers = null;
     private ArrayList<TrackControllerGUI> guis = null;
-    private TkM tm = null;
+    public TkM tm = null;
     private CTC ctc = null;
 
     private String[] TkNames = {"Tk0","Tk1","Tk2","Tk3","Tk4","Tk5"};
@@ -39,13 +39,10 @@ public class TrackControllerMain
 
     public void setCTC(CTC ctcModule) {
         ctc = ctcModule;
-        System.out.println("CTC after set: " + ctc);
-        System.out.println("this module ctc: " + this);
     }
 
     public void showGUI(Stage window) { // just make a new gui
-        TrackController tkc = GetCurrController();
-        System.out.println(tkc);
+        TrackController tkc = getCurrController();
         TrackControllerGUI newgui = new TrackControllerGUI(this, tkc);
         guis.add(newgui);
         newgui.start(window);
@@ -55,7 +52,7 @@ public class TrackControllerMain
         guis.remove(gui);
     }
 
-    public String[] GetControllerNames() {
+    public String[] getControllerNames() {
         return TkNames;
     }
 
@@ -74,15 +71,15 @@ public class TrackControllerMain
 
     }
 
-    public TrackController GetCurrController() {
+    public TrackController getCurrController() {
         return controllers.get(CurrentController);
     }
 
-    public TrackController GetController(String name) {
+    public TrackController getController(String name) {
         return controllers.get(name);
     }
 
-    public void SetController(String name) {
+    public void setController(String name) {
         CurrentController = name;
     }
 
@@ -92,34 +89,34 @@ public class TrackControllerMain
 
         ArrayList<Block> blocks0 = new ArrayList<Block>();
         for (String blockLetter : Tk0List)
-            blocks0.add(new Block());//tm.getBlocks(blockLetter,"GREEN"));
+            blocks0.addAll(tm.green.getBlocksBySection(blockLetter));
 
         ArrayList<Block> blocks1 = new ArrayList<Block>();
         for (String blockLetter : Tk1List)
-            blocks1.add(new Block());//tm.getBlocks(blockLetter,"GREEN"));
+            blocks1.addAll(tm.green.getBlocksBySection(blockLetter));
 
         ArrayList<Block> blocks2 = new ArrayList<Block>();
         for (String blockLetter : Tk2List)
-            blocks2.add(new Block());//tm.getBlocks(blockLetter,"GREEN"));
+            blocks2.addAll(tm.green.getBlocksBySection(blockLetter));
 
         ArrayList<Block> blocks3 = new ArrayList<Block>();
         for (String blockLetter : Tk3List)
-            blocks3.add(new Block());//tm.getBlocks(blockLetter,"RED"));
+            blocks3.addAll(tm.red.getBlocksBySection(blockLetter));
 
         ArrayList<Block> blocks4 = new ArrayList<Block>();
         for (String blockLetter : Tk4List)
-            blocks4.add(new Block());//tm.getBlocks(blockLetter,"RED"));
+            blocks4.addAll(tm.red.getBlocksBySection(blockLetter));
 
         ArrayList<Block> blocks5 = new ArrayList<Block>();
         for (String blockLetter : Tk5List)
-            blocks5.add(new Block());//tm.getBlocks(blockLetter,"RED"));
+            blocks5.addAll(tm.red.getBlocksBySection(blockLetter));
 
-        tk0 = new TrackController("GREEN",TkNames[0],blocks0,tm,this);
-        tk1 = new TrackController("GREEN",TkNames[1],blocks1,tm,this);
-        tk2 = new TrackController("GREEN",TkNames[2],blocks2,tm,this);
-        tk3 = new TrackController("RED",  TkNames[3],blocks3,tm,this);
-        tk4 = new TrackController("RED",  TkNames[4],blocks4,tm,this);
-        tk5 = new TrackController("RED",  TkNames[5],blocks5,tm,this);
+        tk0 = new TrackController("green",TkNames[0],blocks0,tm,this);
+        tk1 = new TrackController("green",TkNames[1],blocks1,tm,this);
+        tk2 = new TrackController("green",TkNames[2],blocks2,tm,this);
+        tk3 = new TrackController("red",  TkNames[3],blocks3,tm,this);
+        tk4 = new TrackController("red",  TkNames[4],blocks4,tm,this);
+        tk5 = new TrackController("red",  TkNames[5],blocks5,tm,this);
 
         controllers.put(TkNames[0],tk0);
         controllers.put(TkNames[1],tk1);
@@ -129,66 +126,64 @@ public class TrackControllerMain
         controllers.put(TkNames[5],tk5);
     }
 
-    public boolean SendSuggestedSpeed(String blockID,double speed) {
-        TrackController t = FindController(BlockID);
+    public boolean sendSuggestedSpeed(String blockID,double speed) {
+        TrackController t = findController(blockID);
+        t.sendSuggestedSpeed(blockID,speed);
         // add stuff
         return true;
     }
 
-    public boolean SendSuggestedAuthority(String blockID, String authorityID) {
-        TrackController t = FindController(BlockID);
+    public boolean sendSuggestedAuthority(String blockID, String authorityID) {
+        TrackController t = findController(blockID);
         return true;
     }
 
-    public boolean SetSwitchState(String BlockID, boolean SwitchState) {
-        TrackController t = FindController(BlockID);
+    public boolean setSwitchState(String blockID, boolean SwitchState) {
+        TrackController t = findController(blockID);
         return true;
     }
 
-    public boolean SetCrossingState(String BlockID, boolean crossState) {
-        TrackController t = FindController(BlockID);
+    public boolean setCrossingState(String blockID, boolean crossState) {
+        TrackController t = findController(blockID);
         return true;
     }
 
-    private TrackController FindController(String blockID) {
+    private TrackController findController(String blockID) {
         TrackController controller = null;
         for(TrackController tkc : controllers.values()) {
-            if (tkc.ControlsBlock(blockID)) {
+            if (tkc.controlsBlock(blockID)) {
                 controller = tkc;
                 break;
             }
-
         }
         return controller;
     }
 
-    public TrackController BlockToTrackController(String blockID) {
+    public TrackController blockToTrackController(String blockID) {
         return null;
     }
 
-    public boolean UpdateOccupiedBlocks() {
+    public boolean updateOccupiedBlocks() {
         return true;
     }
     
-    public boolean VerifySafeConditions() {
+    public boolean verifySafeConditions() {
         return true;
     }
 
-    public boolean SendSuggestedSpeedAndAuthority(int blockID, double speed, int blockIDAuthority) {
+    public boolean sendSuggestedSpeedAndAuthority(int blockID, double speed, int blockIDAuthority) {
         return true;
     }
 
-    public boolean SendSuggestedSpeed(int blockID, double speed) {
+    public boolean sendSuggestedSpeed(int blockID, double speed) {
         return true;
     }
 
-    public boolean SendSuggestedAuthority(int blockID, int blockIDAuthority) {
+    public boolean sendSuggestedAuthority(int blockID, int blockIDAuthority) {
         return true;
     }
 
     public void updateOccupancy(Block blockID) {
-        System.out.println("this module occupancy: " + this);
-        System.out.println("BlockID" + blockID.getBlockID());
         ctc.updateOccupancy(blockID.getBlockID());
     }
 
