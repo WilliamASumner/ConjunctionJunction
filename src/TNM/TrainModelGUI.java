@@ -12,17 +12,21 @@ public class TrainModelGUI extends Application {
 	String myName = "wowee";
 	String myAuthority = "A1";//Audited Authority Block
 	double mydubSpeed = 0.0;
+	TrainModel tnm;
 	
-	public TrainModelGUI()// String inName, String inBlock, double inSpeed)
+	Button EbrakeFailButton = new Button("EBrake Fail");
+	
+	public TrainModelGUI(TrainModel TNM)// String inName, String inBlock, double inSpeed)
 	{
 		/*
 		myName = inName;
 		myAuthority = inBlock;
 		mydubSpeed = inSpeed;
 		*/
-		myName = TrainModel.name;
-		myAuthority = TrainModel.AuthorityBlockID;
-		mydubSpeed = TrainModel.AuditedSpeed;
+		tnm = TNM;
+		myName = TNM.name;
+		myAuthority = TNM.AuthorityBlockID;
+		mydubSpeed = TNM.AuditedSpeed;
 	}
 
     @Override // not sure what this does?
@@ -43,16 +47,29 @@ public class TrainModelGUI extends Application {
                 System.out.println(num);
             }
         });
+		
+		
 
         StackPane root = new StackPane();
+		StackPane mystackpane = new StackPane();
         //root.getChildren().add(btn);
 		
 		Label myLabel = new Label(finalstring);
         root.getChildren().add(myLabel);
+		root.getChildren().add(EbrakeFailButton);
 		
         primaryStage.setScene(new Scene(root, 300 ,250)); // content container
 		
         primaryStage.show();
     }
+	
+	//Action Listeners
+	public void handle(ActionEvent event)
+	{
+		if(event.getSource()==EbrakeFailButton)
+		{
+			tnm.toggleEbrakeFail();
+		}
+	}
 }
 

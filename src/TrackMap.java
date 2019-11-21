@@ -13,7 +13,9 @@ public class TrackMap {
 
   public ArrayList<Block> parseFile(String filename) {
     map.add(0, new Block());
+    System.out.println(filename + ", " + filename.substring(filename.length()-3,filename.length()));
     if (!(filename.substring(filename.length()-3,filename.length()).equals("csv"))) {
+
       return map;
     }
 
@@ -36,11 +38,13 @@ public class TrackMap {
     // 11 rows
 
     for (int i = 1; i < csvrows.length; i++) {
-      if (csvrows[i].equals(" ,,,,,,,,,,,")) {
+      //System.out.println(csvrows[i]);
+      if (csvrows[i].equals(" ,,,,,,,,,")) {
         break;
       }
 
         String[] elements = csvrows[i].split(",");
+      //  System.out.println(elements.length);
 
       // for (int j = 0; j <= 8; j++) {
       //   System.out.print(elements[j] + " ");
@@ -52,7 +56,19 @@ public class TrackMap {
         newBlock.setGrade(Double.parseDouble(elements[4]));
         newBlock.setSpeedLimit(Double.parseDouble(elements[5]));
         if (elements[6] != null) {
-          //set block type to specific type
+          // if (elements[6].contains("STATION")) {
+          //   newBlock.setType(BlockType.STATIONBLOCK);
+          //   //String[] info = elements[6].split(";");
+          //   //System.out.println(elements[6]);
+          //   //newBlock.setStationName();
+          // }
+          // else if (elements[6].contains("SWITCH")) {
+          //   newBlock.setType(BlockType.SWITCHBLOCK);
+          // }
+          // else if (elements[6].contains("CROSSING")) {
+          //   newBlock.setType(BlockType.CROSSBLOCK);
+          // }
+
         }
         newBlock.setElevation(Double.parseDouble(elements[8]));
         int index = Integer.parseInt(elements[2]);

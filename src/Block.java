@@ -18,6 +18,22 @@ public class Block
     String AuditedAuthority;
     boolean IsUnderground;
     BlockType type;
+    String stationName;
+
+    public String getStationName() {
+      if (this.type == BlockType.STATIONBLOCK) {
+        return stationName;
+      }
+      else {
+        return "";
+      }
+    }
+
+    public void setStationName(String newStationName) {
+      if (this.type == BlockType.STATIONBLOCK) {
+        stationName = newStationName;
+      }
+    }
 
     public Block() { // empty for testing
         LineColor = "RED";
