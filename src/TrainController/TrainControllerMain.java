@@ -4,6 +4,7 @@ public class TrainControllerMain{
     TrainControllerMainGUI myGUI;
     TrainController[] tncArray = new TrainController[20];
     int trainCount = 0;
+    Power p;
     // //Train Controller Constructor
     // public TrainController(String name, String authority, double speed, TrainModel tm){
     //     auditedSpeed = speed;
@@ -24,6 +25,7 @@ public class TrainControllerMain{
     //Update function called from mainui, calls the subsequent update
     //function for each train controller object
     public void update(){
+        
         for(int i = 0; i < tncArray.length; i++){
             if (tncArray[i] != null)
                 tncArray[i].update();
@@ -57,7 +59,7 @@ public class TrainControllerMain{
   
 
     public Power initPower(){
-        Power p = new Power();
+        p = new Power();
         return p;
     }
 
@@ -82,4 +84,3 @@ public class TrainControllerMain{
   }
     
 }
-
