@@ -79,7 +79,7 @@ public class TkM {
 
 
     public void createTrain(String name, String authority, Block b, double speed, TrainControllerMain TnC) {
-        TrainModel newTrain = new TrainModel(name, authority, b, speed, TnC,this);
+        TrainModel newTrain = TrainModelMain.createTrain(name, authority, b, speed, TnC,this);
 
         trains.add(newTrain);
     }

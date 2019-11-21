@@ -273,6 +273,19 @@ public class TrainModel {
     {
         myGUI = new TrainModelGUI(this);//name, AuthorityBlockID, AuditedSpeed);
     }
+	public Block getCurrBlock()
+	{
+		return currBlock;
+	}
+	
+	public TrainModelGUI getGUI()
+	{
+		return myGUI;
+	}
+	public String getName()
+	{
+		return name;
+	}
 
 
     public void initTrainController(String Stringname, String ABlock, double ASpeed)

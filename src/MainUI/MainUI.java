@@ -32,6 +32,7 @@ public class MainUI extends Application {
     private TrackControllerMain tkcm = null;
 
     private TrainControllerMain tnc = null;
+    private TrainModelMain tnm = null;
     private Button CTC = null;
     private Button trackModel = null;
     private Button trainModel = null;
@@ -46,7 +47,7 @@ public class MainUI extends Application {
     private CTC_GUI ctcg = null;
     private CTC     ctc = null;
     //private CTC ctcg = null;
-    private TrainModel tnm = null;
+    //private TrainModel tnm = null;
     //
    public static void main(String[] args) {
         // launch CTC 
@@ -65,6 +66,7 @@ public class MainUI extends Application {
     @Override
     public void start(Stage stage)  {
         tnc = new TrainControllerMain();
+        tnm = new TrainModelMain();
         tkm = new TkM(tnc); // initialize track model
         tkcm = new TrackControllerMain();
         tkcm.setTrackModel(tkm);
@@ -194,16 +196,8 @@ public class MainUI extends Application {
     class TrainModelButtonHandler implements EventHandler<ActionEvent>{
         @Override
         public void handle(ActionEvent event){
-             Stage newWindow = new Stage();
-             //tkm.
-
-            //if (ctcg != null)
-                //tnm = ctcg.getTrainModel();
-            //if (tnm == null)
-                //tnm = new TrainModel();
-            //if (tnm != null)
-                //tnm.showGUI(newWindow);
-
+            Stage newWindow = new Stage();
+            tnm.showGUI(newWindow);
         }
     }
 
