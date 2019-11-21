@@ -61,7 +61,7 @@ $(TESTCLASSFILES): $(TESTFILE)
 	$(CC) $(JFLAGS) -d $(BIN_DIR) $(TESTFILE)
 
 run: src.txt $(TARGET_CLASS)
-	$(RUNCMD) $(JFLAGS) -cp "$(BIN_DIR);$(ANTLRPATH)" $(TARGET)
+	$(RUNCMD) $(JFLAGS) -cp "$(BIN_DIR):$(ANTLRPATH)" $(TARGET)
 #	$(RUNCMD) $(JFLAGS) -cp "$(BIN_DIR)" $(TARGET)
 
 # java build text
