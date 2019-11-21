@@ -10,11 +10,8 @@ public class TrainController{
     static double currSpeed = 60;
     // Block authority;
     static String authority = "test block";
-    static double auditedSpeed;   //CTC suggested speed limit
-    double currTemp;
-    boolean isUnderground;
+    static double auditedSpeed = 70;
     String beaconData;
-    boolean eBrake_isActive;
     boolean serviceBrake_isActive;
     boolean[] LeftDoors = new boolean[4];
     boolean[] RightDoors = new boolean[4];
@@ -112,4 +109,3 @@ public class TrainController{
     }
     
 }
-   

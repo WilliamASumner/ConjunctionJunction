@@ -5,19 +5,53 @@ public class Block
 {
     boolean isOccupied;
     String LineColor;
-    int BlockID;
+    String BlockID;
     double Grade;
     double Elevation;
     double SpeedLimit;
-    String[] failures;
-    int nextBlockID;
-    int prevBlockID;
+    ArrayList<String> failures;
+    String nextBlockID;
+    String prevBlockID;
     Boolean IsBidirectional;
     double Length;
     double AuditedSpeed;
-    Block AuditedAuthority;
+    String AuditedAuthority;
     boolean IsUnderground;
     BlockType type;
+    String stationName;
+
+    public String getStationName() {
+      if (this.type == BlockType.STATIONBLOCK) {
+        return stationName;
+      }
+      else {
+        return "";
+      }
+    }
+
+    public void setStationName(String newStationName) {
+      if (this.type == BlockType.STATIONBLOCK) {
+        stationName = newStationName;
+      }
+    }
+
+    public Block() { // empty for testing
+        LineColor = "RED";
+        BlockID = "A1";
+        Grade = 0.0;
+        Elevation = 0.0;
+        SpeedLimit = 0.0;
+        failures = new ArrayList<String>();
+        nextBlockID = "A2";
+        prevBlockID = "A3";
+        IsBidirectional = true;
+        Length = 1.0;
+        AuditedSpeed = 50.0;
+        AuditedAuthority = "G1";
+        IsUnderground = true;
+        type = BlockType.REGBLOCK;
+    }
+
 
     public void setIsOccupied(boolean newValue) {
         isOccupied = newValue;
@@ -27,7 +61,7 @@ public class Block
         LineColor = newValue;
     }
 
-    public void setBlockID(int newValue) {
+    public void setBlockID(String newValue) {
         BlockID = newValue;
     }
 
@@ -44,14 +78,21 @@ public class Block
     }
 
     public void  setFailure(String newValue) {
-        failures[0] = newValue;
+        failures.add(newValue);
     }
 
-    public void setNextBlockID(int newValue) {
+    public void resetFailures() {
+        failures.clear();
+    }
+
+    public void removeFailure(String failure) {
+        failures.remove(failure);
+    }
+    public void setNextBlockID(String newValue) {
         nextBlockID = newValue;
     }
 
-    public void setPrevBlockID(int newValue) {
+    public void setPrevBlockID(String newValue) {
         prevBlockID = newValue;
     }
 
@@ -67,7 +108,7 @@ public class Block
         AuditedSpeed = newValue;
     }
 
-    public void setAuditedAuthority(Block newValue) {
+    public void setAuditedAuthority(String newValue) {
         AuditedAuthority = newValue;
     }
 
@@ -87,7 +128,7 @@ public class Block
         return LineColor;
     }
 
-    int getBlockID() {
+    String getBlockID() {
         return BlockID;
     }
 
@@ -103,15 +144,15 @@ public class Block
         return SpeedLimit;
     }
 
-    String[] getFailures() {
+    ArrayList<String> getFailures() {
         return failures;
     }
 
-    int getNextBlockID() {
+    String getNextBlockID() {
         return nextBlockID;
     }
 
-    int getPrevBlockID() {
+    String getPrevBlockID() {
         return prevBlockID;
     }
 
@@ -127,7 +168,7 @@ public class Block
         return AuditedSpeed;
     }
 
-    Block getAuditedAuthority() {
+    String getAuditedAuthority() {
         return AuditedAuthority;
     }
 
@@ -139,4 +180,11 @@ public class Block
         return type;
     }
 
+    public String toString() {
+      return this.getBlockID();
+    }
+
+    public static int blockIDToNum(String ID) {
+        return Integer.parseInt(ID.substring(1,ID.length()));
+    }
 }

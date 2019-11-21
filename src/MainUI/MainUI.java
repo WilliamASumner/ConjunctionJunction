@@ -19,6 +19,8 @@ public class MainUI extends Application {
     // fields
     
     static AnchorPane root;
+    private boolean isSetup = false;
+    private SetupUI setup = new SetupUI();
     
     private Label myLabel;
     private TextField departureTime;
@@ -30,6 +32,12 @@ public class MainUI extends Application {
     private TrackController tkc = null;
 
     private TrainController tnc = null;
+    private Button CTC = null;
+    private Button trackModel = null;
+    private Button trainModel = null;
+    private Button trainController = null;
+    private Button trackController = null;
+
 
     private TkM tkm = null;
     //private TrackModel tkm = null;
@@ -44,36 +52,47 @@ public class MainUI extends Application {
         // launch the app
         launch();
     }
+
+   public void completeSetup() {
+       CTC.setDisable(false);
+       trackController.setDisable(false);
+       trainController.setDisable(false);
+       trainModel.setDisable(false);
+   }
     
     @Override
     public void start(Stage stage) {
-        tkm = new TkM(); // initialize track controller
 
-        tkcm = new TrackControllerMain(); // should this be elsewhere?
-        tkc = tkcm.createTrackController("plc",null,tkm);
-
+        tkm = new TkM(); // initialize track model
+        tkcm = new TrackControllerMain();
+        tkcm.createControllers();
+        ctc = new CTC();
 
         // Create button
-        Button CTC = new Button("CTC");
+        CTC = new Button("CTC");
         // Register the event handler
         CTC.setOnAction(new CTCButtonHandler());
+        //CTC.setDisable(true);
 
         // Create button
-        Button trackController = new Button("Track Controller");
+        trackController = new Button("Track Controller");
         // Register the event handler
         trackController.setOnAction(new TrackControllerButtonHandler());
+        //trackController.setDisable(true);
         // Create button
-        Button trackModel = new Button("Track Model");
+        trackModel = new Button("Track Model");
         // Register the event handler
         trackModel.setOnAction(new TrackModelButtonHandler());
 
         // Create button
-        Button trainModel = new Button("Train Model");
+        trainModel = new Button("Train Model");
         // Register the event handler
         trainModel.setOnAction(new TrainModelButtonHandler());
+        //trainModel.setDisable(true);
 
         // Create button
-        Button trainController = new Button("Train Controller");
+        trainController = new Button("Train Controller");
+        //trainController.setDisable(true);
         // Register the event handler
         trainController.setOnAction(
                 new TrainControllerButtonHandler()
@@ -97,11 +116,10 @@ public class MainUI extends Application {
 
                 // update all modules in succession
                 //ctc.update()
-                //tkc.update()
+                //tkcm.update()
                 //tkm.update()
                 //tnm.update()
                 //tnc.update()
-                //System.out.println("here");
             }
         }.start(); */
 
@@ -133,8 +151,7 @@ public class MainUI extends Application {
         @Override
         public void handle(ActionEvent event) {
             Stage newWindow = new Stage();
-            System.out.println(tkc.toString());
-            tkc.showGUI(newWindow);
+            tkcm.showGUI(newWindow);
         }
     }
 
@@ -159,10 +176,12 @@ public class MainUI extends Application {
         @Override
         public void handle(ActionEvent event){
              Stage newWindow = new Stage();
-            tnm = ctcg.getTrainModel();
+            if (ctcg != null)
+                tnm = ctcg.getTrainModel();
             if (tnm == null)
                 tnm = new TrainModel();
-            tnm.showGUI(newWindow);
+            if (tnm != null)
+                tnm.showGUI(newWindow);
 
         }
     }
@@ -174,10 +193,12 @@ public class MainUI extends Application {
         @Override
         public void handle(ActionEvent event){
             Stage newWindow = new Stage();
-            tnc = tnm.TNC;
-            if (tnc == null)
+            if (tnc == null && tnm == null)
                 tnc = new TrainController();
-            tnc.showGUI(newWindow);
+            else if (tnc == null)
+                tnc = tnm.TNC;
+            if (tnc != null)
+                tnc.showGUI(newWindow);
         }
     }
 

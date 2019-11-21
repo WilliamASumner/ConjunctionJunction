@@ -21,6 +21,7 @@ endif
 #NOTE: must be comma separated
 JAVAFX_MODULES  = javafx.controls,javafx.fxml
 JFLAGS         := --module-path=$(JAVAFX_PATH) --add-modules $(JAVAFX_MODULES)
+ANTLRPATH=$(MAKE_DIR)/lib/antlr-4.7.2-complete.jar
 
 ############### MODULE VARS ##################
 MODULES         = TkC TkM TrC TrM CTC
@@ -36,7 +37,8 @@ MAIN_MODULEFILES   = ./src/MainUI/*.class
 
 # TODO REMOVE
 TESTFILE       := ./HelloWorld.java
-CLASSFILES      = ./HelloWorld.class
+TESTCLASSFILES      = $(MAKE_DIR)/HelloWorld.class
+TESTTARGET     := HelloWorld
 
 ################# TARGET VARS ################
 
@@ -52,12 +54,18 @@ TTARGET        := HelloWorld
 
 default: src.txt $(TARGET_CLASS)
 
+testrun: $(TESTCLASSFILES)
+	$(RUNCMD) $(JFLAGS) -cp "$(BIN_DIR)" $(TESTTARGET)
+
+$(TESTCLASSFILES): $(TESTFILE)
+	$(CC) $(JFLAGS) -d $(BIN_DIR) $(TESTFILE)
+
 run: src.txt $(TARGET_CLASS)
-	$(RUNCMD) $(JFLAGS) -cp $(BIN_DIR) $(TARGET)
+	$(RUNCMD) $(JFLAGS) -cp "$(BIN_DIR);$(ANTLRPATH)" $(TARGET)
 
 # java build text
 src.txt: ./src/
-	find ./src/ -name "*.java" > src.txt
+	find ./src -name "*.java" > src.txt
 
 
 #$(TARGET_CLASS):
@@ -71,7 +79,7 @@ src.txt: ./src/
 
 # Result is dependent on all files in src dir
 $(TARGET_CLASS): $(shell find ./src -type f)
-	$(CC) $(JFLAGS) -d $(BIN_DIR) @src.txt
+	$(CC) $(JFLAGS) -Xlint:unchecked -d $(BIN_DIR) @src.txt
 
 runtest: $(TTARGET)
 	$(RUNCMD) $(JFLAGS) $(TTARGET)
