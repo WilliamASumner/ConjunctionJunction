@@ -171,7 +171,10 @@ public class TrainModel {
 
     public void update()
     {
-        if (Sbrake ==false && Ebrake==false)
+        
+		AuthorityBlockID = currBlock.getAuditedAuthority();
+		AuditedSpeed = currBlock.getAuditedSpeed();
+		if (Sbrake ==false && Ebrake==false)
         {
             acceleration = CalcAcceleration();
         }
@@ -187,6 +190,8 @@ public class TrainModel {
         {
             distanceTraveled = distanceTraveled - currBlockLength;
             nextBlockFunc();
+			AuthorityBlockID = currBlock.getAuditedAuthority();
+			AuditedSpeed = currBlock.getAuditedSpeed();
         }
         return;
     }
