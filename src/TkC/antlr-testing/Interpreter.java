@@ -8,6 +8,10 @@ public class Interpreter extends TkcBaseListener
         actionList = new ActionsList(tkc);
     }
 
+    public ActionsList getList() {
+        return actionList;
+    }
+
     @Override
     public void enterProgram(TkcParser.ProgramContext ctx) {
 
