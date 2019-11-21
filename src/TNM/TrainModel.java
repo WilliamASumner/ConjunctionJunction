@@ -7,10 +7,14 @@ public class TrainModel {
     static String AuthorityBlockID = "test Block";
     static double AuditedSpeed = 3.14;
     TrainController TNC = null;
+	TrainControllerMain TNC_Main;
     TrainModelGUI myGUI;
 	Block currBlock;
 	
+	
 	boolean[] Doors = new boolean[8];
+	boolean lights = false;
+	double temperature = 70;
 	
 	double powerCommand = 0; //kiloWatts
 	double grade = 0;
@@ -37,6 +41,9 @@ public class TrainModel {
 	boolean Sbrake = false;
 	double SbrakeAcc = -1.2; //meters/second^2
 	
+	boolean signalFail = false;
+	boolean engineFail = false;
+	
 	double currBlockLength = 1000;
 	
 	double distanceTraveled = 0;
@@ -50,7 +57,45 @@ public class TrainModel {
 		if (EbrakeFail)
 			EbrakeFail=false;
 		else
+		{
 			EbrakeFail=true;
+			Ebrake = false;
+		}
+		return;
+	}
+	
+	public void toggleSbrakeFail()
+	{
+		if (SbrakeFail)
+			SbrakeFail=false;
+		else
+		{
+			SbrakeFail=true;
+			Sbrake = false;
+		}
+		return;
+	}
+	
+
+	public void toggleSignalFail()
+	{
+		if (signalFail)
+			signalFail=false;
+		else
+		{
+			signalFail=true;
+		}
+		return;
+	}
+	public void toggleEngineFail()
+	{
+		if (engineFail)
+			engineFail=false;
+		else
+		{
+			engineFail=true;
+			powerCommand = 0;
+		}
 		return;
 	}
 
@@ -129,13 +174,20 @@ public class TrainModel {
 		}
 		return;// false;
 	}
-	
-	
+		
 	private double CalcAcceleration()
 	{
 		if (velocity == 0)
 		{
 			velocity = altvelocity;
+		}
+		if (engineFail)
+		{
+			powerCommand = 0;
+		}
+		else
+		{
+			powerCommand = TNC.calculatePower();
 		}
 		double retval = 1000 * powerCommand / (estimatedmass * velocity);
 		return retval;
@@ -161,6 +213,20 @@ public class TrainModel {
 	public void setDoorStatus(boolean[] input)
 	{
 		Doors = input;
+	}
+	
+	public void toggleLights()
+	{
+		if (lights)
+			lights = false;
+		else
+			lights = true;
+		return;
+	}
+	
+	public void setTemperature(double inputTemp)
+	{
+		temperature = inputTemp;
 	}
 
     public void showGUI(Stage newStage) {
