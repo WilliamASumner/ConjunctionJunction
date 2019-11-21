@@ -117,17 +117,6 @@ public class TrainModel {
         return;
     }
 
-    /*public TrainModel()
-      {
-      initTrainController("", "", 0.0);
-
-    //---- Do not touch this vvvvv
-    name = "";
-    AuthorityBlockID = "";
-    AuditedSpeed = 0.0;
-
-    initTrainModelGUI();
-    }*/
     //constructor
     public TrainModel(String Stringname, String ABlock, Block startBlock, double ASpeed, TrainControllerMain TNCMain_input,TkM tm)
     {
