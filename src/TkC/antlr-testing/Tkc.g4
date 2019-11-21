@@ -2,7 +2,7 @@
  * Written by Will Sumner
 */
 
-grammar TkcGrammar;
+grammar Tkc;
 
 program
 :
