@@ -38,7 +38,6 @@ public class MainUI extends Application {
     private Button trainController = null;
     private Button trackController = null;
 
-
     private TkM tkm = null;
     //private TrackModel tkm = null;
     private CTC_GUI ctcg = null;
@@ -62,6 +61,11 @@ public class MainUI extends Application {
     
     @Override
     public void start(Stage stage) {
+        tkm = new TkM(); // initialize track controller
+
+        tkcm = new TrackControllerMain(); // should this be elsewhere?
+        tnc = new TrainControllerMain();
+        tkc = tkcm.createTrackController("plc",null,tkm);
 
         tkm = new TkM(); // initialize track model
         tkcm = new TrackControllerMain();
@@ -194,7 +198,7 @@ public class MainUI extends Application {
         public void handle(ActionEvent event){
             Stage newWindow = new Stage();
             if (tnc == null && tnm == null)
-                tnc = new TrainController();
+                tnc = new TrainControllerMain();
             else if (tnc == null)
                 tnc = tnm.TNC;
             if (tnc != null)

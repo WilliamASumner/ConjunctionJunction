@@ -2,12 +2,10 @@ import javafx.stage.Stage;
 
 public class TrainModel {
     
-	
-    static String name = "test name";
-    static String AuthorityBlockID = "test Block";
-    static double AuditedSpeed = 3.14;
-    TrainController TNC = null;
-	TrainControllerMain TNC_Main;
+    String name = "test name";
+    String AuthorityBlockID = "test Block";
+    double AuditedSpeed = 3.14;
+    TrainControllerMain TNC = null;
     TrainModelGUI myGUI;
 	Block currBlock;
 	

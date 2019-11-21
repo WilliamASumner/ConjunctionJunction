@@ -31,16 +31,16 @@ public class TrainModelGUI extends Application {
 
     @Override // not sure what this does?
     public void start(Stage primaryStage) { // entry point for all apps
-        primaryStage.setTitle("Train Model GUI"); // container for all of it
+        // primaryStage.setTitle("Train Model GUI"); // container for all of it
         
 		
-		int num = 0;
+		// int num = 0;
 		
-		String finalstring = "Train Name: " + myName + "\nAudited Authority: " + myAuthority + "\nAudited Speed: " + mydubSpeed;
+		// String finalstring = "Train Name: " + myName + "\nAudited Authority: " + myAuthority + "\nAudited Speed: " + mydubSpeed;
 		
-		Button btn = new Button();
-        btn.setText("Say 'NUMBER'");
-        btn.setOnAction(new EventHandler<ActionEvent>() {
+		// Button btn = new Button();
+        // btn.setText("Say 'NUMBER'");
+        // btn.setOnAction(new EventHandler<ActionEvent>() {
 
             @Override
             public void handle(ActionEvent event) {
@@ -58,9 +58,9 @@ public class TrainModelGUI extends Application {
         root.getChildren().add(myLabel);
 		root.getChildren().add(EbrakeFailButton);
 		
-        primaryStage.setScene(new Scene(root, 300 ,250)); // content container
+        // primaryStage.setScene(new Scene(root, 300 ,250)); // content container
 		
-        primaryStage.show();
+        // primaryStage.show();
     }
 	
 	//Action Listeners
