@@ -13,7 +13,10 @@ public class TrackMap {
   }
 
   public ArrayList<Block> parseFile(String filename)  {
-    map.add(0, new Block());
+    Block yard = new Block();
+    yard.setBlockID("A0");
+    map.add(0, yard);
+    
     System.out.println(filename + ", " + filename.substring(filename.length()-3,filename.length()));
     if (!(filename.substring(filename.length()-3,filename.length()).equals("csv"))) {
 
@@ -102,7 +105,7 @@ public class TrackMap {
 
   }
 
-  public void orderTrack(String filename) { 
+  public void orderTrack(String filename) {
     if (!(filename.substring(filename.length()-3,filename.length()).equals("csv"))) {
       return;
     }

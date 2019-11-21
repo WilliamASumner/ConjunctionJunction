@@ -67,7 +67,7 @@ public class TkMGUI extends Application {
     }
 
     private void tInit() {
-        Block b = t.red.map.get(6);
+        Block b = t.green.map.get(62);
 
         grid.setPadding(new Insets(10, 10, 10, 10));
         grid.setVgap(5);
@@ -99,6 +99,7 @@ public class TkMGUI extends Application {
             lineOptions.addAll(option);
         }
         ComboBox<String> lineBox = new ComboBox<String>(lineOptions);
+        GridPane.setConstraints(lineBox, 100, 2);
         lineBox.getSelectionModel().select("green");
         lineBox.setOnAction(new EventHandler<ActionEvent>() {
 

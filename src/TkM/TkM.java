@@ -25,9 +25,9 @@ public class TkM {
     TrackMap line = new TrackMap();
     TrackMap red = new TrackMap();
     TrackMap green = new TrackMap();
-    TrainControllerMain tnC;
-    TrackControllerMain tkc = null;
-    ArrayList<TrainModel> trains = new ArrayList<TrainModel>();
+    // TrainControllerMain tnC;
+    // TrackControllerMain tkc = null;
+    // ArrayList<TrainModel> trains = new ArrayList<TrainModel>();
 
     /*public TkM(String lineColor, TrainControllerMain newtnC) {
         tnC = newtnC;
@@ -43,8 +43,8 @@ public class TkM {
 
     }*/
 
-    public TkM(TrainControllerMain newtnC) {
-        tnC = newtnC;
+    public TkM(){//TrainControllerMain newtnC) {
+      //  tnC = newtnC;
         this.buildTrackMaps("rsrc/redFile.csv", "rsrc/greenFile.csv");
 
         //System.out.println(this.toString(red, red.map.get(5).getBlockID()));
@@ -52,9 +52,9 @@ public class TkM {
 
     }
 
-    public void addTrackController(TrackControllerMain newtkc) {
-        tkc = newtkc;
-    }
+    // public void addTrackController(TrackControllerMain newtkc) {
+    //     tkc = newtkc;
+    // }
 
     public ArrayList<TrackMap> buildTrackMaps(String redFile, String greenFile) {
 
@@ -78,17 +78,17 @@ public class TkM {
     }
 
 
-    public void createTrain(String name, String authority, Block b, double speed, TrainControllerMain TnC) {
-        TrainModel newTrain = new TrainModel(name, authority, b, speed, TnC,this);
-
-        trains.add(newTrain);
-    }
-
-    public void update() {
-        for(TrainModel t: trains) {
-            t.update();
-        }
-    }
+    // public void createTrain(String name, String authority, Block b, double speed, TrainControllerMain TnC) {
+    //     TrainModel newTrain = new TrainModel(name, authority, b, speed, TnC,this);
+    //
+    //     trains.add(newTrain);
+    // }
+    //
+    // public void update() {
+    //     for(TrainModel t: trains) {
+    //         t.update();
+    //     }
+    // }
 
 
 
@@ -97,11 +97,11 @@ public class TkM {
         s = stage;
     }
 
-    public void showTrainModelGUI(Stage stage) {
-        TrainModel t = trains.get(0);
-        //if (t != null)
-            //t.showGUI();
-    }
+    // public void showTrainModelGUI(Stage stage) {
+    //     TrainModel t = trains.get(0);
+    //     //if (t != null)
+    //         //t.showGUI();
+    // }
 
 
 
@@ -170,19 +170,19 @@ public class TkM {
         }
     }
 
-    public void updateOccupancy(Block b) {
-        tkc.updateOccupancy(b);
-    }
-
-    public void updateTkM() {
-      for (int i = 0; i < trains.size(); i++) {
-        Block b = trains.get(i).getCurrBlock();
-        if (b.getBlockID.equals("A0")) {
-          trains.remove(i);
-        }
-      }
-
-    }
+    // public void updateOccupancy(Block b) {
+    //     tkc.updateOccupancy(b);
+    // }
+    //
+    // public void updateTkM() {
+    //   for (int i = 0; i < trains.size(); i++) {
+    //     Block b = trains.get(i).getCurrBlock();
+    //     if (b.getBlockID.equals("A0")) {
+    //       trains.remove(i);
+    //     }
+    //   }
+    //
+    // }
 
     // public static void main(String[] args) {
     //
