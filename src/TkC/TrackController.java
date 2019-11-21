@@ -5,6 +5,7 @@ public class TrackController
 {
     String PLCProgram;
     String line;
+    ArrayList<Block> lineBlocks;
     String name;
     ArrayList<Block> controlledBlocks;
 
@@ -19,6 +20,12 @@ public class TrackController
         controlledBlocks = blocks;
         tm = tkmodel;
         tkcm = m;
+        if (line.equals("GREEN")) {
+            lineBlocks = tm.getGreen();
+        }
+        else {
+            lineBlocks = tm.getRed();
+        }
     }
 
     public boolean ControlsBlock(String blockID) {
@@ -84,14 +91,22 @@ public class TrackController
         return true;
     }
 
-    public boolean DispatchTrainData(double speed, String authority) {
-        tm.setIsOccupied(true);
-        tm.setSpeed(speed);
-        tm.setAuthority(authority);
+    public void RequestNewTrain(String name, double speed, String authority) {
+        ArrayList<Block> line = null;
+        Block startBlock = null;
+        if (line.equals("GREEN")) {
+            line = tm.getGreen();
+            startBlock = line.get(Block.blockIDToNum("J62"));
+        }
+        else {
+            line = tm.getRed();
+            startBlock = line.get(Block.blockIDToNum("C9"));
+        }
+        startBlock.setIsOccupied(true);
+        startBlock.setSpeed(speed);
+        startBlock.setAuthority(authority);
 
-        //tkcg.setIsOccupied(true);
-        //tkcg.setSpeed(speed);
-        //tkcg.setAuthority(authority);
+        tm.createTrain(name,authority,speed);
 
         return true;
     }
@@ -102,6 +117,10 @@ public class TrackController
 
     public boolean SendSuggestedAuthority(String blockID, String blockIDAuthority) {
         return true;
+    }
+
+    public double getSpeedLimit(String blockID) {
+        return line.get(Block.blockIDToNum(blockID)).getSpeedLimit();
     }
 
     public void update() {

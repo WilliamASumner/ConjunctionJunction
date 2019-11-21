@@ -184,8 +184,7 @@ public class TrackControllerMain
         return true;
     }
 
-    public boolean dispatchTrainData(double speed, String authority) {
-        return true;
+    public void requestNewTrain(double speed, String authority) {
     }
 
 }
