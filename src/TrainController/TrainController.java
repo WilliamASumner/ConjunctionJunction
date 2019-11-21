@@ -112,18 +112,54 @@ public class TrainController{
     }
 
     //Updates train's audited speed limit from the train model
-    public static void getAuditedSpeed(){
+    public void getAuditedSpeed(){
     //    auditedSpeed = tm.getAuditedSpeed();
     }
 
     //Updates train's authority from the train model
-    public static String getAuthority(){
+    public void getAuthority(){
     //    authority = tm.getAuthority();
     }
 
     //Updates train's authority from the train model
     public String getName(){
         return trainName;
+    }
+
+    public void setEngineFailure(){
+        if(engineFailure){
+            engineFailure = false;
+        }
+        else{
+            engineFailure = true;
+        }
+    }
+
+    public void setCircuitFailure(){
+        if(trackCircuitFailure){
+            trackCircuitFailure = false;
+        }
+        else{
+            trackCircuitFailure = true;
+        }
+    }
+
+    public void setEBrakeFailure(){
+        if(eBrakeFailure){
+            eBrakeFailure = false;
+        }
+        else{
+            eBrakeFailure = true;
+        }
+    }
+
+    public void setSBrakeFailure(){
+        if(serviceBreakFailure){
+            serviceBreakFailure = false;
+        }
+        else{
+            serviceBreakFailure = true;
+        }
     }
 
     //Driver sets train controller mode to automatic
