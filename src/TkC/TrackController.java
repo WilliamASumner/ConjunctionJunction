@@ -91,7 +91,7 @@ public class TrackController
         return true;
     }
 
-    public void RequestNewTrain(String name, double speed, String authority) {
+    public void RequestNewTrain(String name, double speed, String authority, Block startBlock) {
         Block startBlock = null;
         if (line.equals("GREEN")) {
             startBlock = lineBlocks.get(Block.blockIDToNum("J62"));
@@ -103,7 +103,7 @@ public class TrackController
         startBlock.setAuditedSpeed(speed);
         startBlock.setAuditedAuthority(authority);
 
-        tm.createTrain(name,authority,speed);
+        tm.createTrain(name,authority,startBlock,speed);
     }
 
     public boolean SendSuggestedSpeed(String blockID, double speed) {
