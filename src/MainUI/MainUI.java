@@ -75,6 +75,10 @@ public class MainUI extends Application {
         tkm.addTrackController(tkcm);
         tkcm.setCTC(ctc);
 
+        Label programTitle = new Label("Conjunction Junction");
+        Label programTitle2= new Label("Train Simulation Software");
+        programTitle.setAlignment(Pos.CENTER);
+
         // Create button
         CTC = new Button("CTC");
         // Register the event handler
@@ -111,12 +115,12 @@ public class MainUI extends Application {
         );
 
         // Put the HBox, dispatchT, and myLabel in a VBox
-        VBox vbox = new VBox(10, CTC, trackController, trackModel, trainModel, trainController,stopButton);
+        VBox vbox = new VBox(10,programTitle,programTitle2, CTC, trackController, trackModel, trainModel, trainController,stopButton);
         // set the VBox's alignment to center
         vbox.setAlignment(Pos.CENTER);
 
         // Create a scene with the VBox as its root node
-        Scene scene = new Scene(vbox,300,200);
+        Scene scene = new Scene(vbox,300,500);
         stage.setTitle("Train Sim Home Page");
         stage.setScene(scene);
 
