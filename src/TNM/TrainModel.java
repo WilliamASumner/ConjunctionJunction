@@ -1,7 +1,7 @@
 import javafx.stage.Stage;
 
 public class TrainModel {
-    
+
     String name = "test name";
     String AuthorityBlockID = "test Block";
     double AuditedSpeed = 3.14;
@@ -10,18 +10,18 @@ public class TrainModel {
     TrainModelGUI myGUI;
     Block currBlock;
     TkM trackModel = null;
-    
-    
+
+
     boolean[] Doors = new boolean[8];
     boolean lights = false;
     double temperature = 70;
-    
+
     double powerCommand = 0; //kiloWatts
     double grade = 0;
     double gravity = 9.81;
     static double kilosPerPound = 0.453592;
-    
-    
+
+
     static double trainMass = 40.9; //tons
     static int currPassengers = 0; 
     static double passMass = 180; // pounds
@@ -33,31 +33,31 @@ public class TrainModel {
         estimatedmass = kilosPerPound*(2000*trainMass + passMass*currPassengers);
         return;
     }
-    
+
     boolean EbrakeFail = false;
     boolean Ebrake = false;
     double EbrakeAcc = -2.73; //meters/second^2
-    
+
     boolean SbrakeFail = false;
     boolean Sbrake = false;
     double SbrakeAcc = -1.2; //meters/second^2
-    
+
     boolean signalFail = false;
     boolean engineFail = false;
-    
+
     double currBlockLength = 1000;
-    
+
     double distanceTraveled = 0;
     double velocity = 0;
     double altvelocity = 0.01;
     double acceleration = 0;
     double timePerUpdate = 3;
-    
+
     public void toggleEBrakeFail()
     {
         if (EbrakeFail)
         {
-            
+
             EbrakeFail=false;
             singleTNC.setSBrakeFailure(false);
         }
@@ -69,7 +69,7 @@ public class TrainModel {
         }
         return;
     }
-    
+
     public void toggleSBrakeFail()
     {
         if (SbrakeFail)
@@ -92,7 +92,7 @@ public class TrainModel {
             signalFail=false;
             singleTNC.setSignalFailure(false);
         }
-            
+
         else
         {
             signalFail=true;
@@ -107,7 +107,7 @@ public class TrainModel {
             engineFail=false;
             singleTNC.setEngineFailure(false);
         }
-            
+
         else
         {
             engineFail=true;
@@ -118,23 +118,23 @@ public class TrainModel {
     }
 
     /*public TrainModel()
-    {
-        initTrainController("", "", 0.0);
-        
-        //---- Do not touch this vvvvv
-        name = "";
-        AuthorityBlockID = "";
-        AuditedSpeed = 0.0;
-        
-        initTrainModelGUI();
+      {
+      initTrainController("", "", 0.0);
+
+    //---- Do not touch this vvvvv
+    name = "";
+    AuthorityBlockID = "";
+    AuditedSpeed = 0.0;
+
+    initTrainModelGUI();
     }*/
     //constructor
     public TrainModel(String Stringname, String ABlock, Block startBlock, double ASpeed, TrainControllerMain TNCMain_input,TkM tm)
     {
-        
+
         System.out.println("not touching this");
         //---- Do not touch this vvvvv
-        
+
         currBlock = startBlock;
         currBlock.isOccupied = true;
         grade = currBlock.getGrade();
@@ -142,7 +142,7 @@ public class TrainModel {
         TNC_Main = TNCMain_input;
         System.out.println("hey" + TNCMain_input);
         initTrainController(Stringname, ABlock, ASpeed);
-        
+
         trackModel = tm;
         name = Stringname;
         AuthorityBlockID = ABlock;
@@ -150,7 +150,7 @@ public class TrainModel {
 
         initTrainModelGUI();
     }
-	
+
     private void nextBlockFunc() // 
     {
         currBlock.isOccupied = false;
@@ -161,70 +161,70 @@ public class TrainModel {
         grade = currBlock.getGrade();
         currBlockLength = currBlock.getLength();
         trackModel.updateOccupancy(currBlock);
-		return;
+        return;
     }
-	
-	private double CalcAcceleration()
-	{
-		if (velocity == 0)
-		{
-			velocity = altvelocity;
-		}
-		if (engineFail)
-		{
-			powerCommand = 0;
-		}
-		else
-		{
-			powerCommand = singleTNC.calculatePower();
-		}
-		double retval = 1000 * powerCommand / (estimatedmass * velocity);
-		double frictionforce = 0.5 * velocity * velocity;
-		retval = retval - (frictionforce);
-		return retval;
-	}
-	
-	public void update()
-	{
-		if (Sbrake ==false && Ebrake==false)
-		{
-			acceleration = CalcAcceleration();
-		}
-		System.out.println("Acceleration of Train "+name+": "+acceleration);
-		
-		velocity = velocity + acceleration * timePerUpdate;
-		if ((Sbrake || Ebrake) && velocity <=0) velocity =0;
-		
-		distanceTraveled = distanceTraveled + velocity * timePerUpdate;
-		
-		if (distanceTraveled > currBlockLength)
-		{
-			distanceTraveled = distanceTraveled - currBlockLength;
-			nextBlockFunc();
-		}
-		return;
-	}
-	
-	public void setDoorStatus(boolean[] input)
-	{
-		Doors = input;
-	}
-	
-	public void toggleLights()
-	{
-		if (lights)
-			lights = false;
-		else
-			lights = true;
-		return;
-	}
-	
-	public void setTemperature(double inputTemp)
-	{
-		temperature = inputTemp;
-	}
 
-    
+    private double CalcAcceleration()
+    {
+        if (velocity == 0)
+        {
+            velocity = altvelocity;
+        }
+        if (engineFail)
+        {
+            powerCommand = 0;
+        }
+        else
+        {
+            powerCommand = singleTNC.calculatePower();
+        }
+        double retval = 1000 * powerCommand / (estimatedmass * velocity);
+        double frictionforce = 0.5 * velocity * velocity;
+        retval = retval - (frictionforce);
+        return retval;
+    }
+
+    public void update()
+    {
+        if (Sbrake ==false && Ebrake==false)
+        {
+            acceleration = CalcAcceleration();
+        }
+        System.out.println("Acceleration of Train "+name+": "+acceleration);
+
+        velocity = velocity + acceleration * timePerUpdate;
+        if ((Sbrake || Ebrake) && velocity <=0) velocity =0;
+
+        distanceTraveled = distanceTraveled + velocity * timePerUpdate;
+
+        if (distanceTraveled > currBlockLength)
+        {
+            distanceTraveled = distanceTraveled - currBlockLength;
+            nextBlockFunc();
+        }
+        return;
+    }
+
+    public void setDoorStatus(boolean[] input)
+    {
+        Doors = input;
+    }
+
+    public void toggleLights()
+    {
+        if (lights)
+            lights = false;
+        else
+            lights = true;
+        return;
+    }
+
+    public void setTemperature(double inputTemp)
+    {
+        temperature = inputTemp;
+    }
+
+
     public void toggleEBrake()
     {
         if (EbrakeFail==false)
@@ -242,7 +242,7 @@ public class TrainModel {
         }
         return;// false;
     }
-    
+
     public void toggleSBrake()
     {
         if (SbrakeFail==false && Ebrake==false)
@@ -260,17 +260,17 @@ public class TrainModel {
         }
         return;// false;
     }
-    
+
     public void showGUI(Stage newStage) {
         myGUI.start(newStage);
     }
-    
+
     public void initTrainModelGUI()//no touch!
     {
         myGUI = new TrainModelGUI(this);//name, AuthorityBlockID, AuditedSpeed);
     }
 
-    
+
     public void initTrainController(String Stringname, String ABlock, double ASpeed)
     {
         System.out.println("TNC_MAINIS************************" + TNC_Main);
