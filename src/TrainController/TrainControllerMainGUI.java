@@ -78,7 +78,6 @@ public class TrainControllerMainGUI extends Application implements EventHandler<
       }
 
       //Called from TrainControllerMain every time a train is created
-      @SuppressWarnings("unchecked")
       public void updateList(){
         trainMenu.getItems().removeAll(trainMenu.getItems());
         TrainController[] tncTempArray;
@@ -165,13 +164,12 @@ public class TrainControllerMainGUI extends Application implements EventHandler<
         Stage newWindow = new Stage();
         for(int i = 0; i < tncArray.length; i++){
           if(trainMenu.getValue().equals(tncArray[i].getName())){
-            System.out.println("OBJECT = " + tncArray[i]);
+           // System.out.println("OBJECT = " + tncArray[i]);
               tncArray[i].showGUI(newWindow);
           }
         }
       }
     }
-
 
        public void handle(ActionEvent event){
        Stage primaryStage = new Stage();
@@ -198,4 +196,3 @@ public class TrainControllerMainGUI extends Application implements EventHandler<
 
 
 }
-

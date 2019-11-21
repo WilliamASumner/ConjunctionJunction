@@ -21,7 +21,7 @@ public class TrainController{
     boolean serviceBrake_isActive;
     boolean[] Doors = new boolean[8];
     double powerCommand;
-    double temperature;
+    double temperature = 70.0;
     // Block currBlock;
     boolean eBrakeOn;
     boolean sBrakeOn;
@@ -66,7 +66,7 @@ public class TrainController{
     }
     //Called when train controller is created
     void initGUI(){
-        myGUI = new TrainControllerGUI();
+        myGUI = new TrainControllerGUI(this);
         
     }
 
@@ -83,6 +83,7 @@ public class TrainController{
         }
         getAuditedSpeed();
         getAuthority();
+        //myGUI.updatePowerCommand();
     }
 
     //Called when train controller selected from main menu
@@ -97,6 +98,7 @@ public class TrainController{
     
 
     public double getCurrSpeed(){
+        //return tm.getVelocity();
         return currSpeed;
     }
 
@@ -104,22 +106,33 @@ public class TrainController{
         //if we are in automatic mode, then the set speed
         //is the audited speed limit of the track
         if(isAutomaticMode){
-            return auditedSpeed;
+            if(auditedSpeed > 0){
+                return auditedSpeed;
+            }
+            else{
+                return 50.0;
+            }
         }
         //if we are in manual mode, return driver set speed
         else{
-            return driverSetSpeed;
+            if(driverSetSpeed > 0){
+                return driverSetSpeed;
+            }
+            else{
+                return 50.0;
+            }
+            
         }
     }
 
     //Updates train's audited speed limit from the train model
     public void getAuditedSpeed(){
-    //    auditedSpeed = tm.getAuditedSpeed();
+       // auditedSpeed = tm.getAuditedSpeed();
     }
 
     //Updates train's authority from the train model
     public void getAuthority(){
-    //    authority = tm.getAuthority();
+      //  authority = tm.getAuthority();
     }
 
     //Updates train's authority from the train model
@@ -171,14 +184,23 @@ public class TrainController{
 
     //Set speed of train to new driverSetSpeed, only if it not above
     //speed limit
-    public void setNewSpeed(int driverSetSpeed){
-        currSpeed = driverSetSpeed;
+    public boolean setNewSpeed(double driverSetSpeed){
+        if(!isAutomaticMode){
+            currSpeed = driverSetSpeed;
+            return true;
+        }
+        return false;
+        
     }
 
     //Set temperature of train cabin to newTemp value (fahrenheit)
     public void setTemp(double newTemp){
         temperature = newTemp;
         tm.setTemperature(newTemp);
+    }
+
+    public double getTemp(){
+        return temperature;
     }
 
     //Toggle the emergency brake, called from TrainControllerGUI
@@ -199,13 +221,13 @@ public class TrainController{
     public boolean toggleServiceBrake(){
         boolean currentState;
         if(sBrakeOn){
-            eBrakeOn = false;
+            sBrakeOn = false;
         }
         else{
-            eBrakeOn = true;
+            sBrakeOn = true;
         }
         tm.toggleSBrake();
-        currentState = eBrakeOn;
+        currentState = sBrakeOn;
         return currentState;
     }
 
@@ -230,12 +252,13 @@ public class TrainController{
             currentState = Doors[doorNum];
             return currentState;
     }
-    //@returns dobule calculatePower - power command to Train Model in kiloWatts 
+    //@returns double calculatePower - power command to Train Model in kiloWatts 
     //Calculates power command based on current and desired speed
     public double calculatePower(){
         double powerOut;   //power command output, in kiloWatts
         //Power.calcPowerCommand(this);
         powerOut = Power.calcPowerCommand(this);
+       // System.out.println("TRAIN: " + this + " - Power CMD " + powerOut);
         powerOut = 0.01; // TODO FIXME
         return powerOut;
     }

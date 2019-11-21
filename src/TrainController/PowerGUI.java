@@ -34,9 +34,17 @@ public class PowerGUI extends Application implements EventHandler<ActionEvent> {
     int Ki;
     int Kp;
     Power p;
+    FlowPane flowpane;
+    Button KiButton;
+    Button KpButton;
+    TextField KiValue;
+    TextField KpValue;
+    Label currentKi;
+    Label currentKp;
 
-    public PowerGUI(Power p) {
-        p=p;
+    public PowerGUI(Power powerRef) {
+        p=powerRef;
+        initGUI();
 		/*
       speed = TrainController.getAuditedSpeed();
       authority = TrainController.getAuthority();
@@ -52,25 +60,70 @@ public class PowerGUI extends Application implements EventHandler<ActionEvent> {
 	  */
     }
 
+    public void initGUI(){
+        FlowPane Kiflowpane = new FlowPane();
+        FlowPane Kpflowpane = new FlowPane();
+        flowpane = new FlowPane();
+
+        Kiflowpane.getChildren().add(new Label("Set Ki: "));
+        KiValue = new TextField();
+        Kiflowpane.getChildren().add(KiValue);
+        KiButton = new Button("Set new Ki");
+        Kiflowpane.getChildren().add(KiButton);
+        currentKi = new Label("Current Ki Value: " + Double.toString(p.getKi()));
+        Kiflowpane.getChildren().add(currentKi);
+
+        Kpflowpane.getChildren().add(new Label("Set Kp: "));
+        KpValue = new TextField();
+        Kpflowpane.getChildren().add(KpValue);
+        KpButton = new Button("Set new Kp");
+        Kpflowpane.getChildren().add(KpButton);
+        currentKp = new Label("Current Kp Value: " + Double.toString(p.getKp()));
+        Kpflowpane.getChildren().add(currentKp);
+
+
+        flowpane.getChildren().add(Kiflowpane);
+        flowpane.getChildren().add(Kpflowpane);
+
+    }
+
 
 
     @Override
        public void start(Stage primaryStage) {
-           primaryStage.setTitle("Power UI");
+           primaryStage.setTitle("Power Configuration UI");
+
+           KiButton.setOnAction(new KiButtonHandler());
+           KpButton.setOnAction(new KiButtonHandler());
 
            //Labels to display the current Ki and Kp values
           // Label currKi = new Label("Current Ki: " + p.getKi());
           // Label currKp = new Label("Current Kp: " + p.getKp());
 
-           Label Ki = new Label("Set Ki:    "); 
-           Label Kp = new Label("Set Kp:    "); 
-           
-           FlowPane flowpane = new FlowPane();
-
            Scene scene = new Scene(flowpane, 500, 300);
            primaryStage.setScene(scene);
            primaryStage.show();
        }
+
+       public class KiButtonHandler implements EventHandler<ActionEvent>{
+        @Override
+        public void handle(ActionEvent event){
+            //System.out.println("HEY KI");
+            p.setKi(Double.valueOf(KiValue.getText()));
+            currentKi.setText("Current Ki Value: " + Double.toString(p.getKi()));
+        }
+      }
+
+
+      public class KpButtonHandler implements EventHandler<ActionEvent>{
+        @Override
+        public void handle(ActionEvent event){
+            //System.out.println("HEY KP");
+            p.setKp(Double.valueOf(KpValue.getText()));
+            currentKp.setText("Current Kp Value: " + Double.toString(p.getKp()));
+        }
+      }
+
 
        public static void main(String[] args) {
            launch();
@@ -82,3 +135,4 @@ public class PowerGUI extends Application implements EventHandler<ActionEvent> {
        }
 
 }
+	
