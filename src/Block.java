@@ -18,6 +18,22 @@ public class Block
     Block AuditedAuthority;
     boolean IsUnderground;
     BlockType type;
+    String stationName;
+
+    public String getStationName() {
+      if (this.type == BlockType.STATIONBLOCK) {
+        return stationName;
+      }
+      else {
+        return "";
+      }
+    }
+
+    public void setStationName(String newStationName) {
+      if (this.type == BlockType.STATIONBLOCK) {
+        stationName = newStationName;
+      }
+    }
 
     public void setIsOccupied(boolean newValue) {
         isOccupied = newValue;

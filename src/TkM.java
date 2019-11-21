@@ -24,6 +24,7 @@ public class TkM {
       TrackMap line = new TrackMap();
       TrackMap red = new TrackMap();
       TrackMap green = new TrackMap();
+      TrackControllerMain tkc = new TrackControllerMain();
 
       public TkM(String lineColor) {
         this.buildTrackMaps("redFile.csv", "greenFile.csv");
@@ -35,7 +36,7 @@ public class TkM {
           line = this.green;
         }
         System.out.println(this.toString(red, red.map.get(5).getBlockID()));
-        //tkmg = new TkMGUI(this);
+        tkmg = new TkMGUI(this);
 
       }
 
@@ -43,8 +44,12 @@ public class TkM {
         this.buildTrackMaps("redFile.csv", "greenFile.csv");
 
       //  System.out.println(this.toString(red, red.map.get(5).getBlockID()));
-        //tkmg = new TkMGUI(this);
+        tkmg = new TkMGUI(this);
 
+      }
+
+      public void addTrackController(TrackControllerMain newtkc) {
+        tkc = newtkc;
       }
 
       public ArrayList<TrackMap> buildTrackMaps(String redFile, String greenFile) {
@@ -67,6 +72,13 @@ public class TkM {
       public ArrayList<Block> getGreen() {
         return trackmaps.get(1).map;
       }
+
+
+      public void createTrain(String name, String authority, Block b, double speed) {
+        TrainModel newTrain = new TrainModel(name, authority, b, speed);
+      }
+
+
 
      public void showGUI(Stage stage){
        tkmg.start(stage);
@@ -125,21 +137,21 @@ public class TkM {
               return tf;
      }
 
-      // public static void main(String[] args) {
-      //
-      //   TkM t = new TkM("red");
-      // //  t.buildTrackMaps("redFile.csv", "redFile.csv");
-      // //  ArrayList<Block> a = t.trackmaps.get(0).map;
-      //   System.out.println(t.red.map.size());
-      // //  TrackMap r = t.trackmaps.get(0);
-      //   ArrayList<Block> aaa = t.red.getBlocksBySection("A");
-      //   System.out.println(aaa.size());
-      //   System.out.println(t.red.map.get(5).getIsOccupied());
-      //
-      //   //Block b = t.trackmaps.get(0).sendBlock(1);
-    	//   //System.out.println(b.getBlockID() + ", " + b.getLineColor());
-      //
-      // }
+      public static void main(String[] args) {
+
+        TkM t = new TkM("red");
+      //  t.buildTrackMaps("redFile.csv", "redFile.csv");
+      //  ArrayList<Block> a = t.trackmaps.get(0).map;
+        System.out.println(t.red.map.size());
+      //  TrackMap r = t.trackmaps.get(0);
+        ArrayList<Block> aaa = t.red.getBlocksBySection("A");
+        System.out.println(aaa.size());
+        System.out.println(t.red.map.get(5).getIsOccupied());
+
+        //Block b = t.trackmaps.get(0).sendBlock(1);
+    	  //System.out.println(b.getBlockID() + ", " + b.getLineColor());
+
+      }
 
 
 
