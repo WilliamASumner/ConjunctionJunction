@@ -44,7 +44,7 @@ public class TkM {
     }*/
 
     public TkM(TrainControllerMain newtnC) {
-        tnC = newtnC;
+       tnC = newtnC;
         this.buildTrackMaps("rsrc/redFile.csv", "rsrc/greenFile.csv");
 
         //System.out.println(this.toString(red, red.map.get(5).getBlockID()));
@@ -148,11 +148,23 @@ public class TkM {
         t7.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
         Text t7l = new Text(b.getAuditedAuthority() + "\n\n\n");
         t7l.setFont(Font.font("Verdana",  20));
+        Text t8 = new Text("\nNext Block:");
+        t8.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
+        Text t8l = new Text(b.getNextBlock() + "\n\n\n");
+        t8l.setFont(Font.font("Verdana",  20));
+        Text t9 = new Text("\nPrev Block:");
+        t9.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
+        Text t9l = new Text(b.getPrevBlock() + "\n\n\n");
+        t9l.setFont(Font.font("Verdana",  20));
+        Text t10 = new Text("\nBlock Type:");
+        t10.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
+        Text t10l = new Text(b.getType() + "\n\n\n");
+        t10l.setFont(Font.font("Verdana",  20));
 
 
 
 
-        TextFlow tf = new TextFlow(t1,t1l,t2,t2l,t3,t3l,t4,t4l,t5,t5l,t6,t6l,t7,t7l);
+        TextFlow tf = new TextFlow(t1,t1l,t2,t2l,t3,t3l,t4,t4l,t5,t5l,t6,t6l,t7,t7l,t8,t8l,t9,t9l,t10,t10l);
         return tf;
     }
 
