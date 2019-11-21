@@ -54,7 +54,7 @@ public class TrainModel {
     double velocity = 0;
     double altvelocity = 0.01;
     double acceleration = 0;
-    double timePerUpdate = 1;
+    double timePerUpdate = 3;
 
     public void toggleEBrakeFail()
     {
