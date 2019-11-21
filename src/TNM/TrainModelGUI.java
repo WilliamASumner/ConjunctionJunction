@@ -20,39 +20,39 @@ public class TrainModelGUI extends Application {
 		myAuthority = inBlock;
 		mydubSpeed = inSpeed;
 		*/
-		myName = TrainModel.name;
-		myAuthority = TrainModel.AuthorityBlockID;
-		mydubSpeed = TrainModel.AuditedSpeed;
+		//myName = TrainModel.name;
+		//myAuthority = TrainModel.AuthorityBlockID;
+		//mydubSpeed = TrainModel.AuditedSpeed;
 	}
 
     @Override // not sure what this does?
     public void start(Stage primaryStage) { // entry point for all apps
-        primaryStage.setTitle("Train Model GUI"); // container for all of it
+        // primaryStage.setTitle("Train Model GUI"); // container for all of it
         
 		
-		int num = 0;
+		// int num = 0;
 		
-		String finalstring = "Train Name: " + myName + "\nAudited Authority: " + myAuthority + "\nAudited Speed: " + mydubSpeed;
+		// String finalstring = "Train Name: " + myName + "\nAudited Authority: " + myAuthority + "\nAudited Speed: " + mydubSpeed;
 		
-		Button btn = new Button();
-        btn.setText("Say 'NUMBER'");
-        btn.setOnAction(new EventHandler<ActionEvent>() {
+		// Button btn = new Button();
+        // btn.setText("Say 'NUMBER'");
+        // btn.setOnAction(new EventHandler<ActionEvent>() {
 
-            @Override
-            public void handle(ActionEvent event) {
-                System.out.println(num);
-            }
-        });
+        //     @Override
+        //     public void handle(ActionEvent event) {
+        //         System.out.println(num);
+        //     }
+        // });
 
-        StackPane root = new StackPane();
-        //root.getChildren().add(btn);
+        // StackPane root = new StackPane();
+        // //root.getChildren().add(btn);
 		
-		Label myLabel = new Label(finalstring);
-        root.getChildren().add(myLabel);
+		// Label myLabel = new Label(finalstring);
+        // root.getChildren().add(myLabel);
 		
-        primaryStage.setScene(new Scene(root, 300 ,250)); // content container
+        // primaryStage.setScene(new Scene(root, 300 ,250)); // content container
 		
-        primaryStage.show();
+        // primaryStage.show();
     }
 }
 

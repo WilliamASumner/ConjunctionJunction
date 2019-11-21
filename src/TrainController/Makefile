@@ -21,7 +21,7 @@ BLOCK_JAVAFILES := $(addsuffix .java,$(addprefix $(BLOCK_SRCDIR),$(BLOCKFILES)))
 CLASS_PATH      := ../../bin/TNC
 
 ######### TRAIN CONTROLLER #############
-TNC_MODULE     = TrainController TrainControllerGUI
+TNC_MODULE     = TrainController TrainControllerGUI Power PowerGUI TrainControllerMain TrainControllerMainGUI
 TNC_SRCDIR     = ../../src/TrainController/
 TNC_BINDIR     = ../../bin/
 
@@ -31,21 +31,21 @@ TNC_CLASSFILES = $(addsuffix .class,$(addprefix $(TNC_BINDIR),$(TNC_MODULE)))
 #JAVAFILES      := $(addsuffix .java,$(MODULES))
 #CLASSFILES     = $(addsuffix .class,$(MODULES))
 
-################# TEST VARS ##################
+# ################# TEST VARS ##################
 
-TTARGET_CLASS  := $(addprefix $(TNC_BINDIR),TrainControllerGUI.class)
-TTARGET        := TrainControllerGUI
-.PHONY         := clean runtest
+# TTARGET_CLASS  := $(addprefix $(TNC_BINDIR),TrainControllerGUI.class)
+# TTARGET        := TrainControllerGUI
+# .PHONY         := clean runtest
 
-# Rules
-default: $(TTARGET_CLASS)
+# # Rules
+# default: $(TTARGET_CLASS)
 
-run: $(TTARGET_CLASS)
-	$(RUNCMD) $(JFLAGS) -cp $(TNC_BINDIR) $(TTARGET)
+# run: $(TTARGET_CLASS)
+# 	$(RUNCMD) $(JFLAGS) -cp $(TNC_BINDIR) $(TTARGET)
 
 
-$(TTARGET_CLASS): $(TNC_JAVAFILES) $(BLOCK_JAVAFILES)
-	$(CC) $(JFLAGS) -d $(TNC_BINDIR) $(BLOCK_JAVAFILES) $(TNC_JAVAFILES)
+# $(TTARGET_CLASS): $(TNC_JAVAFILES) $(BLOCK_JAVAFILES)
+# 	$(CC) $(JFLAGS) -d $(TNC_BINDIR) $(BLOCK_JAVAFILES) $(TNC_JAVAFILES)
 
-clean:
-	$(RM) '*.class' *.class $(TNC_CLASSFILES)
+# clean:
+# 	$(RM) '*.class' *.class $(TNC_CLASSFILES)

@@ -2,10 +2,10 @@ import javafx.stage.Stage;
 
 public class TrainModel {
     
-    static String name = "test name";
-    static String AuthorityBlockID = "test Block";
-    static double AuditedSpeed = 3.14;
-    TrainController TNC = null;
+    String name = "test name";
+    String AuthorityBlockID = "test Block";
+    double AuditedSpeed = 3.14;
+    TrainControllerMain TNC = null;
     TrainModelGUI myGUI;
 
     public TrainModel()
@@ -44,7 +44,7 @@ public class TrainModel {
     
     public void initTrainController(String Stringname, String ABlock, double ASpeed)
     {
-        TNC = new TrainController(Stringname, ABlock, ASpeed);
+        //TNC = new TrainController(Stringname, ABlock, ASpeed);
     }
 
 }
