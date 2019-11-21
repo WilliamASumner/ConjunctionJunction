@@ -7,8 +7,8 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage; 
 public class Power{
-    private static double Ki;
-    private static double Kp;
+    private static double Ki = 50;
+    private static double Kp = 50;
     private double powerOutput;
     private PowerGUI powerGUI;
 
