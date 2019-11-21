@@ -48,11 +48,9 @@ public class TrainModelGUI extends Application {
             }
         });
 
-
-
         StackPane root = new StackPane();
         //StackPane mystackpane = new StackPane();
-        root.getChildren().add(btn);
+        //root.getChildren().add(btn);
 
         Label myLabel = new Label(finalstring);
         root.getChildren().add(myLabel);
