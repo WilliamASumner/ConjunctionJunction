@@ -179,7 +179,7 @@ public class TrainModel {
 			powerCommand = singleTNC.calculatePower();
 		}
 		double retval = 1000 * powerCommand / (estimatedmass * velocity);
-		double frictionforce = 0.5 * velocity * velocity
+		double frictionforce = 0.5 * velocity * velocity;
 		retval = retval - (frictionforce);
 		return retval;
 	}
