@@ -167,4 +167,8 @@ public class Block
     public String toString() {
       return this.getBlockID();
     }
+
+    public static int blockIDToNum(String ID) {
+        return Integer.parseInt(ID.substring(1,ID.length()));
+    }
 }
