@@ -54,7 +54,7 @@ public class TrainModel {
     double velocity = 0;
     double altvelocity = 0.01;
     double acceleration = 0;
-    double timePerUpdate = 3;
+    double timePerUpdate = 1;
 
     public void toggleEBrakeFail()
     {
@@ -63,12 +63,18 @@ public class TrainModel {
 
             EbrakeFail=false;
             singleTNC.setSBrakeFailure(false);
+			System.out.println("EbrakeFail is now false: "+EbrakeFail);
+        
+			
         }
         else
         {
             EbrakeFail=true;
             singleTNC.setSBrakeFailure(true);
+			System.out.println("EbrakeFail is now true: "+EbrakeFail);
             Ebrake = false;
+			System.out.println("Ebrake is now false: "+Ebrake);
+
         }
         return;
     }
@@ -79,12 +85,15 @@ public class TrainModel {
         {
             SbrakeFail=false;
             singleTNC.setSBrakeFailure(false);
+			System.out.println("SbrakeFail is now false: "+SbrakeFail);
         }
         else
         {
             SbrakeFail=true;
             Sbrake = false;
             singleTNC.setSBrakeFailure(true);
+			System.out.println("SbrakeFail is now true: "+SbrakeFail);
+			System.out.println("Sbrake is now false: "+Sbrake);
         }
         return;
     }
@@ -94,12 +103,14 @@ public class TrainModel {
         {
             signalFail=false;
             singleTNC.setSignalFailure(false);
+			System.out.println("signalFail is now false: "+signalFail);
         }
 
         else
         {
             signalFail=true;
             singleTNC.setSignalFailure(true);
+			System.out.println("signalFail is now true: "+signalFail);
         }
         return;
     }
@@ -109,12 +120,14 @@ public class TrainModel {
         {
             engineFail=false;
             singleTNC.setEngineFailure(false);
+			System.out.println("engineFail is now false: "+engineFail);
         }
 
         else
         {
             engineFail=true;
             singleTNC.setEngineFailure(true);
+			System.out.println("engineFail is now true: "+engineFail);
             powerCommand = 0;
         }
         return;
@@ -167,7 +180,7 @@ public class TrainModel {
             powerCommand = singleTNC.calculatePower();
         }
         double retval = 1000 * powerCommand / (estimatedmass * velocity);
-        double frictionforce = 0.5 * velocity * velocity;
+        double frictionforce = 0.5 * velocity;// Not sure if correct
         retval = retval - (frictionforce);
         return retval;
     }
@@ -185,7 +198,7 @@ public class TrainModel {
         System.out.println("Velocity of Train "+name+": "+velocity);
 
         velocity = velocity + acceleration * timePerUpdate;
-        if ((Sbrake || Ebrake) && velocity <=0) velocity =0;
+        if (velocity <=0) velocity =0;
 
         distanceTraveled = distanceTraveled + velocity * timePerUpdate;
 
@@ -239,10 +252,13 @@ public class TrainModel {
             {
                 Ebrake = true;
                 acceleration = EbrakeAcc;
+				System.out.println("Ebrake is now true: "+Ebrake);
+				
             }
             else
             {
                 Ebrake = false;
+				System.out.println("Ebrake is now false: "+Ebrake);
             }
             //return true;
         }
@@ -257,10 +273,12 @@ public class TrainModel {
             {
                 Sbrake = true;
                 acceleration = SbrakeAcc;
+				System.out.println("Sbrake is now true: "+Sbrake);
             }
             else
             {
                 Sbrake = false;
+				System.out.println("Sbrake is now false: "+Sbrake);
             }
             //return true;
         }

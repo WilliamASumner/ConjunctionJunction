@@ -44,7 +44,7 @@ public class TkM {
     }*/
 
     public TkM(TrainControllerMain newtnC) {
-        tnC = newtnC;
+       tnC = newtnC;
         this.buildTrackMaps("rsrc/redFile.csv", "rsrc/greenFile.csv");
 
         //System.out.println(this.toString(red, red.map.get(5).getBlockID()));
