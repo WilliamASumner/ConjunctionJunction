@@ -10,6 +10,7 @@ public class CTCTrain{
         private String departTime;
         private String curBlkID;
         private String curAuthority;
+		private int totalNumOfStationsLeftToArriveTo;
         private TkM tkm;
         ArrayList<String> schedule;
 /*      HashMap<String, String> mapStationBlocks = new HashMap<>();
@@ -22,7 +23,7 @@ public class CTCTrain{
                 "STEEL PLAZA", "FIRST AVE", "STATION SQUARE",
                 "SOUTH HILLS JUNCTION"
         };
-        
+        stationToBlockGreen
         private String[] stationBlock = {
             
             
@@ -100,7 +101,10 @@ public class CTCTrain{
         }
 
         public String getAuthority(){
-            return curAuthority;
+			if(line.equals("green"))
+				return CTC.stationToBlockGreen.get(curAuthority);
+			else
+				return CTC.stationToBlockRed.get(curAuthority);
         }
 
         /**
@@ -124,12 +128,6 @@ public class CTCTrain{
             return curBlkID;
         }
 
-        /**
-         * Get Train authority.
-         */ 
-        public String getCurAuthority(){
-            return curAuthority;
-        }   
 
         /**
          * Get Train speed.
@@ -153,6 +151,13 @@ public class CTCTrain{
             
         }
 
+		public String getNextscheduleStop(){
+			// Calculates current station train is traveling to
+			int curStation = schedule.size() - totalNumOfStationsLeftToArriveTo;
+			totalNumOfStationsLeftToArriveTo--;
+			return schedule.get(curStation);
+		}
+
         /**
          * Set Train's schedule.
          */     
@@ -162,15 +167,22 @@ public class CTCTrain{
             // add stops to schedule
             for(int i = 0; i < sched.size(); i++)
                 schedule.add(i, sched.get(i));
+		
+			//Add yard as final authority
+			// a0 is block for yard
+			schedule.add("yard");
+			
+			totalNumOfStationsLeftToArriveTo = sched.size() + 1;
+			System.out.println(totalNumOfStationsLeftToArriveTo);
+			
             // Set first authority
-            this.setAuthority(CTC.stationToBlockGreen.get(schedule.get(0)));
+            this.setAuthority(schedule.get(0));
             // NEED TO CHECK WHICH LINE TRAIN IS ON
             // TO GET SPECIFIC YARD BLOCK
-    //      if()
-            //if (line.toLowerCase().equals("green"))
+            if (line.equals("green"))
                 this.setCurBlkID("J62");
-            //else
-                //this.setCurBlkID("C6"); // TODO FIXME
+            else
+                this.setCurBlkID("C6");
         }
         
         /**

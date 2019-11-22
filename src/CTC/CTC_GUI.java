@@ -655,15 +655,17 @@ public class CTC_GUI extends Application {
             
             // Create temporary CTCTrain to add to queued train viewer
             CTCTrain tempTrain = new CTCTrain(newCTC.getTkM());
+			
+			System.out.println(currentLine);
+            //Set line
+            tempTrain.setLine(currentLine);			
+			System.out.println(tempTrain.getLine());
             // Set CTCTrain's schedule
             System.out.println("SCHED=" + sched);
             tempTrain.setSchedule(sched);
             sched.clear();
             // Set name
             tempTrain.setName(tName);
-
-            //Set line
-            tempTrain.setLine(currentLine);
             
             // Determine if speed is at or under limit
 //          newCTC.getBlockSpeed();
