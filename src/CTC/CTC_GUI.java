@@ -347,19 +347,19 @@ public class CTC_GUI extends Application {
         // Create table view 
         table = new TableView();
         
-        TableColumn<String, CTCTrain> trainNameCol = new TableColumn<>("Train Name");
+        TableColumn trainNameCol = new TableColumn<>("Train Name");
         // Set the 'trainNameCol' to accept a field named 'trainName'
         trainNameCol.setCellValueFactory(new PropertyValueFactory<>("trainName"));
         
-        TableColumn<String, CTCTrain> curBlockCol = new TableColumn<>("Cur Block");
+        TableColumn curBlockCol = new TableColumn<>("Cur Block");
         // Set the 'curBlockCol' to accept a field named 'curBlkNum'
         curBlockCol.setCellValueFactory(new PropertyValueFactory<>("curBlkID"));
         
-        TableColumn<String, CTCTrain> authCol = new TableColumn<>("Authority");
+        TableColumn authCol = new TableColumn<>("Authority");
         // Set the 'authCol' to accept a field named 'curBlkNum'
         authCol.setCellValueFactory(new PropertyValueFactory<>("curAuthority"));    
         
-        TableColumn<String, CTCTrain> speedCol = new TableColumn<>("Speed");
+        TableColumn speedCol = new TableColumn<>("Speed");
         // Set the 'speedCol' to accept a field named 'curSpeed'
         speedCol.setCellValueFactory(new PropertyValueFactory<>("curSpeed"));   
         

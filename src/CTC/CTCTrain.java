@@ -9,7 +9,7 @@ public class CTCTrain{
         private double curSpeed;
         private String departTime;
         private String curBlkID;
-        private String curAuthority;
+        public String curAuthority;
 		private int totalNumOfStationsLeftToArriveTo;
         private TkM tkm;
         ArrayList<String> schedule;
@@ -106,6 +106,10 @@ public class CTCTrain{
 			else
 				return CTC.stationToBlockRed.get(curAuthority);
         }
+		
+		public String getCurAuthority(){
+			return curAuthority;
+		}
 
         /**
          * Set Train departure time.

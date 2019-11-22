@@ -75,7 +75,7 @@ public class CTC{
 				if(tempT.getCurBlkID().equals(tempT.getAuthority())){
 					tempT.setAuthority(tempT.getNextscheduleStop());
 					// Send authority to track controller
-					trckCntrl.sendSuggestedAuthority(blockid, authorityid);
+					trckCntrl.sendSuggestedAuthority(tempT.getCurBlkID(), tempT.getAuthority());
 				}
 			}
         }
