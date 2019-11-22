@@ -7,7 +7,7 @@ OS=`uname`
 if [[ "$OS" == "Darwin" ]]; then
     LIBPATH="/Users/willsumner/Desktop/School/Software-Engineering/ConjunctionJunction/lib"
 else
-    LIBPATH="/home/georg/ConjunctionJuntion/lib"
+    LIBPATH="/home/jbamb/COE1186/iter3/ConjunctionJuntion/lib"
 fi
 if [ -z $ANTLRPATH ]; then
     export CLASSPATH=".:$LIBPATH/antlr-4.7.2-complete.jar:$CLASSPATH"

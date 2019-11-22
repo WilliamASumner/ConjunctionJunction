@@ -7,8 +7,8 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage; 
 public class Power{
-    private static double Ki = 50;
-    private static double Kp = 50;
+    public static double Ki = 50.0;
+    public static double Kp = 50.0;
     private double powerOutput;
     private PowerGUI powerGUI;
 
@@ -36,6 +36,9 @@ public class Power{
         KiOut = Ki * error;
         KpOut = Kp * error;
         powerOutput = KiOut + KpOut;
+        System.out.println("Set Speed = " + tnc.getSetSpeed());
+        System.out.println("Current Speed = " + tnc.getCurrSpeed());
+        System.out.println("Power Command = " + powerOutput);
         return powerOutput;
     }
 

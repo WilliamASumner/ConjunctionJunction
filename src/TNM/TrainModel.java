@@ -54,7 +54,7 @@ public class TrainModel {
     double velocity = 0;
     double altvelocity = 0.01;
     double acceleration = 0;
-    double timePerUpdate = 5;
+    double timePerUpdate = 1;
 
     public void toggleEBrakeFail()
     {
@@ -180,7 +180,7 @@ public class TrainModel {
             powerCommand = singleTNC.calculatePower();
         }
         double retval = 1000 * powerCommand / (estimatedmass * velocity);
-        double frictionforce = 0.5 * velocity;// Not sure if correct
+        double frictionforce = 0.02 * velocity;// Not sure if correct
         retval = retval - (frictionforce);
         return retval;
     }
@@ -194,10 +194,13 @@ public class TrainModel {
         {
             acceleration = CalcAcceleration();
         }
-        System.out.println("Acceleration of Train "+name+": "+acceleration);
-        System.out.println("Velocity of Train "+name+": "+velocity);
+       // System.out.println("Acceleration of Train "+name+": "+acceleration);
+       // System.out.println("Velocity of Train "+name+": "+velocity);
 
+       System.out.println("Acceleration = " + acceleration);
+       System.out.println("Velocity = "+ velocity);
         velocity = velocity + acceleration * timePerUpdate;
+        System.out.println("");
         if (velocity <=0) velocity =0;
 
         distanceTraveled = distanceTraveled + velocity * timePerUpdate;
