@@ -59,8 +59,8 @@ public class PowerGUI extends Application implements EventHandler<ActionEvent> {
            primaryStage.setTitle("Power UI");
 
            //Labels to display the current Ki and Kp values
-           Label currKi = new Label("Current Ki: " + p.getKi());
-           Label currKp = new Label("Current Kp: " + p.getKp());
+          // Label currKi = new Label("Current Ki: " + p.getKi());
+          // Label currKp = new Label("Current Kp: " + p.getKp());
 
            Label Ki = new Label("Set Ki:    "); 
            Label Kp = new Label("Set Kp:    "); 

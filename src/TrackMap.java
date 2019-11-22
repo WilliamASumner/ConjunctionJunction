@@ -59,18 +59,22 @@ public class TrackMap {
         newBlock.setGrade(Double.parseDouble(elements[4]));
         newBlock.setSpeedLimit(Double.parseDouble(elements[5]));
         if (elements[6] != null) {
-          // if (elements[6].contains("STATION")) {
-          //   newBlock.setType(BlockType.STATIONBLOCK);
-          //   //String[] info = elements[6].split(";");
-          //   //System.out.println(elements[6]);
-          //   //newBlock.setStationName();
-          // }
-          // else if (elements[6].contains("SWITCH")) {
-          //   newBlock.setType(BlockType.SWITCHBLOCK);
-          // }
-          // else if (elements[6].contains("CROSSING")) {
-          //   newBlock.setType(BlockType.CROSSBLOCK);
-          // }
+           if (elements[6].toUpperCase().contains("STATION")) {
+             newBlock.setType(BlockType.STATIONBLOCK);
+             String[] info = elements[6].split(";");
+             if (info.length == 2) {
+             System.out.println(info[1]);
+                 newBlock.setStationName(info[1]);
+             }
+             else
+                 newBlock.setStationName(info[0]);
+           }
+           else if (elements[6].toUpperCase().contains("SWITCH")) {
+             newBlock.setType(BlockType.SWITCHBLOCK);
+           }
+           else if (elements[6].toUpperCase().contains("CROSSING")) {
+             newBlock.setType(BlockType.CROSSBLOCK);
+           }
 
         }
         newBlock.setElevation(Double.parseDouble(elements[8]));

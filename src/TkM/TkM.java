@@ -79,7 +79,7 @@ public class TkM {
 
 
     public void createTrain(String name, String authority, Block b, double speed, TrainControllerMain TnC) {
-        TrainModel newTrain = new TrainModel(name, authority, b, speed, TnC,this);
+        TrainModel newTrain = TrainModelMain.createTrain(name, authority, b, speed, TnC,this);
 
         trains.add(newTrain);
     }
@@ -172,6 +172,16 @@ public class TkM {
 
     public void updateOccupancy(Block b) {
         tkc.updateOccupancy(b);
+    }
+
+    public void updateTkM() {
+      for (int i = 0; i < trains.size(); i++) {
+        Block b = trains.get(i).getCurrBlock();
+        if (b.getBlockID().equals("A0")) {
+          trains.remove(i);
+        }
+      }
+
     }
 
     // public static void main(String[] args) {

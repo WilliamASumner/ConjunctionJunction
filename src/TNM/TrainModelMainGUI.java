@@ -49,11 +49,13 @@ public class TrainModelMainGUI extends Application implements EventHandler<Actio
 
     TrainModelMain tnmMain;
     //PowerGUI powerGUI;
+    TrainModel tnm;
     TrainModelGUI[] tnmGUIArray = new TrainModelGUI[20];
     TrainModel[] tnmArray;
     FlowPane  flowpane;
     //Button powerConfigButton;
     Button tnmButton;
+    //Power power;
 
     ComboBox trainMenu;
 
@@ -76,12 +78,15 @@ public class TrainModelMainGUI extends Application implements EventHandler<Actio
       }
 
       //Called from TrainModelMain every time a train is created
-      @SuppressWarnings("unchecked")
       public void updateList(){
+        trainMenu.getItems().removeAll(trainMenu.getItems());
+        TrainModel[] tnmTempArray;
         tnmArray = tnmMain.getTrains();
         for(int i = 0; i < tnmArray.length; i++){
-            if (tnmArray[i] != null)
-                trainMenu.getItems().addAll(tnmArray[i].getName());
+            if (tnmArray[i] != null){    
+              trainMenu.getItems().addAll(tnmArray[i].getName());
+            }
+                
         }
       }
 
@@ -94,11 +99,13 @@ public class TrainModelMainGUI extends Application implements EventHandler<Actio
            tnmButton= new Button("Train Model");
 
            //styling for our two buttons
-           /*powerConfigButton.setStyle("-fx-text-fill: blue");
+		   /*
+           powerConfigButton.setStyle("-fx-text-fill: blue");
            powerConfigButton.setMinWidth(400);
            powerConfigButton.setMaxWidth(400);
            powerConfigButton.setMinWidth(100);
-           powerConfigButton.setMaxWidth(100);*/
+           powerConfigButton.setMaxWidth(100);
+		   */
            tnmButton.setStyle("-fx-text-fill: red");
            tnmButton.setMinWidth(400);
            tnmButton.setMaxWidth(400);
@@ -112,8 +119,8 @@ public class TrainModelMainGUI extends Application implements EventHandler<Actio
          //  menuButton.getItems().addAll();
 
            //FlowPane for power config button
-           /*
-		   FlowPane powerConfig = new FlowPane();
+		   /*
+           FlowPane powerConfig = new FlowPane();
 
            powerConfig.setMinWidth(300);
            powerConfig.setStyle("-fx-border-color: black");
@@ -121,7 +128,7 @@ public class TrainModelMainGUI extends Application implements EventHandler<Actio
            flowpane.getChildren().add(powerConfig);
 		   */
           
-           //FlowPane for train Model config button
+           //FlowPane for power config button
            FlowPane trainControl = new FlowPane();
            trainControl.setMinWidth(300);
            trainControl.setStyle("-fx-border-color: black");
@@ -139,20 +146,48 @@ public class TrainModelMainGUI extends Application implements EventHandler<Actio
     @Override
        public void start(Stage primaryStage) {
            primaryStage.setTitle("Train Model Module");  
+           //powerConfigButton.setOnAction(new powerConfigHandler());
+           tnmButton.setOnAction(new tnmHandler());
            Scene scene = new Scene(flowpane, 300, 125);
            primaryStage.setScene(scene);
            primaryStage.show();
        }
 
+		/*
+       class powerConfigHandler implements EventHandler<ActionEvent>{
+        @Override
+        public void handle(ActionEvent event){
+          Stage newWindow = new Stage();
+          tnmMain.initPower().showGUI(newWindow);
+        }
+      }*/
+
+      class tnmHandler implements EventHandler<ActionEvent>{
+      @Override
+      public void handle(ActionEvent event){
+        Stage newWindow = new Stage();
+        for(int i = 0; i < tnmArray.length; i++){
+          if(trainMenu.getValue().equals(tnmArray[i].getName())){
+            System.out.println("OBJECT = " + tnmArray[i]);
+              tnmArray[i].showGUI(newWindow);
+          }
+        }
+      }
+    }
+
+
        public void handle(ActionEvent event){
-        Stage primaryStage = new Stage();
+       Stage primaryStage = new Stage();
 
         //if train Model button is pressed, find the specific
         //train Model object and then open its GUI
         if(event.getSource() == tnmButton){
+          //System.out.println("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
           for(int i = 0; i < tnmArray.length; i++){
             if(trainMenu.getValue().equals(tnmArray[i].getName())){
-                tnmMain.showGUI(primaryStage, tnmArray[i]);
+                //tnmMain.showGUI(primaryStage, tnmArray[i]);
+               // System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXX");
+                tnmArray[i].showGUI(primaryStage);
             }
           }
         }
@@ -167,3 +202,4 @@ public class TrainModelMainGUI extends Application implements EventHandler<Actio
 
 
 }
+

@@ -87,6 +87,7 @@ public class TrainController{
 
     //Called when train controller selected from main menu
     void showGUI(Stage primaryStage){
+        System.out.println("Hello from Train Controller:" + this);
         myGUI.start(primaryStage);
         // Scene scene = new Scene(GUI);
         // primaryStage.setScene(scene);

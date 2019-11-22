@@ -1,9 +1,9 @@
 import javafx.stage.Stage; 
 public class TrainModelMain{
    
-    TrainModelMainGUI myGUI;
-    TrainModel[] tnmArray = new TrainModel[20];
-    int trainCount = 0;
+    static TrainModelMainGUI myGUI;
+    static TrainModel[] tnmArray = new TrainModel[20];
+    static int trainCount = 0;
     // //Train Model Constructor
     // public TrainModel(String name, String authority, double speed, TrainModel tm){
     //     auditedSpeed = speed;
@@ -34,12 +34,11 @@ public class TrainModelMain{
     }
 
     
-    public TrainModel createTrain(String Stringname, String ABlock, Block startBlock, double ASpeed, TrainControllerMain TNCMain_input,TkM tm)
+    public static TrainModel createTrain(String Stringname, String ABlock, Block startBlock, double ASpeed, TrainControllerMain TNCMain_input,TkM tm)
 	{
         //create our train object
         TrainModelGUI tnmGUI;
-        TrainModel tnm = new TrainModel(Stringname, ABlock, startBlock, ASpeed, TNCMain_input, tm)
-		
+        TrainModel tnm = new TrainModel(Stringname, ABlock, startBlock, ASpeed, TNCMain_input,tm);
         tnmGUI = tnm.getGUI();
         //add it to our array of train objects
         tnmArray[trainCount] = tnm;
@@ -54,8 +53,6 @@ public class TrainModelMain{
         myGUI = new TrainModelMainGUI(this);
         
     }
-
-  
 
 
     //Called when train Model selected from main menu
@@ -74,9 +71,10 @@ public class TrainModelMain{
         // primaryStage.setScene(scene);
         // primaryStage.show();
     }
-	public TrainModel[] getTrainArray()
+  public TrainModel[] getTrainArray()
 	{
 		return tnmArray;
 	}
     
 }
+

@@ -1,9 +1,11 @@
 import javafx.stage.Stage;
+import java.io.FileInputStream;
 import java.util.ArrayList;
+import org.antlr.v4.runtime.*; // antlr4
 
 public class TrackController
 {
-    String PLCProgram;
+    FileInputStream plcProgram;
     String line;
     ArrayList<Block> lineBlocks;
     String name;
@@ -15,7 +17,7 @@ public class TrackController
 
     public TrackController(String l, String n, ArrayList<Block> blocks,
             TkM tkmodel,TrackControllerMain m) {
-        PLCProgram = "";
+        plcProgram = null;
         mode = "Automatic";
         line = l;
         name = n;
@@ -62,37 +64,41 @@ public class TrackController
     }
 
 
-    public void setPLC(String plc) {
-        PLCProgram = plc;
+    public void setPLC(FileInputStream plcFile) {
         // open plc and parse
-        runPLC();
+        plcProgram = plcFile;
     }
 
     public void runPLC() {
+
         return;
     }
 
+    public Block getBlock(String blockID) {
+        return tkcm.tm.getBlock(blockID,line);
+    }
+
     public boolean setSwitchState(String blockID, SwitchState s) {
-        Block b = tkcm.tm.getBlock(blockID,line);
+        Block b = getBlock(blockID);
         b.setSwitchState(s);
         return true;
     }
 
     public boolean setCrossingState(String blockID, CrossingState c) {
-        Block b = tkcm.tm.getBlock(blockID,line);
+        Block b = getBlock(blockID);
         b.setCrossingState(c);
         return true;
     }
 
     public boolean sendSuggestedSpeed(String blockID, double speed) {
-        Block b = tkcm.tm.getBlock(blockID,line);
+        Block b = getBlock(blockID);
         b.setAuditedSpeed(speed);
         return true;
     }
 
     public boolean sendSuggestedAuthority(String blockID, String blockIDAuthority) {
-        Block b = tkcm.tm.getBlock(blockID,line);
-        Block a = tkcm.tm.getBlock(blockIDAuthority,line);
+        Block b = getBlock(blockID);
+        Block a = getBlock(blockIDAuthority);
         b.setAuditedAuthority(a);
         return true;
     }
@@ -102,8 +108,10 @@ public class TrackController
     }
 
     public void update() {
+        if (mode.equals("Automatic")) {
+            runPLC();
+        }
         //run plc
-
     }
 
     public String toString() {
