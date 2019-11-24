@@ -12,7 +12,7 @@ if [ -z $ANTLRPATH ]; then
     if [[ "$OS" == "Darwin" ]]; then
     export CLASSPATH=".:$LIBPATH/antlr-4.7.2-complete.jar:$BASEPATH/bin:$CLASSPATH"
     else
-    export CLASSPATH=".;$LIBPATH/antlr-4.7.2-complete.jar;$BASEPATH/bin:$CLASSPATH"
+    export CLASSPATH=".;$LIBPATH/antlr-4.7.2-complete.jar;$BASEPATH/bin;$CLASSPATH"
     fi
 
 fi
