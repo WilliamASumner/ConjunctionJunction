@@ -11,17 +11,14 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.event.EventHandler;
 import javafx.event.ActionEvent;
-//import javafx.event.WindowEvent;
+import javafx.stage.WindowEvent;
 
 import javafx.animation.AnimationTimer;
 import java.io.FileNotFoundException;
 
 public class MainUI extends Application {
-    // fields
     
     static AnchorPane root;
-    private boolean isSetup = false;
-    private SetupUI setup = new SetupUI();
     
     private Label myLabel;
     private TextField departureTime;
@@ -43,39 +40,34 @@ public class MainUI extends Application {
     private boolean updateBoolean = true;
 
     private TkM tkm = null;
-    //private TrackModel tkm = null;
     private CTC_GUI ctcg = null;
     private CTC     ctc = null;
-    //private CTC ctcg = null;
-    //private TrainModel tnm = null;
-    //
+
    public static void main(String[] args) {
-        // launch CTC 
-        //CTC newCTC = new CTC();
-        // launch the app
         launch();
     }
 
-   public void completeSetup() {
-       CTC.setDisable(false);
-       trackController.setDisable(false);
-       trainController.setDisable(false);
-       trainModel.setDisable(false);
-   }
-    
+
     @Override
     public void start(Stage stage)  {
+        // Module instantiations
         tnc = new TrainControllerMain();
         tnm = new TrainModelMain();
-        tkm = new TkM(tnc); // initialize track model
         tkcm = new TrackControllerMain();
+        tkm = new TkM(tnc); // initialize track model
+        ctc = new CTC();
+
+        // Track Controller Connections
         tkcm.setTrackModel(tkm);
         tkcm.createControllers();
-        ctc = new CTC();
+        tkcm.setCTC(ctc);
+
+        //CTC Connections
         ctc.addTrackModel(tkm);
         ctc.addTrackController(tkcm);
+
+        //Track Model Connections
         tkm.addTrackController(tkcm);
-        tkcm.setCTC(ctc);
 
         Label programTitle = new Label("Conjunction Junction");
         Label programTitle2= new Label("Train Simulation Software");
@@ -112,9 +104,7 @@ public class MainUI extends Application {
         );
 
         stopButton = new Button("Stop");
-        stopButton.setOnAction(
-                new stopHandler()
-        );
+        stopButton.setOnAction(new stopHandler());
 
         // Put the HBox, dispatchT, and myLabel in a VBox
         VBox vbox = new VBox(10,programTitle,programTitle2, CTC, trackController, trackModel, trainModel, trainController,stopButton);
@@ -140,7 +130,7 @@ public class MainUI extends Application {
                     //tnm.update();
                     tnc.update();
                     try {
-                        Thread.sleep(1);
+                        Thread.sleep(1); // FIXME, add variable timing
                     } catch (Exception e) {
                         System.out.println(e);
                     }
@@ -149,7 +139,7 @@ public class MainUI extends Application {
         }.start();
 
 
-        //stage.setOnCloseRequest(new closeWindowHandler());
+        stage.setOnCloseRequest(new closeWindowHandler());
         stage.show();
 
     }
@@ -223,11 +213,16 @@ public class MainUI extends Application {
         }
     }
 
-    /*
     class closeWindowHandler implements EventHandler<WindowEvent> {
         @Override
         public void handle(WindowEvent event) {
-            stop();
+            System.out.println("Closing...");
+            try {
+                tkcm.stop();
+                stop();
+            } catch (Exception e) {
+                System.out.println(e);
+            }
         }
-    }*/
+    }
 }
