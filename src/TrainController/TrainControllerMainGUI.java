@@ -78,6 +78,7 @@ public class TrainControllerMainGUI extends Application implements EventHandler<
       }
 
       //Called from TrainControllerMain every time a train is created
+      @SuppressWarnings("unchecked")
       public void updateList(){
         trainMenu.getItems().removeAll(trainMenu.getItems());
         TrainController[] tncTempArray;
