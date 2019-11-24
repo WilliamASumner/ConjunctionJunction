@@ -48,12 +48,13 @@ attribute // can only access occupancy or switch position
     | Occupancy
 ;
 
-assignedattribute // can change more
+assignedattribute // can change switch,authority,crossing,occupancy
 :
       SwitchState
     | Authority
     | CrossingState
     | Occupancy
+    | Speed
 ;
 
 // Possible values to check for and assign
@@ -65,6 +66,7 @@ value
     | CrossingStateValue
     | SignalStateValue
     | OccupancyValue
+    | SpeedValue
 ;
 
 SwitchStateValue
@@ -92,10 +94,18 @@ OccupancyValue
     | UNOCCUPIED
 ;
 
+SpeedValue
+:
+    FLOAT
+;
+
 BlockID
 : [A-Z] DIGIT+
 ;
 
+FLOAT
+: [0-9]*'.'[0-9]+
+;
 Whitespace
 : [ \r\n\t]+ -> skip
 ;
@@ -121,6 +131,11 @@ Semicolon
 
 Period
 : '.'
+;
+
+Speed
+: 'speed'
+| 'SPEED'
 ;
 
 Occupancy
