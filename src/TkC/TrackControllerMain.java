@@ -52,6 +52,13 @@ public class TrackControllerMain
         guis.remove(gui);
     }
 
+    public void stop() {
+        for (TrackControllerGUI gui : guis) {
+            System.out.println("Closing: " + gui);
+            gui.closeGUI();
+        }
+    }
+
     public String[] getControllerNames() {
         return TkNames;
     }

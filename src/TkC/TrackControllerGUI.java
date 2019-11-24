@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 
@@ -137,7 +138,7 @@ public class TrackControllerGUI extends Application {
         row3.setPercentHeight(33);
         root.getRowConstraints().addAll(row1,row2,row3);
 
-        
+
 
         String[] ControllerNames = tkcm.getControllerNames();
         ObservableList<String> ControllerOptions = FXCollections.observableArrayList();
@@ -146,30 +147,7 @@ public class TrackControllerGUI extends Application {
         }
         ComboBox<String> controllerBox = new ComboBox<String>(ControllerOptions);
         controllerBox.getSelectionModel().select(currentController.toString());
-        controllerBox.setOnAction(new EventHandler<ActionEvent>() {
-
-            @Override
-            public void handle(ActionEvent event) {
-                String newTkc = controllerBox.getSelectionModel().getSelectedItem();
-                currentController = tkcm.getController(newTkc);
-                tkcm.setController(newTkc);
-
-                String[] BlockNames = currentController.getControlledBlocks();//,"2","3","4","5"};
-                ObservableList<String> BoxOptionsNew = FXCollections.observableArrayList();
-                for (String option: BlockNames) {
-                    BoxOptionsNew.addAll(option);
-                }
-                blockBox.setItems(BoxOptionsNew);
-                blockBox.getSelectionModel().selectFirst();
-                if (occupancyCheckBox.isSelected()) { // disable
-
-                    occupancyCheckBox.setSelected(false);
-                    currentBlock.setIsOccupied(false);
-                    overrideOccupied = false;
-                }
-
-            }
-        });
+        controllerBox.setOnAction(new ControllerListHandler());
 
         String[] BlockNames = currentController.getControlledBlocks();//,"2","3","4","5"};
         ObservableList<String> BoxOptions = FXCollections.observableArrayList();
@@ -179,38 +157,14 @@ public class TrackControllerGUI extends Application {
 
         blockBox = new ComboBox<String>(BoxOptions);
         blockBox.getSelectionModel().selectFirst();
-        blockBox.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                if (blockBox.getSelectionModel().getSelectedItem() != null) {
-                    //System.out.println(blockBox.getSelectionModel().getSelectedItem());
-                    //System.out.println(currentController.getLine());
-                    currentBlock = tkcm.tm.getBlock(blockBox.getSelectionModel().getSelectedItem(),currentController.getLine());
-                    if (currentBlock.getBlockID().equals("C12")) { // switch
-                        //System.out.println("Here");
-                        currentBlock.setType(BlockType.SWITCHBLOCK);
-                        currentBlock.setSwitchState(SwitchState.FORK);
-                    }
-                    checkUI();
-                }
-            }
-        });
+        blockBox.setOnAction(new BlockListHandler());
 
 
         ObservableList<String> ModeOptions = FXCollections.observableArrayList("Automatic","Manual");
         ComboBox<String> modeBox = new ComboBox<String>(ModeOptions);
         modeBox.getSelectionModel().select(currentController.getMode());
         mode = currentController.getMode();
-        modeBox.setOnAction(new EventHandler<ActionEvent>() {
-
-            @Override
-            public void handle(ActionEvent event) {
-                //System.out.println("selected new mode: " + modeBox.getSelectionModel().getSelectedItem());
-                mode = modeBox.getSelectionModel().getSelectedItem();
-                currentController.setMode(mode);
-                checkUI();
-            }
-        });
+        modeBox.setOnAction(new ModeListHandler());
 
 
         Label ctrl = new Label("Controller: ");
@@ -230,8 +184,8 @@ public class TrackControllerGUI extends Application {
 
 
         /*GridPane.setConstraints(controllerBox,0,0);
-        GridPane.setConstraints(blockBox,0,1);
-        GridPane.setConstraints(modeBox,0,2);*/
+          GridPane.setConstraints(blockBox,0,1);
+          GridPane.setConstraints(modeBox,0,2);*/
 
         VBox MainControls = new VBox();
         MainControls.setPadding(new Insets(10));
@@ -248,16 +202,7 @@ public class TrackControllerGUI extends Application {
 
         occupancyCheckBox = new CheckBox("Override to Occupied");
         occupancyCheckBox.setIndeterminate(false); // only true/false
-        occupancyCheckBox.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                //System.out.println(occupancyCheckBox.isSelected() ? "checked" : "unchecked");
-                currentBlock.setIsOccupied(occupancyCheckBox.isSelected());
-                overrideOccupied = !overrideOccupied;
-                //controllerHBox.setDisable(true); // useful for turning off
-                checkUI();
-            }
-        });
+        occupancyCheckBox.setOnAction(new OccupancyCheckBoxHandler());
 
 
 
@@ -303,8 +248,6 @@ public class TrackControllerGUI extends Application {
 
         GridPane.setColumnSpan(MiddleDividerHigh,2);
         GridPane.setColumnSpan(MiddleDividerLow,2);
-
-
 
         switchImageView = new ImageView(switchImageGrey);
         switchImageView.setFitWidth(160);
@@ -370,31 +313,7 @@ public class TrackControllerGUI extends Application {
         Button importButton = new Button("Import PLC");
         importButton.setPrefWidth(200);
         importButton.setPrefHeight(100);
-        importButton.setOnAction(new EventHandler<ActionEvent>() {
-
-            @Override
-            public void handle(ActionEvent event) {
-                fileChooser.setTitle("Choose a PLC Program");
-                fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
-                fileChooser.getExtensionFilters().addAll(
-                        new FileChooser.ExtensionFilter("PLC Program","*.plc"),
-                        new FileChooser.ExtensionFilter("All Files","*.*")
-                );
-
-                File file = fileChooser.showOpenDialog(currentStage);
-                if (file != null) {
-                    try {
-                        //Desktop.getDesktop().open(file);
-                        System.out.println("opening file: " + file);
-                        currentController.setPLC(new FileInputStream(file));
-
-                    } catch (IOException ex) {
-                        System.out.println("Error: could not open file");
-                    }
-                }
-                currPLC.setText(file.getName());
-            }
-        });
+        importButton.setOnAction(new ImportButtonHandler());
 
 
         VBox PLCBox = new VBox(currProgBox,importButton);
@@ -410,20 +329,7 @@ public class TrackControllerGUI extends Application {
         }
         switchBox = new ComboBox<String>(SwStates);
         switchBox.getSelectionModel().selectFirst();
-        switchBox.setOnAction(new EventHandler<ActionEvent>() {
-
-            @Override
-            public void handle(ActionEvent event) {
-                //System.out.println("selected new switch state: " + switchBox.getSelectionModel().getSelectedItem());
-                String s = switchBox.getSelectionModel().getSelectedItem();
-                if (s.equals("FORK"))
-                    currentBlock.setSwitchState(SwitchState.FORK);
-                else
-                    currentBlock.setSwitchState(SwitchState.MAIN);
-
-                checkUI();
-            }
-        });
+        switchBox.setOnAction(new SwitchStateHandler());
 
         String[] CrossingStates = {"UP","DOWN"};
         ObservableList<String> CrStates = FXCollections.observableArrayList();
@@ -432,20 +338,7 @@ public class TrackControllerGUI extends Application {
         }
         crossBox = new ComboBox<String>(CrStates);
         crossBox.getSelectionModel().selectFirst();
-        crossBox.setOnAction(new EventHandler<ActionEvent>() {
-
-            @Override
-            public void handle(ActionEvent event) {
-                //System.out.println("selected new crossing state: " + crossBox.getSelectionModel().getSelectedItem());
-                String s = crossBox.getSelectionModel().getSelectedItem();
-                if (s.equals("UP"))
-                    currentBlock.setCrossingState(CrossingState.UP);
-                else
-                    currentBlock.setCrossingState(CrossingState.DOWN);
-
-                checkUI();
-            }
-        });
+        crossBox.setOnAction(new CrossStateHandler());
 
         String[] BlockStatuses = {"SIGNAL FAILURE", "RAIL FAILURE"};
         ObservableList<String> BStates = FXCollections.observableArrayList();
@@ -454,13 +347,7 @@ public class TrackControllerGUI extends Application {
         }
         ComboBox<String> BlockBox = new ComboBox<String>(BStates);
         BlockBox.getSelectionModel().selectFirst();
-        BlockBox.setOnAction(new EventHandler<ActionEvent>() {
-
-            @Override
-            public void handle(ActionEvent event) {
-                //System.out.println("selected new block status: " + BlockBox.getSelectionModel().getSelectedItem());
-            }
-        });
+        BlockBox.setOnAction(new FailureListHandler());
 
 
         Label sw = new Label("  Switch:");
@@ -485,7 +372,6 @@ public class TrackControllerGUI extends Application {
         root.getChildren().addAll(lowerRight); // lower right
 
         scene = new Scene(root, 600,500);
-
     }
 
 
@@ -503,11 +389,21 @@ public class TrackControllerGUI extends Application {
             @Override
             public void handle(WindowEvent t) {
                 tkcm.removeGUI(thisGUI); // remove this TrackControllerGUI
+                closeGUI();
             }
         });
-        
+
         primaryStage.setScene(scene); // content container
         primaryStage.show();
+    }
+
+    public void closeGUI() {
+        try {
+            Platform.exit();
+            System.exit(0);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
     }
 
     public void setManualMode() {
@@ -561,9 +457,9 @@ public class TrackControllerGUI extends Application {
         }
 
         if (!mode.equals("Automatic") && currentBlock.getType() == BlockType.SWITCHBLOCK) {
-                sStateBox.setDisable(false);
+            sStateBox.setDisable(false);
         } else {
-                sStateBox.setDisable(true);
+            sStateBox.setDisable(true);
         }
 
         if (!mode.equals("Automatic") && currentBlock.getType() == BlockType.CROSSBLOCK) {
@@ -634,4 +530,124 @@ public class TrackControllerGUI extends Application {
     public void ChangePLC(String plc) {
         return;
     }
+
+    // Handlers
+    class ControllerListHandler extends EventHandler<ActionEvent> {
+        @Override
+        public void handle(ActionEvent event) {
+            String newTkc = controllerBox.getSelectionModel().getSelectedItem();
+            currentController = tkcm.getController(newTkc);
+            tkcm.setController(newTkc);
+
+            String[] BlockNames = currentController.getControlledBlocks();//,"2","3","4","5"};
+            ObservableList<String> BoxOptionsNew = FXCollections.observableArrayList();
+            for (String option: BlockNames) {
+                BoxOptionsNew.addAll(option);
+            }
+            blockBox.setItems(BoxOptionsNew);
+            blockBox.getSelectionModel().selectFirst();
+            if (occupancyCheckBox.isSelected()) { // disable
+                occupancyCheckBox.setSelected(false);
+                currentBlock.setIsOccupied(false);
+                overrideOccupied = false;
+            }
+
+        }
+    }
+    class ImportButtonHandler extends EventHandler<ActionEvent> {
+
+        @Override
+        public void handle(ActionEvent event) {
+            fileChooser.setTitle("Choose a PLC Program");
+            fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+            fileChooser.getExtensionFilters().addAll(
+                    new FileChooser.ExtensionFilter("PLC Program","*.plc"),
+                    new FileChooser.ExtensionFilter("All Files","*.*")
+                    );
+
+            File file = fileChooser.showOpenDialog(currentStage);
+            if (file != null) {
+                try {
+                    //Desktop.getDesktop().open(file);
+                    System.out.println("opening file: " + file);
+                    currentController.setPLC(new FileInputStream(file));
+
+                } catch (IOException ex) {
+                    System.out.println("Error: could not open file");
+                }
+            }
+            currPLC.setText(file.getName());
+        }
+    }
+
+    class FailureListHandler EventHandler<ActionEvent>{
+
+        @Override
+        public void handle(ActionEvent event) {
+            //System.out.println("selected new block status: " + BlockBox.getSelectionModel().getSelectedItem());
+        }
+    }
+
+    class CrossStateHandler extends EventHandler<ActionEvent>{
+        @Override
+        public void handle(ActionEvent event) {
+            //System.out.println("selected new crossing state: " + crossBox.getSelectionModel().getSelectedItem());
+            String s = crossBox.getSelectionModel().getSelectedItem();
+            if (s.equals("UP"))
+                currentBlock.setCrossingState(CrossingState.UP);
+            else
+                currentBlock.setCrossingState(CrossingState.DOWN);
+
+            checkUI();
+        }
+    }
+
+    class SwitchStateHandler extends EventHandler<ActionEvent> {
+        @Override
+        public void handle(ActionEvent event) {
+            //System.out.println("selected new switch state: " + switchBox.getSelectionModel().getSelectedItem());
+            String s = switchBox.getSelectionModel().getSelectedItem();
+            if (s.equals("FORK"))
+                currentBlock.setSwitchState(SwitchState.FORK);
+            else
+                currentBlock.setSwitchState(SwitchState.MAIN);
+
+            checkUI();
+        }
+    }
+
+    class OccupancyCheckBoxHandler extends EventHandler<ActionEvent> {
+        @Override
+        public void handle(ActionEvent event) {
+            //System.out.println(occupancyCheckBox.isSelected() ? "checked" : "unchecked");
+            currentBlock.setIsOccupied(occupancyCheckBox.isSelected());
+            overrideOccupied = !overrideOccupied;
+            //controllerHBox.setDisable(true); // useful for turning off
+            checkUI();
+        }
+    }
+
+    class ModeListHandler extends EventHandler<ActionEvent> {
+
+        @Override
+        public void handle(ActionEvent event) {
+            //System.out.println("selected new mode: " + modeBox.getSelectionModel().getSelectedItem());
+            mode = modeBox.getSelectionModel().getSelectedItem();
+            currentController.setMode(mode);
+            checkUI();
+        }
+    }
+
+    class BlockListHandler extends EventHandler<ActionEvent> {
+        @Override
+        public void handle(ActionEvent event) {
+            if (blockBox.getSelectionModel().getSelectedItem() != null) {
+                //System.out.println(blockBox.getSelectionModel().getSelectedItem());
+                //System.out.println(currentController.getLine());
+                currentBlock = tkcm.tm.getBlock(blockBox.getSelectionModel().getSelectedItem(),currentController.getLine());
+                checkUI();
+            }
+        }
+    }
+
 }
