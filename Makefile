@@ -62,6 +62,9 @@ $(TARGET_CLASS): $(shell find ./src -type f)
 #	$(CC) $(JFLAGS) -d $(BIN_DIR) @src.txt
 	$(CC) $(JFLAGS) $(LINT_FLAGS) -cp "$(BIN_DIR)$(SEP)$(ANTLRPATH)" -d $(BIN_DIR) @src.txt
 
+runv: src.txt $(TARGET_CLASS) # make whole project
+	$(RUNCMD) $(JFLAGS) -cp "$(BIN_DIR)$(SEP)$(ANTLRPATH)" $(VTARGET)
+
 runtest: $(TTARGET)
 	$(RUNCMD) $(JFLAGS) $(TTARGET)
 
