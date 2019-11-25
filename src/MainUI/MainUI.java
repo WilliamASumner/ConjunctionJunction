@@ -1,4 +1,5 @@
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.layout.HBox;
@@ -218,11 +219,18 @@ public class MainUI extends Application {
         public void handle(WindowEvent event) {
             System.out.println("Closing...");
             try {
-                tkcm.stop();
-                stop();
+                tkcm.stop(); // stop modules
             } catch (Exception e) {
                 System.out.println(e);
             }
+
+            try { // close everything
+                Platform.exit();
+                System.exit(0);
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+
         }
     }
 }
