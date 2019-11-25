@@ -20,6 +20,10 @@ public class ActionList {
         return actions;
     }
 
+    public TrackController getController() {
+        return tkc;
+    }
+
     public boolean containsAction(Action other) {
         for (Action a: actions) {
             if(a.equals(other)) {
@@ -46,77 +50,19 @@ public class ActionList {
         return false;
     }
 
-    public void addAction(String blk, ActionType act, AttributeType attr, String val) {
+    public void addAction(Block blk, ActionType act, AttributeType attr, String val) {
         actions.add(new Action(blk,act,attr,val));
     }
 
-    /**
-     * Action
-     * This class provides the basic unit of function for a program.
-     * Every action produces either a boolean value or sets the state
-     * of the TrackMap.
-     */
+    public void addActions(ArrayList<Action> acts) {
+        actions.addAll(acts);
+    }
 
-    private class Action {
-        private String        blockID;
-        private ActionType    actionType;
-        private AttributeType attrib;
-        private String        value;
-
-        public Action(String blk, ActionType actT, AttributeType attr, String val) {
-            blockID = blk;
-            actionType = actT;
-            attrib = attr;
-            value = val;
+    public void execute() {
+        for (Action a : actions) {
+            a.perform();
+            tkc.addToLog(a.toString());
         }
-
-        public String getBlockID() {
-            return blockID;
-        }
-
-        public ActionType getActionType() {
-            return actionType;
-        }
-
-        public AttributeType getAttrib() {
-            return attrib;
-        }
-
-        public String getValue() {
-            return value;
-        }
-
-        public boolean equals(Action other) {
-            return other.getActionType().equals(actionType) &&
-                other.getAttrib().equals(attrib) &&
-                other.getValue().equals(value);
-        }
-
-        public void perform() {
-            Block b = tkc.getBlock(blockID);
-            switch(actionType) {
-                case ASSIGN:
-                    break;
-                case COMPARE:
-                    break;
-                default:
-                    break;
-            }
-
-        }
-
-        public void execute() {
-            accumulator = false; // initialize accumulator
-            for (Action a : actions) {
-                a.perform();
-            }
-        }
-
-        @Override
-        public String toString() {
-            return blockID + '.' + attrib + actionType + value;
-        }
-
     }
 
     @Override
@@ -128,4 +74,5 @@ public class ActionList {
         temp += "}";
         return temp;
     }
+
 }
