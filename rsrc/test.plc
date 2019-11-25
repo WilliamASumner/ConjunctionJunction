@@ -1,0 +1,27 @@
+if (D13.occupancy == occupied and // checking first block
+    A2.occupancy == unoccupied or // checking following block
+    Z32.switchstate != MAIN) then // dummy condition
+
+    C12.switchstate=MAIN;
+    D13.speed=0.0;
+
+endif;
+
+if (J19.switchstate == fork and // checking first block
+    X23.switchstate != main or // checking following block
+    H9.occupancy == unoccupied) then // dummy condition
+
+    U91.speed         =  0.0;
+    C12.crossingstate = DOWN;
+    J13.authority     =  J13;
+
+endif;
+
+if (Q302.occupancy == occupied and // checking first block
+    Y5.switchstate != unoccupied or // checking following block
+    L1.occupancy == occupied) then // dummy condition
+
+    P89.speed         =  0.0;
+    C16.crossingstate = DOWN;
+    F13.authority     =  J13;
+endif;
