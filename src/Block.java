@@ -3,34 +3,41 @@ import java.util.*; // Scanner and BufferedReader Class
 
 public class Block
 {
-    boolean isOccupied;
     String LineColor;
     String BlockID;
+
     double Grade;
     double Elevation;
     double SpeedLimit;
-    String[] failures;
+    double Length;
+    boolean IsUnderground;
+
+    BlockType type;
     Block nextBlockID;
     Block nextBlockIDFork;
     Block prevBlockID;
+
     boolean IsBidirectional;
-    double Length;
+    boolean isOccupied;
     double AuditedSpeed;
     Block AuditedAuthority;
-    boolean IsUnderground;
-    BlockType type;
     String stationName;
+
     SwitchState switchState;
     CrossingState crossingState;
 
+    ErrorState circuit;
+    ErrorState power;
+    ErrorState signal;
+    int numFailures;
+
     public Block() {
-        isOccupied = false;
+        isOccupied = false; // dummy values
         LineColor = "green";
         BlockID = "A1";
         Grade = 0.0;
         Elevation = 0.0;
         SpeedLimit = 50.0;
-        failures = null;
         nextBlockID = null;
         prevBlockID = null;
         IsBidirectional = false;
@@ -42,6 +49,12 @@ public class Block
         stationName = "Uninitialized";
         switchState = SwitchState.MAIN;
         crossingState = CrossingState.UP;
+
+        circuit = ErrorState.GOOD; // start as functioning
+        power = ErrorState.GOOD;
+        signal = ErrorState.GOOD;
+        numFailures = 0;
+
     }
 
 
@@ -85,8 +98,7 @@ public class Block
         SpeedLimit = newValue;
     }
 
-    public void  setFailure(String newValue) {
-        failures[0] = newValue;
+    public void  addFailure(String newValue) {
     }
 
     public void setNextBlock(Block newValue) {
@@ -145,7 +157,43 @@ public class Block
         return SpeedLimit;
     }
 
+    boolean isWorking() { // check all possible errors
+        return (circuit == ErrorState.GOOD) &&
+               (power   == ErrorState.GOOD) &&
+               (signal  == ErrorState.GOOD);
+    }
+
+    void setFailure(String failure) {
+        if (failure.toLowerCase().equals("circuit")) {
+            circuit = ErrorState.FAIL;
+        } else if (failure.toLowerCase().equals("power")) {
+            power = ErrorState.FAIL;
+        } else if (failure.toLowerCase().equals("signal")) {
+            signal = ErrorState.FAIL;
+        } /*else {
+            throw Exception(); // invalid setFailure
+        } */
+    }
+
     String[] getFailures() {
+        String[] failures = null;
+        if (!isWorking()) {
+            failures = new String[numFailures];
+            int i = 0;
+            if (circuit == ErrorState.FAIL) {
+                failures[i] = "circuit";
+                i++;
+            }
+            if (power == ErrorState.FAIL) {
+                power = ErrorState.FAIL;
+                failures[i] = "power";
+                i++;
+            }
+            if (signal == ErrorState.FAIL) {
+                signal = ErrorState.FAIL;
+                failures[i] = "signal";
+            }
+        }
         return failures;
     }
 
