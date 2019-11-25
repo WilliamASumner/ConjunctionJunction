@@ -172,10 +172,18 @@ public class TkM {
         lineColor = lineColor.toLowerCase();
         int bid = Integer.parseInt(blockID.substring(1, blockID.length()));
         if (lineColor.equals("red")) {
-            return red.map.get(bid);
+            if (bid >= red.map.size()) {
+                return null;
+            } else {
+                return red.map.get(bid);
+            }
         }
         else if (lineColor.equals("green")) {
-            return green.map.get(bid);
+            if (bid >= green.map.size()) {
+                return null;
+            } else {
+                return green.map.get(bid);
+            }
         }
         else {
             return null;
