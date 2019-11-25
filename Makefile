@@ -21,20 +21,12 @@ else
 	SEP            = :
 endif
 
+################# FLAG VARS ##################
 #NOTE: must be comma separated
 JAVAFX_MODULES  = javafx.controls,javafx.fxml
 JFLAGS         := --module-path=$(JAVAFX_PATH) --add-modules $(JAVAFX_MODULES)
 ANTLRPATH=$(MAKE_DIR)/lib/antlr-4.7.2-complete.jar
-
-############### MODULE VARS ##################
-MODULES         = TkC TkM TrC TrM CTC
-
-######### TRACK CONTROLLER #############
-TKC_MODULEFILES   = ./src/TkC/*.class
-MAIN_MODULEFILES   = ./src/MainUI/*.class
-
-#JAVAFILES      := $(addsuffix .java,$(MODULES))
-#CLASSFILES     = $(addsuffix .class,$(MODULES))
+LINT_FLAGS=-Xlint:unchecked -Xlint:deprecation
 
 ################# TEST VARS ##################
 
@@ -57,12 +49,6 @@ TTARGET        := HelloWorld
 
 default: src.txt $(TARGET_CLASS)
 
-testrun: $(TESTCLASSFILES)
-	$(RUNCMD) $(JFLAGS) -cp "$(BIN_DIR)" $(TESTTARGET)
-
-$(TESTCLASSFILES): $(TESTFILE)
-	$(CC) $(JFLAGS) -d $(BIN_DIR) $(TESTFILE)
-
 run: src.txt $(TARGET_CLASS)
 	$(RUNCMD) $(JFLAGS) -cp "$(BIN_DIR)$(SEP)$(ANTLRPATH)" $(TARGET)
 #	$(RUNCMD) $(JFLAGS) -cp "$(BIN_DIR)" $(TARGET)
@@ -71,27 +57,21 @@ run: src.txt $(TARGET_CLASS)
 src.txt: ./src/
 	find ./src -name "*.java" > src.txt
 
-
-#$(TARGET_CLASS):
-#	@$(MAKE) -C ./src/
-#	@$(MAKE) -C ./src/TkC
-#	#@$(MAKE) -C ./src/TkM
-#	#@$(MAKE) -C ./src/CTC
-#	#@$(MAKE) -C ./src/TnC
-#	#@$(MAKE) -C ./src/TnM
-#	@$(MAKE) -C ./src/MainUI default
-
 # Result is dependent on all files in src dir
 $(TARGET_CLASS): $(shell find ./src -type f)
 #	$(CC) $(JFLAGS) -d $(BIN_DIR) @src.txt
-	$(CC) $(JFLAGS) -Xlint:unchecked  -cp "$(BIN_DIR)$(SEP)$(ANTLRPATH)" -d $(BIN_DIR) @src.txt
+	$(CC) $(JFLAGS) $(LINT_FLAGS) -cp "$(BIN_DIR)$(SEP)$(ANTLRPATH)" -d $(BIN_DIR) @src.txt
 
 runtest: $(TTARGET)
 	$(RUNCMD) $(JFLAGS) $(TTARGET)
 
-#javafx test target
-$(TTARGET): $(TESTFILE)
-	$(CC) $(JFLAGS) $(TESTFILE)
+testrun: $(TESTCLASSFILES)
+	$(RUNCMD) $(JFLAGS) -cp "$(BIN_DIR)" $(TESTTARGET)
+
+$(TESTCLASSFILES): $(TESTFILE)
+	$(CC) $(JFLAGS) -d $(BIN_DIR) $(TESTFILE)
+
+
 
 clean:
 	$(RM) $(BIN_DIR)/*.class
