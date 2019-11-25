@@ -1,6 +1,3 @@
-import java.io.*; // IO
-import java.util.*; // Scanner and BufferedReader Class
-
 public class Block
 {
     String LineColor;
