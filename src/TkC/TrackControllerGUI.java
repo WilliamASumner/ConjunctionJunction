@@ -49,7 +49,8 @@ import java.util.ArrayList;
 
 public class TrackControllerGUI extends Application {
 
-    private String resourceBaseDir = "file:"+System.getProperty("user.dir") + "/imgs"; // get base dir
+    private final String imgBaseDir = "file:"+System.getProperty("user.dir") + "/imgs"; // get base dir
+    private final String resourceDir = System.getProperty("user.dir") + "/rsrc";
 
 
     private TrackControllerMain tkcm;
@@ -89,14 +90,14 @@ public class TrackControllerGUI extends Application {
     private ComboBox<String> modeBox;
 
     // Images
-    Image crossImageGrey = new Image(resourceBaseDir + "/crossing-greyed-out.png");
+    Image crossImageGrey = new Image(imgBaseDir + "/crossing-greyed-out.png");
 
-    Image crossImageDown = new Image(resourceBaseDir + "/crossing-on.png");
-    Image crossImageUp = new Image(resourceBaseDir + "/crossing-off.png");
+    Image crossImageDown = new Image(imgBaseDir + "/crossing-on.png");
+    Image crossImageUp = new Image(imgBaseDir + "/crossing-off.png");
 
-    Image switchImageGrey = new Image(resourceBaseDir + "/switch-greyed-out.png");
-    Image switchImageMain = new Image(resourceBaseDir + "/switch-main.png");
-    Image switchImageFork = new Image(resourceBaseDir + "/switch-fork.png");
+    Image switchImageGrey = new Image(imgBaseDir + "/switch-greyed-out.png");
+    Image switchImageMain = new Image(imgBaseDir + "/switch-main.png");
+    Image switchImageFork = new Image(imgBaseDir + "/switch-fork.png");
 
     // changable labels
     private Label authorityVal;
@@ -312,7 +313,7 @@ public class TrackControllerGUI extends Application {
         root.getChildren().addAll(middleVBox); // middle right
 
         Label currProgLabel = new Label("Current PLC Program: ");
-        currPLC = new Label("None");
+        currPLC = new Label(currentController.getPLCName());
 
         HBox currProgBox = new HBox(currProgLabel,currPLC);
         currProgBox.setAlignment(Pos.CENTER);
@@ -512,6 +513,9 @@ public class TrackControllerGUI extends Application {
         }
         authorityVal.setText(currentBlock.getAuditedAuthority().getBlockID());
         speedVal.setText(String.valueOf(currentBlock.getAuditedSpeed()));
+        currPLC.setText(currentController.getPLCName());
+
+        modeBox.getSelectionModel().select(currentController.getMode());
         checkUI();
     }
 
@@ -566,7 +570,7 @@ public class TrackControllerGUI extends Application {
         @Override
         public void handle(ActionEvent event) {
             fileChooser.setTitle("Choose a PLC Program");
-            fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+            fileChooser.setInitialDirectory(new File(resourceDir));
             fileChooser.getExtensionFilters().addAll(
                     new FileChooser.ExtensionFilter("PLC Program","*.plc"),
                     new FileChooser.ExtensionFilter("All Files","*.*")
@@ -577,13 +581,16 @@ public class TrackControllerGUI extends Application {
                 try {
                     //Desktop.getDesktop().open(file);
                     System.out.println("opening file: " + file);
-                    currentController.setPLC(new FileInputStream(file));
-                    displayFailedPLC();
+                    if (currentController.setPLC(new FileInputStream(file))) {
+                        currentController.setPLCName(file.getName());
+                    } else {
+                        displayFailedPLC();
+                    }
                 } catch (IOException ex) {
                     System.out.println("Error: could not open file");
                 }
             }
-            currPLC.setText(file.getName());
+            currPLC.setText(currentController.getPLCName());
         }
     }
 

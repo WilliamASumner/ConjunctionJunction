@@ -10,17 +10,18 @@ public class EvalList
     }
 
     public void addIf(IfNode c) {
+        c.reverseConditions();
         ifs.add(c);
     }
 
     public ActionList evaluate(TrackController tkc) { // evaluate the program
-        System.out.println("evaluating");
+        System.out.println("evaluating program");
         ActionList generatedActions = new ActionList(tkc);
-        for (IfNode condition : ifs ) {
-            System.out.println("checking " + condition);
-            if (condition.evaluate()) {
+        for (IfNode ifcond : ifs ) {
+            System.out.println("checking " + ifcond);
+            if (ifcond.evaluate()) {
                 System.out.println("adding actions");
-                generatedActions.addActions(condition.getActions());
+                generatedActions.addActions(ifcond.getActions());
             }
         }
         return generatedActions;

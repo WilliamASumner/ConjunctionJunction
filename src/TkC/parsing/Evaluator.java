@@ -6,6 +6,10 @@ import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 
+/**Evaluator
+ * A simple test class for evaluating plc programs.
+ */
+
 public class Evaluator extends TkcBaseListener
 {
 
@@ -25,11 +29,10 @@ public class Evaluator extends TkcBaseListener
             new TrackController("green", "Tk0", dummyMap,null,null);
 
         CommonTokenStream toks = new CommonTokenStream(lex);
-        //toks.fill(); // what does this do?
 
         TkcParser parser = new TkcParser(toks);
-        ParseTree tree = parser.program(); // parse!
         parser.setBuildParseTree(true);
+        ParseTree tree = parser.program(); // parse!
 
         ParseTreeWalker walker = new ParseTreeWalker();
         EvaluatorListener runner = new EvaluatorListener(parser,tkc);
@@ -39,6 +42,11 @@ public class Evaluator extends TkcBaseListener
             System.out.println("ERROR PARSING");
             return;
         }
+        inFile.seek(0);
+        tree = parser.program(); // parse!
+        walker = new ParseTreeWalker();
+        runner = new EvaluatorListener(parser,tkc);
+        walker.walk(runner,tree);
 
         EvalList parserOneOutput = runner.getEvalList();
         ActionList thingsToDo = parserOneOutput.evaluate(tkc); // find which actions need to be done

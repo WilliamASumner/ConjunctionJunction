@@ -1,30 +1,47 @@
 import javafx.stage.Stage;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.lang.StringBuilder;
-import org.antlr.v4.runtime.*; // antlr4
+import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.ParseTreeWalker;
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
+
 
 public class TrackController
 {
-    FileInputStream plcProgram;
+    String plcName;
     String line;
     ArrayList<Block> lineBlocks;
     String name;
     ArrayList<Block> controlledBlocks;
     String mode = "";
     StringBuilder log;
+    boolean encounteredError;
+    boolean plcInitialized;
+
+    EvalList parserOneOutput;
+    EvalList parserTwoOutput;
 
     TkM tm = null;
     TrackControllerMain tkcm;
 
     public TrackController(String l, String n, ArrayList<Block> blocks,
             TkM tkmodel,TrackControllerMain m) {
-        plcProgram = null;
+        plcName = "None";
         mode = "Automatic";
         line = l;
         name = n;
         controlledBlocks = blocks;
         tkcm = m;
+
+        encounteredError = false;
+        plcInitialized = false;
+
+        parserOneOutput = null;
+        parserTwoOutput = null;
 
         log = new StringBuilder();
 
@@ -68,19 +85,78 @@ public class TrackController
     public void setMode(String m) {
         mode = m;
     }
+
     public String getMode(){
         return mode;
     }
 
+    public void setPLCName(String s) {
+        plcName = s;
+    }
 
-    public void setPLC(FileInputStream plcFile) {
+    public String getPLCName() {
+        return plcName;
+    }
+
+
+    public boolean setPLC(FileInputStream f) {
         // open plc and parse
-        plcProgram = plcFile;
+        CharStream inFile;
+        try {
+            inFile = CharStreams.fromStream(f);
+        } catch (IOException e) {
+            encounteredError = true;
+            System.out.println("Error initiliazing filestream");
+            return false;
+        }
+
+        TkcLexer lex = new TkcLexer(null); // TODO check that this is not too slow
+        lex.setInputStream(inFile);        // should be ok... run once a PLC load
+
+        CommonTokenStream toks = new CommonTokenStream(lex);
+
+        TkcParser parser = new TkcParser(toks);
+        ParseTree tree = parser.program(); // parse!
+        parser.setBuildParseTree(true);
+
+        ParseTreeWalker walker = new ParseTreeWalker();
+        EvaluatorListener runner = new EvaluatorListener(parser,this);
+        walker.walk(runner,tree);
+        parserOneOutput = runner.getEvalList();
+
+
+        //TkcLeftParser parserTwo = new TkcLeftParser(toks);
+        //ParseTree treeTwo = parser.program(); // parse!
+        //parser.setBuildParseTree(true);
+
+        //ParseTreeWalker walkerTwo = new ParseTreeWalker();
+        //EvaluatorListener runnerTwo = new EvaluatorListener(parser,this);
+        //walkerTwo.walk(runnerTwo,tree);
+        //parserTwoOutput = runnerTwo.getEvalList();
+
+        if (runner.encounteredError()) { // parsing error
+            encounteredError = true;
+            plcInitialized = false;
+            return false;
+        }
+        plcInitialized = true;
+        return true;
     }
 
     public void runPLC() {
+        if (plcInitialized) { // a valid PLC has been loaded
+            ActionList thingsToDo = parserOneOutput.evaluate(this); // find which actions need to be done
+            //ActionList thingsToDoCopy = parserTwoOutput.evaluate();
+            //if (thingsToDo.equivalentTo(thingsToDoCopy)) {
+            //  System.out.println("working voting");
+            //  thingsToDo.execute();
+            //} else {
+            //   System.out.println("ERROR VOTING");
+            // }
+            thingsToDo.execute();
 
-        return;
+            return;
+        }
     }
 
     public void addToLog(String s) {
