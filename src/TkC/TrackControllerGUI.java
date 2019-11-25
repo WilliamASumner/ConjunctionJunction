@@ -4,7 +4,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 
@@ -17,6 +16,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.CheckBox;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
@@ -26,6 +27,7 @@ import javafx.scene.layout.Priority;
 
 import javafx.scene.shape.Circle;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -79,6 +81,12 @@ public class TrackControllerGUI extends Application {
     private ComboBox<String> blockBox;
     private ComboBox<String> crossBox;
     private ComboBox<String> switchBox;
+    private final FileChooser fileChooser = new FileChooser();
+    private Button importButton;
+
+
+    private ComboBox<String> controllerBox;
+    private ComboBox<String> modeBox;
 
     // Images
     Image crossImageGrey = new Image(resourceBaseDir + "/crossing-greyed-out.png");
@@ -115,7 +123,6 @@ public class TrackControllerGUI extends Application {
 
     private void setup() { // called once to create UI
 
-        final FileChooser fileChooser = new FileChooser();
 
         GridPane root = new GridPane();
 
@@ -145,7 +152,7 @@ public class TrackControllerGUI extends Application {
         for (String option: ControllerNames) {
             ControllerOptions.addAll(option);
         }
-        ComboBox<String> controllerBox = new ComboBox<String>(ControllerOptions);
+        controllerBox = new ComboBox<String>(ControllerOptions);
         controllerBox.getSelectionModel().select(currentController.toString());
         controllerBox.setOnAction(new ControllerListHandler());
 
@@ -161,7 +168,7 @@ public class TrackControllerGUI extends Application {
 
 
         ObservableList<String> ModeOptions = FXCollections.observableArrayList("Automatic","Manual");
-        ComboBox<String> modeBox = new ComboBox<String>(ModeOptions);
+        modeBox = new ComboBox<String>(ModeOptions);
         modeBox.getSelectionModel().select(currentController.getMode());
         mode = currentController.getMode();
         modeBox.setOnAction(new ModeListHandler());
@@ -310,7 +317,7 @@ public class TrackControllerGUI extends Application {
         HBox currProgBox = new HBox(currProgLabel,currPLC);
         currProgBox.setAlignment(Pos.CENTER);
 
-        Button importButton = new Button("Import PLC");
+        importButton = new Button("Import PLC");
         importButton.setPrefWidth(200);
         importButton.setPrefHeight(100);
         importButton.setOnAction(new ImportButtonHandler());
@@ -388,8 +395,8 @@ public class TrackControllerGUI extends Application {
         primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent t) {
-                tkcm.removeGUI(thisGUI); // remove this TrackControllerGUI
-                closeGUI();
+                tkcm.removeGUI(thisGUI); // remove from gui list
+                primaryStage.close();
             }
         });
 
@@ -397,14 +404,7 @@ public class TrackControllerGUI extends Application {
         primaryStage.show();
     }
 
-    public void closeGUI() {
-        try {
-            Platform.exit();
-            System.exit(0);
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-    }
+    
 
     public void setManualMode() {
 
@@ -426,11 +426,13 @@ public class TrackControllerGUI extends Application {
     public void setSpeed(double speed) {
         //currentBlock.setSpeed(speed);
     }
+
     public void setAuthority(String authority) {
         //currentBlock.setAuthority(authority);
     }
 
-    public void checkUI(){ //disable/enable elements depending on block
+    //disable/enable elements depending on block
+    public void checkUI() { 
         if (currentBlock.getFailures() != null && currentBlock.getFailures().length != 0) // if errors
             statusVal.setText("BROKEN");
         else
@@ -513,26 +515,30 @@ public class TrackControllerGUI extends Application {
         checkUI();
     }
 
-    public void ChangeSwitchState(SwitchState s) {
-        //currentBlock.setSwitchState(s);
+    public void changeSwitchState(SwitchState s) {
+        currentBlock.setSwitchState(s);
     }
 
-    public void ChangeBlockStatus(String failure) {
-        //currentBlock.addFailure(failure)
+    public void changeBlockStatus(String failure) {
+        currentBlock.setFailure(failure);
+    }
+
+    public void changeCrossingState(CrossingState s) {
+        currentBlock.setCrossingState(s);
+    }
+
+    public void changePLC(String plc) {
         return;
     }
 
-    public void ChangeCrossingState(CrossingState s) {
-        //currentBlock.setCrossingState(s);
-        return;
-    }
-
-    public void ChangePLC(String plc) {
-        return;
+    public void displayFailedPLC() {
+        importButton.setStyle("-fx-background-color: red");
+        //BackgroundFill redBackground = new BackgroundFill(Paint.valueOf(Color.RED.toString()),null,null);
+        //importButton.setBackground(new Background(redBackground));
     }
 
     // Handlers
-    class ControllerListHandler extends EventHandler<ActionEvent> {
+    class ControllerListHandler implements EventHandler<ActionEvent> {
         @Override
         public void handle(ActionEvent event) {
             String newTkc = controllerBox.getSelectionModel().getSelectedItem();
@@ -554,7 +560,8 @@ public class TrackControllerGUI extends Application {
 
         }
     }
-    class ImportButtonHandler extends EventHandler<ActionEvent> {
+
+    class ImportButtonHandler implements EventHandler<ActionEvent> {
 
         @Override
         public void handle(ActionEvent event) {
@@ -563,7 +570,7 @@ public class TrackControllerGUI extends Application {
             fileChooser.getExtensionFilters().addAll(
                     new FileChooser.ExtensionFilter("PLC Program","*.plc"),
                     new FileChooser.ExtensionFilter("All Files","*.*")
-                    );
+            );
 
             File file = fileChooser.showOpenDialog(currentStage);
             if (file != null) {
@@ -571,7 +578,7 @@ public class TrackControllerGUI extends Application {
                     //Desktop.getDesktop().open(file);
                     System.out.println("opening file: " + file);
                     currentController.setPLC(new FileInputStream(file));
-
+                    displayFailedPLC();
                 } catch (IOException ex) {
                     System.out.println("Error: could not open file");
                 }
@@ -580,7 +587,7 @@ public class TrackControllerGUI extends Application {
         }
     }
 
-    class FailureListHandler EventHandler<ActionEvent>{
+    class FailureListHandler implements EventHandler<ActionEvent>{
 
         @Override
         public void handle(ActionEvent event) {
@@ -588,7 +595,7 @@ public class TrackControllerGUI extends Application {
         }
     }
 
-    class CrossStateHandler extends EventHandler<ActionEvent>{
+    class CrossStateHandler implements EventHandler<ActionEvent> {
         @Override
         public void handle(ActionEvent event) {
             //System.out.println("selected new crossing state: " + crossBox.getSelectionModel().getSelectedItem());
@@ -602,7 +609,7 @@ public class TrackControllerGUI extends Application {
         }
     }
 
-    class SwitchStateHandler extends EventHandler<ActionEvent> {
+    class SwitchStateHandler implements EventHandler<ActionEvent> {
         @Override
         public void handle(ActionEvent event) {
             //System.out.println("selected new switch state: " + switchBox.getSelectionModel().getSelectedItem());
@@ -616,7 +623,7 @@ public class TrackControllerGUI extends Application {
         }
     }
 
-    class OccupancyCheckBoxHandler extends EventHandler<ActionEvent> {
+    class OccupancyCheckBoxHandler implements EventHandler<ActionEvent> {
         @Override
         public void handle(ActionEvent event) {
             //System.out.println(occupancyCheckBox.isSelected() ? "checked" : "unchecked");
@@ -627,7 +634,7 @@ public class TrackControllerGUI extends Application {
         }
     }
 
-    class ModeListHandler extends EventHandler<ActionEvent> {
+    class ModeListHandler implements EventHandler<ActionEvent> {
 
         @Override
         public void handle(ActionEvent event) {
@@ -638,7 +645,7 @@ public class TrackControllerGUI extends Application {
         }
     }
 
-    class BlockListHandler extends EventHandler<ActionEvent> {
+    class BlockListHandler implements EventHandler<ActionEvent> {
         @Override
         public void handle(ActionEvent event) {
             if (blockBox.getSelectionModel().getSelectedItem() != null) {

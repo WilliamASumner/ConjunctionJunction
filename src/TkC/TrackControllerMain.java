@@ -54,8 +54,11 @@ public class TrackControllerMain
 
     public void stop() {
         for (TrackControllerGUI gui : guis) {
-            System.out.println("Closing: " + gui);
-            gui.closeGUI();
+            try {
+                gui.stop();
+            } catch (Exception e) {
+                System.out.println(e);
+            }
         }
     }
 
