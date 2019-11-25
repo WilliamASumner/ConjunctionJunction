@@ -1,6 +1,7 @@
 import javafx.stage.Stage;
 import java.io.FileInputStream;
 import java.util.ArrayList;
+import java.lang.StringBuilder;
 import org.antlr.v4.runtime.*; // antlr4
 
 public class TrackController
@@ -11,6 +12,7 @@ public class TrackController
     String name;
     ArrayList<Block> controlledBlocks;
     String mode = "";
+    StringBuilder log;
 
     TkM tm = null;
     TrackControllerMain tkcm;
@@ -22,13 +24,20 @@ public class TrackController
         line = l;
         name = n;
         controlledBlocks = blocks;
-        tm = tkmodel;
         tkcm = m;
-        if (line.equals("GREEN")) {
-            lineBlocks = tm.getGreen();
-        }
-        else {
-            lineBlocks = tm.getRed();
+
+        log = new StringBuilder();
+
+        if(tkmodel != null) {
+            tm = tkmodel;
+            if (line.equals("GREEN")) {
+                lineBlocks = tm.getGreen();
+            }
+            else {
+                lineBlocks = tm.getRed();
+            }
+        } else {
+            lineBlocks = controlledBlocks;
         }
     }
 
@@ -74,7 +83,30 @@ public class TrackController
         return;
     }
 
+    public void addToLog(String s) {
+        log.append(s);
+    }
+
+    public String showLog() {
+        return log.toString();
+    }
+
+    public void clearLog() {
+        log.setLength(0); // reset to 0
+    }
+
     public Block getBlock(String blockID) {
+        if (tkcm == null) {
+            System.out.println("ERROR: empty tkcm"); // todo make these exceptions
+            Block b = new Block();
+            b.setBlockID(blockID);
+            return b;
+        } else if (tm == null) {
+            System.out.println("ERROR: empty trackmodel");
+            Block b = new Block();
+            b.setBlockID(blockID);
+            return b;
+        }
         return tkcm.tm.getBlock(blockID,line);
     }
 
