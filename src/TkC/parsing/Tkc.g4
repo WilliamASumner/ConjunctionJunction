@@ -22,13 +22,13 @@ ifstatement
 
 conditionlist
 :
-      condition
-    | condition OR  conditionlist
-    | condition AND conditionlist
+      condition                        #singleCondition
+    | condition OR  conditionlist      #conditionListOr
+    | condition AND conditionlist      #conditionListAnd
 ;
 
 condition
-:  BlockID '.' attribute EEquals value
+:  BlockID '.' attribute comparison value
 ;
 
 statementlist
@@ -48,12 +48,16 @@ attribute // can only access occupancy or switch position
     | Occupancy
 ;
 
+comparison // equals or not
+:     EEquals
+    | NEquals
+;
+
 assignedattribute // can change switch,authority,crossing,occupancy
 :
       SwitchState
     | Authority
     | CrossingState
-    | Occupancy
     | Speed
 ;
 
@@ -68,6 +72,11 @@ value
     | OccupancyValue
     | SpeedValue
 ;
+
+BlockID
+: [A-Z] DIGIT+
+;
+
 
 SwitchStateValue
 :
@@ -97,10 +106,6 @@ OccupancyValue
 SpeedValue
 :
     FLOAT
-;
-
-BlockID
-: [A-Z] DIGIT+
 ;
 
 FLOAT
@@ -161,6 +166,10 @@ Authority
 
 EEquals
 : '=='
+;
+
+NEquals
+: '!='
 ;
 
 Equals
@@ -235,4 +244,5 @@ fragment RParen
 fragment DIGIT
 : [0-9]
 ;
+
 
