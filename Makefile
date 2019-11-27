@@ -54,11 +54,11 @@ run: src.txt $(TARGET_CLASS)
 #	$(RUNCMD) $(JFLAGS) -cp "$(BIN_DIR)" $(TARGET)
 
 # java build text
-src.txt: ./src/
+src.txt: $(shell find ./src -type f)
 	find ./src -name "*.java" > src.txt
 
 # Result is dependent on all files in src dir
-$(TARGET_CLASS): $(shell find ./src -type f)
+$(TARGET_CLASS): $(shell find ./src -type f) src.txt
 #	$(CC) $(JFLAGS) -d $(BIN_DIR) @src.txt
 	$(CC) $(JFLAGS) $(LINT_FLAGS) -cp "$(BIN_DIR)$(SEP)$(ANTLRPATH)" -d $(BIN_DIR) @src.txt
 
