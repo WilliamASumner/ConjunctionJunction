@@ -58,10 +58,14 @@ src.txt: $(shell find ./src -type f)
 	find ./src -name "*.java" > src.txt
 
 # Result is dependent on all files in src dir
-$(TARGET_CLASS): $(shell find ./src -type f) src.txt
+$(TARGET_CLASS): $(shell find ./src -type f) src.txt ./src/TkC/parsing/TkcParser.java
 #	$(CC) $(JFLAGS) -d $(BIN_DIR) @src.txt
 	$(CC) $(JFLAGS) $(LINT_FLAGS) -cp "$(BIN_DIR)$(SEP)$(ANTLRPATH)" -d $(BIN_DIR) @src.txt
 
+# Make antlr files if they don't already exist
+./src/TkC/parsing/TkcParser.java: ./src/TkC/parsing/Tkc.g4 ./src/TkC/parsing/TkcLeft.g4
+	java -Xmx500M -cp ".$(SEP)$(ANTLRPATH)$(SEP)./src/TkC/parsing/" org.antlr.v4.Tool ./src/TkC/parsing/Tkc.g4
+	java -Xmx500M -cp ".$(SEP)$(ANTLRPATH)$(SEP)./src/TkC/parsing/" org.antlr.v4.Tool ./src/TkC/parsing/TkcLeft.g4
 runv: src.txt $(TARGET_CLASS) # make whole project
 	$(RUNCMD) $(JFLAGS) -cp "$(BIN_DIR)$(SEP)$(ANTLRPATH)" $(VTARGET)
 
@@ -80,3 +84,4 @@ clean:
 	$(RM) $(BIN_DIR)/*.class
 	$(RM) *.class
 	$(RM) src.txt
+	$(RM) ./src/TkC/parsing/Tkc*.{java,interp,tokens,class}
