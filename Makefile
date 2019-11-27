@@ -53,12 +53,8 @@ run: src.txt $(TARGET_CLASS)
 	$(RUNCMD) $(JFLAGS) -cp "$(BIN_DIR)$(SEP)$(ANTLRPATH)" $(TARGET)
 #	$(RUNCMD) $(JFLAGS) -cp "$(BIN_DIR)" $(TARGET)
 
-# java build text
-src.txt: $(shell find ./src -type f)
-	find ./src -name "*.java" > src.txt
-
 # Result is dependent on all files in src dir
-$(TARGET_CLASS): $(shell find ./src -type f) src.txt ./src/TkC/parsing/TkcParser.java
+$(TARGET_CLASS): $(shell find ./src -type f) src.txt
 #	$(CC) $(JFLAGS) -d $(BIN_DIR) @src.txt
 	$(CC) $(JFLAGS) $(LINT_FLAGS) -cp "$(BIN_DIR)$(SEP)$(ANTLRPATH)" -d $(BIN_DIR) @src.txt
 
@@ -66,6 +62,12 @@ $(TARGET_CLASS): $(shell find ./src -type f) src.txt ./src/TkC/parsing/TkcParser
 ./src/TkC/parsing/TkcParser.java: ./src/TkC/parsing/Tkc.g4 ./src/TkC/parsing/TkcLeft.g4
 	java -Xmx500M -cp ".$(SEP)$(ANTLRPATH)$(SEP)./src/TkC/parsing/" org.antlr.v4.Tool ./src/TkC/parsing/Tkc.g4
 	java -Xmx500M -cp ".$(SEP)$(ANTLRPATH)$(SEP)./src/TkC/parsing/" org.antlr.v4.Tool ./src/TkC/parsing/TkcLeft.g4
+
+# java build text
+src.txt: $(shell find ./src -type f) ./src/TkC/parsing/TkcParser.java
+	find ./src -name "*.java" > src.txt
+
+
 runv: src.txt $(TARGET_CLASS) # make whole project
 	$(RUNCMD) $(JFLAGS) -cp "$(BIN_DIR)$(SEP)$(ANTLRPATH)" $(VTARGET)
 
