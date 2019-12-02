@@ -87,7 +87,7 @@ public class EvaluatorListener extends TkcBaseListener {
         if (ctx.getText().equals("==")) {
             currentCondition.setComparison(CompType.EQ);
         } else {
-            currentCondition.setComparison(CompType.EQ);
+            currentCondition.setComparison(CompType.NEQ);
         }
     }
     
