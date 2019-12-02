@@ -60,8 +60,8 @@ $(TARGET_CLASS): $(shell find ./src -type f) src.txt
 
 # Make antlr files if they don't already exist
 ./src/TkC/parsing/TkcParser.java: ./src/TkC/parsing/Tkc.g4 ./src/TkC/parsing/TkcLeft.g4
-	java -Xmx500M -cp ".$(SEP)$(ANTLRPATH)$(SEP)./src/TkC/parsing/" org.antlr.v4.Tool ./src/TkC/parsing/Tkc.g4
-	java -Xmx500M -cp ".$(SEP)$(ANTLRPATH)$(SEP)./src/TkC/parsing/" org.antlr.v4.Tool ./src/TkC/parsing/TkcLeft.g4
+	java -Xmx500M -cp ".$(SEP)$(ANTLRPATH)$(SEP)./src/TkC/parsing/" org.antlr.v4.Tool ./src/TkC/parsing/Tkc.g4 -o ./src/TkC/parsing/
+	java -Xmx500M -cp ".$(SEP)$(ANTLRPATH)$(SEP)./src/TkC/parsing/" org.antlr.v4.Tool ./src/TkC/parsing/TkcLeft.g4 -o ./src/TkC/parsing/
 
 # java build text
 src.txt: $(shell find ./src -type f) ./src/TkC/parsing/TkcParser.java
