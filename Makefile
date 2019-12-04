@@ -7,10 +7,9 @@ JARCMD         := jar -cvf
 RM              = rm -f
 MKDIR_P         = mkdir -p
 
-MAKE_DIR        = $(PWD)
-MAKE_DIR        = .
+MAKE_DIR        = ${CURDIR}
 BIN_DIR         = $(addsuffix /bin,$(MAKE_DIR))
-BIN_DIR         = ./bin
+BIN_DIR         = $(MAKE_DIR)/bin
 SEP             =;
 
 ifdef OS # windows
@@ -48,6 +47,7 @@ TTARGET        := HelloWorld
 # then make each dirs files
 
 default: src.txt $(TARGET_CLASS)
+	echo $(MAKE_DIR)
 
 run: src.txt $(TARGET_CLASS)
 	$(RUNCMD) $(JFLAGS) -cp "$(BIN_DIR)$(SEP)$(ANTLRPATH)" $(TARGET)
@@ -59,16 +59,16 @@ $(TARGET_CLASS): $(shell find ./src -type f) src.txt
 	$(CC) $(JFLAGS) $(LINT_FLAGS) -cp "$(BIN_DIR)$(SEP)$(ANTLRPATH)" -d $(BIN_DIR) @src.txt
 
 # Make antlr files if they don't already exist
-./src/TkC/parsing/TkcParser.java: ./src/TkC/parsing/Tkc.g4 ./src/TkC/parsing/TkcLeft.g4
-	java -Xmx500M -cp ".$(SEP)$(ANTLRPATH)$(SEP)./src/TkC/parsing/" org.antlr.v4.Tool ./src/TkC/parsing/Tkc.g4 -o ./src/TkC/parsing/
-	java -Xmx500M -cp ".$(SEP)$(ANTLRPATH)$(SEP)./src/TkC/parsing/" org.antlr.v4.Tool ./src/TkC/parsing/TkcLeft.g4 -o ./src/TkC/parsing/
+$(MAKE_DIR)/src/TkC/parsing/TkcParser.java: $(MAKE_DIR)/src/TkC/parsing/Tkc.g4 $(MAKE_DIR)/src/TkC/parsing/TkcLeft.g4
+	java -Xmx500M -cp ".$(SEP)$(ANTLRPATH)$(SEP)$(MAKE_DIR)/src/TkC/parsing/" org.antlr.v4.Tool $(MAKE_DIR)/src/TkC/parsing/Tkc.g4 -o $(MAKE_DIR)/src/TkC/parsing/
+	java -Xmx500M -cp ".$(SEP)$(ANTLRPATH)$(SEP)$(MAKE_DIR)/src/TkC/parsing/" org.antlr.v4.Tool $(MAKE_DIR)/src/TkC/parsing/TkcLeft.g4 -o $(MAKE_DIR)/src/TkC/parsing/
 
 # java build text
-src.txt: $(shell find ./src -type f) ./src/TkC/parsing/TkcParser.java
+src.txt: $(shell find ./src -type f) $(MAKE_DIR)/src/TkC/parsing/TkcParser.java
 	find ./src -name "*.java" > src.txt
 
 
-runv: src.txt $(TARGET_CLASS) # make whole project
+runv: src.txt $(TARGET_CLASS) # make part of project
 	$(RUNCMD) $(JFLAGS) -cp "$(BIN_DIR)$(SEP)$(ANTLRPATH)" $(VTARGET)
 
 runtest: $(TTARGET)
@@ -86,4 +86,4 @@ clean:
 	$(RM) $(BIN_DIR)/*.class
 	$(RM) *.class
 	$(RM) src.txt
-	$(RM) ./src/TkC/parsing/Tkc*.{java,interp,tokens,class}
+	$(RM) $(MAKE_DIR)/src/TkC/parsing/Tkc*.{java,interp,tokens,class}
