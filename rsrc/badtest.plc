@@ -1,0 +1,11 @@
+if (D13.ocupancy == occupied and // checking first block
+    A2.occupancy == unoccupied ) then // checking following block
+    C12.switchstate=main;
+    D13.speed=100.0;
+
+endif;
+
+if (D13.occupancy != occupied) then
+    C12.switchstate=fork;
+    D13.speed=20.0;
+endif;
