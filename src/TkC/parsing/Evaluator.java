@@ -39,7 +39,7 @@ public class Evaluator extends TkcBaseListener
         walker.walk(runner,tree);
 
         if (runner.encounteredError()) {
-            System.out.println("ERROR PARSING");
+            //System.out.println("ERROR PARSING");
             return;
         }
         inFile.seek(0);
@@ -53,12 +53,12 @@ public class Evaluator extends TkcBaseListener
         //EvalList parserTwoOutput = runnerTwo.getEvalList(tkc);
         //ActionList thingsToDoCopy = parserTwoOutput.evaluate();
         //if (thingsToDo.equivalentTo(thingsToDoCopy)) {
-        //  System.out.println("working voting");
+        ////  System.out.println("working voting");
         //  thingsToDo.execute();
         //} else {
-        //   System.out.println("ERROR VOTING");
+        ////   System.out.println("ERROR VOTING");
         // }
-        System.out.println(thingsToDo);
+        //System.out.println(thingsToDo);
         thingsToDo.execute();
 
     }

@@ -15,12 +15,12 @@ public class EvalList
     }
 
     public ActionList evaluate(TrackController tkc) { // evaluate the program
-        System.out.println("evaluating program");
+        //System.out.println("evaluating program");
         ActionList generatedActions = new ActionList(tkc);
         for (IfNode ifcond : ifs ) {
-            System.out.println("checking " + ifcond);
+            //System.out.println("checking " + ifcond);
             if (ifcond.evaluate()) {
-                System.out.println("adding actions");
+                //System.out.println("adding actions");
                 generatedActions.addActions(ifcond.getActions());
             }
         }

@@ -127,12 +127,12 @@ public class Action { // hopefully one of a kind
                         block.setSwitchState(getSwitchVal(value));
                         break;
                     default:
-                        System.out.println("ERROR: invalid attribute");
+                        //System.out.println("ERROR: invalid attribute");
                         break;
                 }
                 break;
             default:
-                System.out.println("ERROR: invalid operation on block");
+                //System.out.println("ERROR: invalid operation on block");
                 break;
         }
     }

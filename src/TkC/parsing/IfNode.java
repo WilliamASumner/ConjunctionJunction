@@ -29,22 +29,22 @@ public class IfNode {
         boolean accumulator = false;
         for (Condition condition : conditions) {
             boolean result = condition.evaluate();
-            System.out.println("condition: " + condition + "=" + result);
+            //System.out.println("condition: " + condition + "=" + result);
             switch(condition.getChainOp()) {
                 case OR:
                     accumulator = accumulator || result;
-                    System.out.println("OR="+accumulator);
+                    //System.out.println("OR="+accumulator);
                     break;
                 case AND:
                     accumulator = accumulator && result;
-                    System.out.println("AND="+accumulator);
+                    //System.out.println("AND="+accumulator);
                     break;
                 case NONE:
                     accumulator = result;
-                    System.out.println("NONE="+accumulator);
+                    //System.out.println("NONE="+accumulator);
                     break;
                 default:
-                    System.out.println("ERROR: bad chain operator");
+                    //System.out.println("ERROR: bad chain operator");
                     return false;
             }
         }

@@ -48,7 +48,7 @@ public class Condition {
             case SWITCHSTATE:
                 return valueOf(block.getSwitchState()) == value;
             default:
-                System.out.println("ERROR: invalid condition attr");
+                //System.out.println("ERROR: invalid condition attr");
                 return false;
         }
     }
@@ -59,7 +59,7 @@ public class Condition {
             case NEQ:
                 return !isEqual();
             default:
-                System.out.println("ERROR: invalid comparison op");
+                //System.out.println("ERROR: invalid comparison op");
                 return false;
         }
     }
