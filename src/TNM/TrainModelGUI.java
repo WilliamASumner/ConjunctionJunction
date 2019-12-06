@@ -45,13 +45,13 @@ public class TrainModelGUI extends Application {
 	public void initGUI()
 	{
 		
-		eBrake.setStyle("-fx-text-fill: red");
+		eBrake.setStyle("-fx-text-fill: black");
         eBrake.setMinWidth(400);
         eBrake.setMaxWidth(400);
         eBrake.setMinWidth(200);
         eBrake.setMaxWidth(200);
 		
-		EbrakeFailButton.setStyle("-fx-text-fill: red");
+		EbrakeFailButton.setStyle("-fx-text-fill: black");
         EbrakeFailButton.setMinWidth(400);
         EbrakeFailButton.setMaxWidth(400);
         EbrakeFailButton.setMinWidth(200);
@@ -116,10 +116,12 @@ public class TrainModelGUI extends Application {
 	{
 		 if(newEbrake){
                     eBrake.setText("E Brake: Currently ON");
+					eBrake.setStyle("-fx-text-fill: red");
                     System.out.println("TrainModelGUI: Emergency Brake ON...");
                 }
                 else{
                     eBrake.setText("E Brake: Currently OFF");
+					eBrake.setStyle("-fx-text-fill: black");
                     System.out.println("TrainModelGUI: Emergency Brake OFF...");
                 }
 	}
@@ -146,10 +148,12 @@ public class TrainModelGUI extends Application {
 			if(currentState)
 			{
 				EbrakeFailButton.setText("EBrake: Failed");
+				EbrakeFailButton.setStyle("-fx-text-fill: red");
 			}
             else
 			{
-				EbrakeFailButton.setText("EBrake: Working");				
+				EbrakeFailButton.setText("EBrake: Working");
+				EbrakeFailButton.setStyle("-fx-text-fill: black");				
 			}
         }
     }
