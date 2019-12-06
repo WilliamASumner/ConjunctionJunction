@@ -7,16 +7,17 @@ JARCMD         := jar -cvf
 RM              = rm -f
 MKDIR_P         = mkdir -p
 
-MAKE_DIR        = ${CURDIR}
 BIN_DIR         = $(addsuffix /bin,$(MAKE_DIR))
 BIN_DIR         = $(MAKE_DIR)/bin
 SEP             =;
 
 ifdef OS # windows
 	JAVAFX_PATH    = $(MAKE_DIR)/lib/javafx-sdk-11.0.2-windows/lib
+	MAKE_DIR       = .
 	SEP            = ;
 else
 	JAVAFX_PATH    = $(MAKE_DIR)/lib/javafx-sdk-11.0.2-unix/lib
+	MAKE_DIR       = ${CURDIR}
 	SEP            = :
 endif
 
@@ -47,7 +48,6 @@ TTARGET        := HelloWorld
 # then make each dirs files
 
 default: src.txt $(TARGET_CLASS)
-	echo $(MAKE_DIR)
 
 run: src.txt $(TARGET_CLASS)
 	$(RUNCMD) $(JFLAGS) -cp "$(BIN_DIR)$(SEP)$(ANTLRPATH)" $(TARGET)
