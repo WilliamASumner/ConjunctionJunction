@@ -61,7 +61,7 @@ public class TrainController{
         authority = a;
         trainName = name;
         tm = trainModel;
-		//System.out.println("Name: "+name+"Block: "+authority+"Speed: "+auditedSpeed);
+		//System.out.println("TrainController: Name: "+name+"Block: "+authority+"Speed: "+auditedSpeed);
         initGUI();
     }
     //Called when train controller is created
@@ -84,13 +84,13 @@ public class TrainController{
         getAuditedSpeed();
         getAuthority();
         currSpeed = getCurrSpeed();
-        //System.out.println("Speed = " +currSpeed);
+        //System.out.println("TrainController: Speed = " +currSpeed);
         //myGUI.updatePowerCommand();
     }
 
     //Called when train controller selected from main menu
     void showGUI(Stage primaryStage){
-        System.out.println("Hello from Train Controller:" + this);
+        System.out.println("TrainController: Hello from Train Controller:" + this);
         myGUI.start(primaryStage);
         // Scene scene = new Scene(GUI);
         // primaryStage.setScene(scene);
@@ -260,7 +260,7 @@ public class TrainController{
         double powerOut;   //power command output, in kiloWatts
         //Power.calcPowerCommand(this);
         powerOut = Power.calcPowerCommand(this);
-       // System.out.println("TRAIN: " + this + " - Power CMD " + powerOut);
+       // System.out.println("TrainController: TRAIN: " + this + " - Power CMD " + powerOut);
         powerOut = 0.1; // TODO FIXME
         if(eBrakeOn || sBrakeOn){
             powerOut = 0; 
