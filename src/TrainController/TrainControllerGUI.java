@@ -254,6 +254,18 @@ public class TrainControllerGUI extends Application implements EventHandler<Acti
         primaryStage.setScene(scene);
         primaryStage.show();
        }
+	   
+	   public void setEbrake(boolean newEbrake)
+	{
+		 if(newEbrake){
+                    eBrake.setText("E Brake: Currently ON");
+                    System.out.println("Turning Emergency Brake ON...");
+                }
+                else{
+                    eBrake.setText("E Brake: Currently OFF");
+                    System.out.println("Turning Emergency Brake OFF...");
+                }
+	}
 
 
       public class setSpeedHandler implements EventHandler<ActionEvent>{
@@ -273,14 +285,6 @@ public class TrainControllerGUI extends Application implements EventHandler<Acti
         public void handle(ActionEvent event){
             boolean currentState;
                 currentState = tnc.toggleEBrake();
-                if(currentState){
-                    eBrake.setText("E Brake: Currently ON");
-                    System.out.println("Turning Emergency Brake ON...");
-                }
-                else{
-                    eBrake.setText("E Brake: Currently OFF");
-                    System.out.println("Turning Emergency Brake OFF...");
-                }
         }
       }
 

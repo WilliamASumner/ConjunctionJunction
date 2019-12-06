@@ -61,13 +61,12 @@ public class TrainModel {
     double acceleration = 0;
     double timePerUpdate = 1;
 
-    public void toggleEBrakeFail()
+    public boolean toggleEBrakeFail()
     {
         if (EbrakeFail)
         {
 
             EbrakeFail=false;
-            singleTNC.setSBrakeFailure(false);
 			System.out.println("EbrakeFail is now false: "+EbrakeFail);
         
 			
@@ -75,13 +74,15 @@ public class TrainModel {
         else
         {
             EbrakeFail=true;
-            singleTNC.setSBrakeFailure(true);
 			System.out.println("EbrakeFail is now true: "+EbrakeFail);
             Ebrake = false;
 			System.out.println("Ebrake is now false: "+Ebrake);
 
         }
-        return;
+        singleTNC.setEBrakeFailure(EbrakeFail);		
+		singleTNC.getGUI().setEbrake(Ebrake);//James 
+		myGUI.setEbrake(Ebrake);
+        return EbrakeFail;
     }
 
     public void toggleSBrakeFail()
@@ -210,8 +211,8 @@ public class TrainModel {
         {
             acceleration = CalcAcceleration();
         }
-       System.out.println("Acceleration of Train "+name+": "+acceleration);
-       System.out.println("Velocity of Train "+name+": "+velocity);
+       //System.out.println("Acceleration of Train "+name+": "+acceleration);
+       //System.out.println("Velocity of Train "+name+": "+velocity);
 
         velocity = velocity + acceleration * timePerUpdate;
         if (velocity <=0) velocity =0;
@@ -262,7 +263,7 @@ public class TrainModel {
 		return velocity;
 	}
 
-    public void toggleEBrake()
+    public boolean toggleEBrake()
     {
         if (EbrakeFail==false)
         {
@@ -278,9 +279,11 @@ public class TrainModel {
                 Ebrake = false;
 				System.out.println("Ebrake is now false: "+Ebrake);
             }
-            //return true;
+			
+			singleTNC.getGUI().setEbrake(Ebrake);//James 
+			myGUI.setEbrake(Ebrake);
         }
-        return;// false;
+        return Ebrake;// false;
     }
 
     public void toggleSBrake()
