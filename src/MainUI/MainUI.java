@@ -14,7 +14,9 @@ import javafx.event.EventHandler;
 import javafx.event.ActionEvent;
 import javafx.stage.WindowEvent;
 
-import javafx.animation.AnimationTimer;
+import javafx.animation.KeyFrame;
+import javafx.util.Duration;
+import javafx.animation.Timeline;
 import java.io.FileNotFoundException;
 
 public class MainUI extends Application {
@@ -36,9 +38,16 @@ public class MainUI extends Application {
     private Button trainModel = null;
     private Button trainController = null;
     private Button trackController = null;
-    private Button stopButton = null;
 
-    private boolean updateBoolean = true;
+    private Button stopButton = null;
+    private Button speedUpButton = null;
+    private Button speedDownButton = null;
+
+    private Timeline timeline;
+    private int timeMultiplier = 1;
+    private Label multiplierDisplay;
+
+    private boolean isStopped = false;
 
     private TkM tkm = null;
     private CTC_GUI ctcg = null;
@@ -107,42 +116,60 @@ public class MainUI extends Application {
         stopButton = new Button("Stop");
         stopButton.setOnAction(new stopHandler());
 
+        speedDownButton = new Button("Slow down");
+        speedDownButton.setOnAction(new slowDownHandler());
+
+        speedUpButton = new Button("Speedup");
+        speedUpButton.setOnAction(new speedUpHandler());
+
+        HBox timeControls = new HBox(speedDownButton,stopButton,speedUpButton);
+        timeControls.setAlignment(Pos.CENTER);
+
+        multiplierDisplay = new Label("1x");
+
+
         // Put the HBox, dispatchT, and myLabel in a VBox
-        VBox vbox = new VBox(10,programTitle,programTitle2, CTC, trackController, trackModel, trainModel, trainController,stopButton);
+        VBox vbox = new VBox(10,programTitle,programTitle2, CTC, trackController, trackModel, trainModel, trainController,timeControls,multiplierDisplay);
         // set the VBox's alignment to center
         vbox.setAlignment(Pos.CENTER);
+
+        stage.setOnCloseRequest(new closeWindowHandler());
 
         // Create a scene with the VBox as its root node
         Scene scene = new Scene(vbox,300,500);
         stage.setTitle("Train Sim Home Page");
         stage.setScene(scene);
 
+        timeMultiplier = 1;
+        updateTimeline();
+
         //final long startNanoTime = System.nanoTime();
 
-        new AnimationTimer() { // anonymous animation timer
-            public void handle(long currentNanoTime) {
-                //double deltaT = (currentNanoTime - startNanoTime)/1000000000.0;
-                if (updateBoolean) {
+        stage.show();
 
-                    // update all modules in succession
+    }
+
+    /**
+     * Update timer
+     */
+    private void updateTimeline() {
+        if (timeline != null)
+            timeline.stop();
+        timeline = new Timeline(
+            new KeyFrame(Duration.millis(1000.0/timeMultiplier), // default time is 1 second per update
+            new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent t) {
                     ctc.update();
                     tkcm.update();
                     tkm.update();
-                    //tnm.update();
+                    tnm.update();
                     tnc.update();
-                    try {
-                        Thread.sleep(1); // FIXME, add variable timing
-                    } catch (Exception e) {
-                        System.out.println(e);
-                    }
                 }
-            }
-        }.start();
-
-
-        stage.setOnCloseRequest(new closeWindowHandler());
-        stage.show();
-
+            })
+        );
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.play();
     }
 
     /**
@@ -174,8 +201,6 @@ public class MainUI extends Application {
         @Override
         public void handle(ActionEvent event) {
             Stage newWindow = new Stage();
-            if (tkm == null)
-                tkm = new TkM(tnc);
             tkm.showGUI(newWindow);
 
         }
@@ -187,7 +212,7 @@ public class MainUI extends Application {
     class TrainModelButtonHandler implements EventHandler<ActionEvent>{
         @Override
         public void handle(ActionEvent event){
-            Stage newWindow = new Stage();
+            Stage newWindow = new Stage(); // new window
             tnm.showGUI(newWindow);
         }
     }
@@ -206,11 +231,80 @@ public class MainUI extends Application {
     class stopHandler implements EventHandler<ActionEvent>{
         @Override
         public void handle(ActionEvent event){
-            if (updateBoolean)
-                stopButton.setText("Start");
-            else
+            if (isStopped) {
                 stopButton.setText("Stop");
-            updateBoolean = !updateBoolean;
+                timeline.play();
+            } else {
+                stopButton.setText("Start");
+                timeline.stop();
+            }
+            isStopped = !isStopped;
+        }
+    }
+
+    class slowDownHandler implements EventHandler<ActionEvent>{
+        @Override
+        public void handle(ActionEvent event){
+            switch (timeMultiplier) {
+                case 4:
+                    timeMultiplier = 2;
+                    break;
+                case 10:
+                    timeMultiplier = 4;
+                    break;
+                case 20:
+                    timeMultiplier = 10;
+                    break;
+                case 25:
+                    timeMultiplier = 20;
+                    break;
+                case 50:
+                    timeMultiplier = 25;
+                    break;
+                case 100:
+                    timeMultiplier = 50;
+                    break;
+                default: // 1 -> 1, 2 -> 1
+                    timeMultiplier = 1;
+            }
+            multiplierDisplay.setText(timeMultiplier+"x");
+            updateTimeline();
+        }
+    }
+
+    class speedUpHandler implements EventHandler<ActionEvent>{
+        @Override
+        public void handle(ActionEvent event){
+            switch (timeMultiplier) {
+                case 1:
+                    timeMultiplier = 2;
+                    break;
+                case 2:
+                    timeMultiplier = 4;
+                    break;
+                case 4:
+                    timeMultiplier = 10;
+                    break;
+                case 10:
+                    timeMultiplier = 20;
+                    break;
+                case 20:
+                    timeMultiplier = 25;
+                    break;
+                case 25:
+                    timeMultiplier = 50;
+                    break;
+                case 50:
+                    timeMultiplier = 100;
+                    break;
+                case 100:
+                    timeMultiplier = 100;
+                    break;
+                default:
+                    timeMultiplier = 1;
+            }
+            multiplierDisplay.setText(timeMultiplier+"x");
+            updateTimeline();
         }
     }
 
