@@ -148,6 +148,7 @@ public class TrackControllerGUI extends Application {
 
 
 
+        //------ UPPER LEFT section
         String[] ControllerNames = tkcm.getControllerNames();
         ObservableList<String> ControllerOptions = FXCollections.observableArrayList();
         for (String option: ControllerNames) {
@@ -157,7 +158,7 @@ public class TrackControllerGUI extends Application {
         controllerBox.getSelectionModel().select(currentController.toString());
         controllerBox.setOnAction(new ControllerListHandler());
 
-        String[] BlockNames = currentController.getControlledBlocks();//,"2","3","4","5"};
+        String[] BlockNames = currentController.getControlledBlocks();
         ObservableList<String> BoxOptions = FXCollections.observableArrayList();
         for (String option: BlockNames) {
             BoxOptions.addAll(option);
@@ -191,27 +192,29 @@ public class TrackControllerGUI extends Application {
         HBox modeHBox = new HBox(modeLabel,spacer3,modeBox);
 
 
-        /*GridPane.setConstraints(controllerBox,0,0);
-          GridPane.setConstraints(blockBox,0,1);
-          GridPane.setConstraints(modeBox,0,2);*/
+        Label occCheckBoxLabel = new Label("Override to Occupied");
+
+        Region occSpacer = new Region();
+        HBox.setHgrow(occSpacer,Priority.ALWAYS);
+
+        occupancyCheckBox = new CheckBox();
+        occupancyCheckBox.setIndeterminate(false); // only true/false
+        occupancyCheckBox.setOnAction(new OccupancyCheckBoxHandler());
+
+        HBox occCheckHBox = new HBox(occCheckBoxLabel,occSpacer,occupancyCheckBox);
+
 
         VBox MainControls = new VBox();
         MainControls.setPadding(new Insets(10));
         MainControls.setSpacing(8);
-        MainControls.getChildren().addAll(controllerHBox,blockHBox,modeHBox); // upper left
+        MainControls.getChildren().addAll(controllerHBox,blockHBox,modeHBox,occCheckHBox); // upper left
 
         GridPane.setConstraints(MainControls,0,0);
 
         root.getChildren().addAll(MainControls); // upper left
 
+        //------ UPPER RIGHT section
         Label LineInfo = new Label("Line: " + currentController.getLine());
-        Label OccupancyLabel = new Label("Occupancy: ");
-        occupancyVal = new Label("UNOCCUPIED");
-
-        occupancyCheckBox = new CheckBox("Override to Occupied");
-        occupancyCheckBox.setIndeterminate(false); // only true/false
-        occupancyCheckBox.setOnAction(new OccupancyCheckBoxHandler());
-
 
 
         Label AuthorityLabel = new Label("Authority: ");
@@ -227,16 +230,21 @@ public class TrackControllerGUI extends Application {
         HBox SpeedBox = new HBox();
         SpeedBox.getChildren().addAll(SpeedLabel,speedVal);
 
+
+        Label OccupancyLabel = new Label("Occupancy: ");
+        occupancyVal = new Label(occToString(currentBlock.getIsOccupied()));
+
         HBox OccBox = new HBox();
         OccBox.getChildren().addAll(OccupancyLabel,occupancyVal);
 
         HBox StatusBox = new HBox();
         StatusBox.getChildren().addAll(StatusLabel,statusVal);
 
+
         VBox GeneralInfo = new VBox();
         GeneralInfo.setPadding(new Insets(10));
         GeneralInfo.setSpacing(8);
-        GeneralInfo.getChildren().addAll(LineInfo,OccBox,occupancyCheckBox); // upper right
+        GeneralInfo.getChildren().addAll(LineInfo,OccBox);
         GeneralInfo.getChildren().addAll(AuthBox,SpeedBox,StatusBox); // upper right
 
         GridPane.setConstraints(GeneralInfo,1,0);
@@ -403,6 +411,12 @@ public class TrackControllerGUI extends Application {
 
         primaryStage.setScene(scene); // content container
         primaryStage.show();
+    }
+
+    public String occToString(boolean val) {
+        if (val)
+            return "OCCUPIED";
+        return "UNOCCUPIED";
     }
 
     
