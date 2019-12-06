@@ -7,7 +7,7 @@ public class CTCTrain{
         private String line;
         private String trainName;
         private double curSpeed;
-        private String departTime;
+        String departTime;
         private String curBlkID;
         public String curAuthority;
 		private int totalNumOfStationsLeftToArriveTo;
@@ -116,7 +116,7 @@ public class CTCTrain{
          */         
         public void setDepartureTime(String departT){
             departTime = departT;
-        }   
+        }     
 
         /**
          * Get Train departure name.

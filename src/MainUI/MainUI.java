@@ -130,9 +130,9 @@ public class MainUI extends Application {
 
         new AnimationTimer() { // anonymous animation timer
             public void handle(long currentNanoTime) {
-                //double deltaT = (currentNanoTime - startNanoTime)/1000000000.0;
+                double deltaTSec = (currentNanoTime - startNanoTime)/1000000000.0;
                 if (updateBoolean) {
-
+					System.out.println(deltaTSec);
                     // update all modules in succession
                     ctc.update();
                     tkcm.update();
@@ -161,6 +161,9 @@ public class MainUI extends Application {
         @Override
         public void handle(ActionEvent event) {
             Stage newWindow = new Stage();
+			newWindow.setTitle("CTC Module");
+			newWindow.setWidth(1100);
+			newWindow.setHeight(630);
             ctc.showGUI(newWindow);
         }
     }
