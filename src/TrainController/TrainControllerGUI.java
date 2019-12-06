@@ -259,11 +259,11 @@ public class TrainControllerGUI extends Application implements EventHandler<Acti
 	{
 		 if(newEbrake){
                     eBrake.setText("E Brake: Currently ON");
-                    System.out.println("Turning Emergency Brake ON...");
+                    System.out.println("TrainControllerGUI: Turning Emergency Brake ON...");
                 }
                 else{
                     eBrake.setText("E Brake: Currently OFF");
-                    System.out.println("Turning Emergency Brake OFF...");
+                    System.out.println("TrainControllerGUI: Turning Emergency Brake OFF...");
                 }
 	}
 
@@ -274,7 +274,7 @@ public class TrainControllerGUI extends Application implements EventHandler<Acti
             boolean test = tnc.setNewSpeed(speedSlider.getValue());
             if(test){
                 driverSetSpeed.setText("Current Set Speed Limit: " + speedSlider.getValue() + " MPH");
-                System.out.println("Setting new speed of " + speedSlider.getValue());
+                System.out.println("TrainControllerGUI: Setting new speed of " + speedSlider.getValue());
             }
         }
       }
@@ -295,11 +295,11 @@ public class TrainControllerGUI extends Application implements EventHandler<Acti
                 currentState = tnc.toggleServiceBrake();
                 if(currentState){
                     sBrake.setText("S Brake: Currently ON");
-                    System.out.println("Turning Service Brake ON...");
+                    System.out.println("TrainControllerGUI: Turning Service Brake ON...");
                 }
                 else{
                     sBrake.setText("S Brake: Currently OFF");
-                    System.out.println("Turning Service Brake OFF...");
+                    System.out.println("TrainControllerGUI: Turning Service Brake OFF...");
 
                 }
         }
@@ -311,11 +311,11 @@ public class TrainControllerGUI extends Application implements EventHandler<Acti
             currentState = tnc.setLights();
             if (currentState){
                 lights.setText("Lights Currently ON");
-                System.out.println("Turning Lights ON...");
+                System.out.println("TrainControllerGUI: Turning Lights ON...");
             }
             else{
                 lights.setText("Lights Currently OFF");
-                System.out.println("Turning Lights OFF...");
+                System.out.println("TrainControllerGUI: Turning Lights OFF...");
             }
         }
       }
@@ -327,11 +327,11 @@ public class TrainControllerGUI extends Application implements EventHandler<Acti
             currentState = tnc.toggleDoor(0);
             if(currentState){
                 rDoor1.setText("Right Door 1 Currently Open");
-                System.out.println("Opening Right Door 1...");
+                System.out.println("TrainControllerGUI: Opening Right Door 1...");
             }
             else{
                 rDoor1.setText("Right Door 1 Currently Closed");
-                System.out.println("Closing Right Door 1...");
+                System.out.println("TrainControllerGUI: Closing Right Door 1...");
             }
         }
       }
@@ -343,11 +343,11 @@ public class TrainControllerGUI extends Application implements EventHandler<Acti
             currentState = tnc.toggleDoor(1);
             if(currentState){
                 rDoor2.setText("Right Door 2 Currently Open");
-                System.out.println("Opening Right Door 2 ...");
+                System.out.println("TrainControllerGUI: Opening Right Door 2 ...");
             }
             else{
                 rDoor2.setText("Right Door 2 Currently Closed");
-                System.out.println("Closing Right Door 2...");
+                System.out.println("TrainControllerGUI: Closing Right Door 2...");
             }
         }
       }
@@ -359,11 +359,11 @@ public class TrainControllerGUI extends Application implements EventHandler<Acti
             currentState = tnc.toggleDoor(2);
             if(currentState){
                 rDoor3.setText("Right Door 3 Currently Open");
-                System.out.println("Opeing Right Door 3...");
+                System.out.println("TrainControllerGUI: Opeing Right Door 3...");
             }
             else{
                 rDoor3.setText("Right Door 3 Currently Closed");
-                System.out.println("Closing Right Door 3...");
+                System.out.println("TrainControllerGUI: Closing Right Door 3...");
             }
         }
       }
@@ -375,11 +375,11 @@ public class TrainControllerGUI extends Application implements EventHandler<Acti
             currentState = tnc.toggleDoor(3);
             if(currentState){
                 rDoor4.setText("Right Door 4 Currently Open");
-                System.out.println("Opening Right Door 4...");
+                System.out.println("TrainControllerGUI: Opening Right Door 4...");
             }
             else{
                 rDoor4.setText("Right Door 4 Currently Closed");
-                System.out.println("Closing Right Door 4...");
+                System.out.println("TrainControllerGUI: Closing Right Door 4...");
             }
         }
       }
@@ -391,11 +391,11 @@ public class TrainControllerGUI extends Application implements EventHandler<Acti
             currentState = tnc.toggleDoor(4);
             if(currentState){
                 lDoor1.setText("Left Door 1 Currently Open");
-                System.out.println("Opening Left Door 1...");
+                System.out.println("TrainControllerGUI: Opening Left Door 1...");
             }
             else{
                 lDoor1.setText("Left Door 1 Currently Closed");
-                System.out.println("Closing Left Door 1...");
+                System.out.println("TrainControllerGUI: Closing Left Door 1...");
             }
         }
       }
@@ -407,11 +407,11 @@ public class TrainControllerGUI extends Application implements EventHandler<Acti
             currentState = tnc.toggleDoor(5);
             if(currentState){
                 lDoor2.setText("Left Door 2 Currently Open");
-                System.out.println("Opening Left Door 2...");
+                System.out.println("TrainControllerGUI: Opening Left Door 2...");
             }
             else{
                 lDoor2.setText("Left Door 2 Currently Closed");
-                System.out.println("Closing Left Door 2...");
+                System.out.println("TrainControllerGUI: Closing Left Door 2...");
             }
         }
       }
@@ -423,11 +423,11 @@ public class TrainControllerGUI extends Application implements EventHandler<Acti
             currentState = tnc.toggleDoor(6);
             if(currentState){
                 lDoor3.setText("Left Door 3 Currently Open");
-                System.out.println("Opening Left Door 3...");
+                System.out.println("TrainControllerGUI: Opening Left Door 3...");
             }
             else{
                 lDoor3.setText("Left Door 3 Currently Closed");
-                System.out.println("Closing Left Door 3...");
+                System.out.println("TrainControllerGUI: Closing Left Door 3...");
             }
         }
       }
@@ -439,11 +439,11 @@ public class TrainControllerGUI extends Application implements EventHandler<Acti
             currentState = tnc.toggleDoor(7);
             if(currentState){
                 lDoor4.setText("Left Door 4 Currently Open");
-                System.out.println("Opening Left Door 4...");
+                System.out.println("TrainControllerGUI: Opening Left Door 4...");
             }
             else{
                 lDoor4.setText("Left Door 4 Currently Closed");
-                System.out.println("Closing Left Door 4...");
+                System.out.println("TrainControllerGUI: Closing Left Door 4...");
             }
         }
       }
@@ -452,7 +452,7 @@ public class TrainControllerGUI extends Application implements EventHandler<Acti
           @Override
           public void handle(ActionEvent event){
             tnc.setTemp(tempSlider.getValue());
-            currentTemp.setText("Current Temperature: " + tnc.getTemp() + " Fahrenheit");
+            currentTemp.setText("TrainControllerGUI: Current Temperature: " + tnc.getTemp() + " Fahrenheit");
           }
       }
       

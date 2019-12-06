@@ -168,10 +168,13 @@ public class TrainModelMainGUI extends Application implements EventHandler<Actio
       public void handle(ActionEvent event){
         Stage newWindow = new Stage();
         for(int i = 0; i < tnmArray.length; i++){
+			
+			if(tnmArray!=null && tnmArray[i]!=null){
           if(trainMenu.getValue().equals(tnmArray[i].getName())){
-            System.out.println("OBJECT = " + tnmArray[i]);
+            //System.out.println("TrainModelMainGUI: OBJECT = " + tnmArray[i]);
               tnmArray[i].showGUI(newWindow);
           }
+			}
         }
       }
     }
@@ -183,11 +186,11 @@ public class TrainModelMainGUI extends Application implements EventHandler<Actio
         //if train Model button is pressed, find the specific
         //train Model object and then open its GUI
         if(event.getSource() == tnmButton){
-          //System.out.println("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
+          //System.out.println("TrainModelMainGUI: YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
           for(int i = 0; i < tnmArray.length; i++){
             if(trainMenu.getValue().equals(tnmArray[i].getName())){
                 //tnmMain.showGUI(primaryStage, tnmArray[i]);
-               // System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXX");
+               // System.out.println("TrainModelMainGUI: XXXXXXXXXXXXXXXXXXXXXXXXX");
                 tnmArray[i].showGUI(primaryStage);
             }
           }

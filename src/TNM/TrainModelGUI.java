@@ -116,11 +116,11 @@ public class TrainModelGUI extends Application {
 	{
 		 if(newEbrake){
                     eBrake.setText("E Brake: Currently ON");
-                    System.out.println("Turning Emergency Brake ON...");
+                    System.out.println("TrainModelGUI: Emergency Brake ON...");
                 }
                 else{
                     eBrake.setText("E Brake: Currently OFF");
-                    System.out.println("Turning Emergency Brake OFF...");
+                    System.out.println("TrainModelGUI: Emergency Brake OFF...");
                 }
 	}
 

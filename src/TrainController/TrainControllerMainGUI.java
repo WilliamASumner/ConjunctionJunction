@@ -164,10 +164,13 @@ public class TrainControllerMainGUI extends Application implements EventHandler<
       public void handle(ActionEvent event){
         Stage newWindow = new Stage();
         for(int i = 0; i < tncArray.length; i++){
+			if(tncArray!=null && tncArray[i]!=null){
+				
           if(trainMenu.getValue().equals(tncArray[i].getName())){
-           // System.out.println("OBJECT = " + tncArray[i]);
+           // System.out.println("TrainControllerMainGUI: OBJECT = " + tncArray[i]);
               tncArray[i].showGUI(newWindow);
           }
+			}
         }
       }
     }
@@ -178,11 +181,11 @@ public class TrainControllerMainGUI extends Application implements EventHandler<
         //if train controller button is pressed, find the specific
         //train controller object and then open its GUI
         if(event.getSource() == tncButton){
-          //System.out.println("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
+          //System.out.println("TrainControllerMainGUI: YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
           for(int i = 0; i < tncArray.length; i++){
             if(trainMenu.getValue().equals(tncArray[i].getName())){
                 //tncMain.showGUI(primaryStage, tncArray[i]);
-               // System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXX");
+               // System.out.println("TrainControllerMainGUI: XXXXXXXXXXXXXXXXXXXXXXXXX");
                 tncArray[i].showGUI(primaryStage);
             }
           }

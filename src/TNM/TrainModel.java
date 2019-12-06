@@ -67,16 +67,16 @@ public class TrainModel {
         {
 
             EbrakeFail=false;
-			System.out.println("EbrakeFail is now false: "+EbrakeFail);
+			System.out.println("TrainModel: EbrakeFail is now false: "+EbrakeFail);
         
 			
         }
         else
         {
             EbrakeFail=true;
-			System.out.println("EbrakeFail is now true: "+EbrakeFail);
+			System.out.println("TrainModel: EbrakeFail is now true: "+EbrakeFail);
             Ebrake = false;
-			System.out.println("Ebrake is now false: "+Ebrake);
+			System.out.println("TrainModel: Ebrake is now false: "+Ebrake);
 
         }
         singleTNC.setEBrakeFailure(EbrakeFail);		
@@ -91,15 +91,15 @@ public class TrainModel {
         {
             SbrakeFail=false;
             singleTNC.setSBrakeFailure(false);
-			System.out.println("SbrakeFail is now false: "+SbrakeFail);
+			System.out.println("TrainModel: SbrakeFail is now false: "+SbrakeFail);
         }
         else
         {
             SbrakeFail=true;
             Sbrake = false;
             singleTNC.setSBrakeFailure(true);
-			System.out.println("SbrakeFail is now true: "+SbrakeFail);
-			System.out.println("Sbrake is now false: "+Sbrake);
+			System.out.println("TrainModel: SbrakeFail is now true: "+SbrakeFail);
+			System.out.println("TrainModel: Sbrake is now false: "+Sbrake);
         }
         return;
     }
@@ -109,14 +109,14 @@ public class TrainModel {
         {
             signalFail=false;
             singleTNC.setSignalFailure(false);
-			System.out.println("signalFail is now false: "+signalFail);
+			System.out.println("TrainModel: signalFail is now false: "+signalFail);
         }
 
         else
         {
             signalFail=true;
             singleTNC.setSignalFailure(true);
-			System.out.println("signalFail is now true: "+signalFail);
+			System.out.println("TrainModel: signalFail is now true: "+signalFail);
         }
         return;
     }
@@ -126,14 +126,14 @@ public class TrainModel {
         {
             engineFail=false;
             singleTNC.setEngineFailure(false);
-			System.out.println("engineFail is now false: "+engineFail);
+			System.out.println("TrainModel: engineFail is now false: "+engineFail);
         }
 
         else
         {
             engineFail=true;
             singleTNC.setEngineFailure(true);
-			System.out.println("engineFail is now true: "+engineFail);
+			System.out.println("TrainModel: engineFail is now true: "+engineFail);
             powerCommand = 0;
         }
         return;
@@ -174,9 +174,9 @@ public class TrainModel {
 	private void setGrade(double newgrade)
 	{
 		grade = newgrade;
-		System.out.println("grade: "+grade);
+		System.out.println("TrainModel: grade: "+grade);
 		radians = radiansPerGrade*grade;
-		System.out.println("radians: "+radians);
+		System.out.println("TrainModel: radians: "+radians);
 		
 	}
 
@@ -211,8 +211,8 @@ public class TrainModel {
         {
             acceleration = CalcAcceleration();
         }
-       //System.out.println("Acceleration of Train "+name+": "+acceleration);
-       //System.out.println("Velocity of Train "+name+": "+velocity);
+       //System.out.println("TrainModel: Acceleration of Train "+name+": "+acceleration);
+       //System.out.println("TrainModel: Velocity of Train "+name+": "+velocity);
 
         velocity = velocity + acceleration * timePerUpdate;
         if (velocity <=0) velocity =0;
@@ -271,13 +271,13 @@ public class TrainModel {
             {
                 Ebrake = true;
                 acceleration = EbrakeAcc;
-				System.out.println("Ebrake is now true: "+Ebrake);
+				System.out.println("TrainModel: Ebrake is now true: "+Ebrake);
 				
             }
             else
             {
                 Ebrake = false;
-				System.out.println("Ebrake is now false: "+Ebrake);
+				System.out.println("TrainModel: Ebrake is now false: "+Ebrake);
             }
 			
 			singleTNC.getGUI().setEbrake(Ebrake);//James 
@@ -294,12 +294,12 @@ public class TrainModel {
             {
                 Sbrake = true;
                 acceleration = SbrakeAcc;
-				System.out.println("Sbrake is now true: "+Sbrake);
+				System.out.println("TrainModel: Sbrake is now true: "+Sbrake);
             }
             else
             {
                 Sbrake = false;
-				System.out.println("Sbrake is now false: "+Sbrake);
+				System.out.println("TrainModel: Sbrake is now false: "+Sbrake);
             }
             //return true;
         }
@@ -334,7 +334,7 @@ public class TrainModel {
 
     public void initTrainController(String Stringname, String ABlock, double ASpeed)
     {
-        System.out.println("TNC_MAINIS************************" + TNC_Main);
+        System.out.println("TrainModel: TNC_MAINIS************************" + TNC_Main);
         singleTNC = TNC_Main.createTrain(Stringname, ABlock, ASpeed,this);
         // TODO SCRUTINIZE
     }
