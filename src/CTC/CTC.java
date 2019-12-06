@@ -3,20 +3,20 @@ import javafx.stage.Stage;
 import java.util.*; 
 
 public class CTC{
-    TrainModel[] dispatchedTrains;
-    TrainModel newTrain;
-    TrainModel[] queuedTrains;
     int throughput;
-    int currentTime;
     TrackControllerMain trckCntrl;
     TkM tkm;
     CTC_GUI gui = null;
 
-
+    ArrayList<CTCTrain> dT = new ArrayList<CTCTrain>(5);
+    CTCTrain nT, tempT;
+    ArrayList<CTCTrain> qT = new ArrayList<CTCTrain>(5);
 
     public static HashMap<String,String> stationToBlockRed = new HashMap<String,String>();
     public static HashMap<String,String> stationToBlockGreen = new HashMap<String,String>();
+	
     public void init() {
+		
         stationToBlockGreen.put("PIONEER","A2");
         stationToBlockGreen.put("EDGEBROOK","C9");
         stationToBlockGreen.put("STATION","D16");
@@ -45,12 +45,8 @@ public class CTC{
 		stationToBlockRed.put("FIRST AVE", "H45");
 		stationToBlockRed.put("STATION SQUARE", "I48");
 		stationToBlockRed.put("SOUTH HILLS JUNCTION", "L60");
+		stationToBlockRed.put("yard","a0");
 	}
-
-    
-    ArrayList<CTCTrain> dT = new ArrayList<CTCTrain>(5);
-    CTCTrain nT, tempT;
-    ArrayList<CTCTrain> qT = new ArrayList<CTCTrain>(5);
 
     public CTC() { // for testing
         init();
@@ -58,12 +54,50 @@ public class CTC{
 
     @SuppressWarnings("unchecked")
     public void update() {
+		// update clock 
+/*		gui.stackAddClock = gui.updateByRebuildingClock();
+		// update throughput
+		// tkm.getThroughput();
+		gui.stackAddThroughput = gui.updateByRebuildingThroughput();
+		gui.leftVbox.getChildren().addAll(0, stackAddClock, stackAddThroughput, )
+		= new VBox(0, stackAddClock, stackAddThroughput, imageView);
+        leftVbox.setStyle(cssLayout);
+		gui.leftVbox = gui.
+*/		
+		// Check 'Select a Queued Train' view for any trains ready to auto dispatch
+		if(qT.size() != 0 && !gui.queuedTrainsView.getItems().isEmpty()){
+			for(int i = 0; i < qT.size(); i++){
+				CTCTrain tempTrain = qT.get(i);
+				String dispatchTime = tempTrain.departTime;
+				String curTime = gui.digitalClock.getText();
+				String[] splitDepartTime = curTime.split(":");
+				String hourMinDepartTime = splitDepartTime[0] + ":" + splitDepartTime[1];
+				// If train's disptach time equals current time, dispatch it (auto)
+				if(dispatchTime.equals(hourMinDepartTime)){
+					gui.table.getItems().add(tempTrain);
+					// Add to disptached trains
+					gui.newCTC.dispatchQueuedTrain(tempTrain);
+				
+					// Remove 'queuedTrain' from 'Select a Queued Train' view
+					gui.queuedItems.remove(tempTrain.toString());
+					gui.queuedTrainsView.setItems(gui.queuedItems);
+				
+					// check to see if there are any trains queued
+					if(gui.queuedTrainsView.getItems().isEmpty())
+						gui.selectedTrain.getItems().clear();   // no queued trains, remove all 
+														//  selected schedules from view
+					gui.newCTC.deleteQueuedTrain(tempTrain); // delete train from queued trains
+				}
+			}
+		}
+		
         // Update train locations
         if(dT != null && dT.size() != 0){
 			//check if cur block of a train is yard...if so remove
 			for(int i = 0; i < dT.size(); i++)
 				if(dT.get(i).getCurBlkID().equals("a0"))
 					dT.remove(i);
+				
 			// Remove the table items	
             gui.table.getItems().removeAll(gui.table.getItems());
 			// Add the table items
@@ -73,12 +107,17 @@ public class CTC{
 				// check if dispatched trains cur authority == cur block
 				CTCTrain tempT = dT.get(i);
 				if(tempT.getCurBlkID().equals(tempT.getAuthority())){
+					// Set new authority
 					tempT.setAuthority(tempT.getNextscheduleStop());
 					// Send authority to track controller
 					trckCntrl.sendSuggestedAuthority(tempT.getCurBlkID(), tempT.getAuthority());
 				}
 			}
         }
+		
+		
+		
+		
     }
 
     public void showGUI(Stage primaryStage) {
@@ -157,6 +196,21 @@ public class CTC{
         dT.add(tempT);
         trckCntrl.requestNewTrain(tempT.getName(), tempT.getSpeed(), tempT.getAuthority(), tempT.getCurrentBlock());
     }
+	
+    /**
+     * Search for given train's .toString() info against dispatched trains' 
+     * .toString() to see if dT contains the train, return found train if so.
+     */     
+    public CTCTrain findDispatchedTrain(String info){
+        for(int i = 0; i < dT.size(); i++){
+            if(dT.get(i).toString().equals(info)){
+                tempT = dT.get(i);
+                break;
+            }
+        }
+        return tempT;
+    }	
+	
 /*    
     public int sendSpeedAuthority(int trainsCurBlockID, int newAuthorityBlkID){
 

@@ -84,7 +84,7 @@ public class TrainController{
         getAuditedSpeed();
         getAuthority();
         currSpeed = getCurrSpeed();
-        System.out.println("Speed = " +currSpeed);
+        //System.out.println("Speed = " +currSpeed);
         //myGUI.updatePowerCommand();
     }
 
