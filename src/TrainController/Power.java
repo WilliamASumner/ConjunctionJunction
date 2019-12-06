@@ -36,9 +36,9 @@ public class Power{
         KiOut = Ki * error;
         KpOut = Kp * error;
         powerOutput = KiOut + KpOut;
-        System.out.println("Set Speed = " + tnc.getSetSpeed());
-        System.out.println("Current Speed = " + tnc.getCurrSpeed());
-        System.out.println("Power Command = " + powerOutput);
+        //System.out.println("Set Speed = " + tnc.getSetSpeed());
+        //System.out.println("Current Speed = " + tnc.getCurrSpeed());
+        //System.out.println("Power Command = " + powerOutput);
         return powerOutput;
     }
 
