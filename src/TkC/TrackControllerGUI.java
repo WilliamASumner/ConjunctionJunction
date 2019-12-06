@@ -192,15 +192,22 @@ public class TrackControllerGUI extends Application {
         HBox modeHBox = new HBox(modeLabel,spacer3,modeBox);
 
 
-        occupancyCheckBox = new CheckBox("Override to Occupied");
+        Label occCheckBoxLabel = new Label("Override to Occupied");
+
+        Region occSpacer = new Region();
+        HBox.setHgrow(occSpacer,Priority.ALWAYS);
+
+        occupancyCheckBox = new CheckBox();
         occupancyCheckBox.setIndeterminate(false); // only true/false
         occupancyCheckBox.setOnAction(new OccupancyCheckBoxHandler());
+
+        HBox occCheckHBox = new HBox(occCheckBoxLabel,occSpacer,occupancyCheckBox);
 
 
         VBox MainControls = new VBox();
         MainControls.setPadding(new Insets(10));
         MainControls.setSpacing(8);
-        MainControls.getChildren().addAll(controllerHBox,blockHBox,modeHBox,occupancyCheckBox); // upper left
+        MainControls.getChildren().addAll(controllerHBox,blockHBox,modeHBox,occCheckHBox); // upper left
 
         GridPane.setConstraints(MainControls,0,0);
 
