@@ -33,7 +33,7 @@ public class ActionList {
         return false;
     }
 
-    public boolean equivalent(ActionList other) {
+    public boolean equivalentTo(ActionList other) {
         if (actions.size() != other.getActions().size())
             return false;
         int foundActions = 0;

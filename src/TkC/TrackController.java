@@ -125,16 +125,16 @@ public class TrackController
         parserOneOutput = runner.getEvalList();
 
 
-        //TkcLeftParser parserTwo = new TkcLeftParser(toks);
-        //ParseTree treeTwo = parser.program(); // parse!
-        //parser.setBuildParseTree(true);
+        TkcLeftParser parserTwo = new TkcLeftParser(toks);
+        ParseTree treeTwo = parser.program(); // parse!
+        parser.setBuildParseTree(true);
 
-        //ParseTreeWalker walkerTwo = new ParseTreeWalker();
-        //EvaluatorListener runnerTwo = new EvaluatorListener(parser,this);
-        //walkerTwo.walk(runnerTwo,tree);
-        //parserTwoOutput = runnerTwo.getEvalList();
+        ParseTreeWalker walkerTwo = new ParseTreeWalker();
+        EvaluatorListener runnerTwo = new EvaluatorListener(parser,this);
+        walkerTwo.walk(runnerTwo,tree);
+        parserTwoOutput = runnerTwo.getEvalList();
 
-        if (runner.encounteredError()) { // parsing error
+        if (runner.encounteredError() || runnerTwo.encounteredError()) { // parsing error
             encounteredError = true;
             plcInitialized = false;
             return false;
@@ -146,15 +146,14 @@ public class TrackController
     public void runPLC() {
         if (plcInitialized) { // a valid PLC has been loaded
             ActionList thingsToDo = parserOneOutput.evaluate(this); // find which actions need to be done
-            //ActionList thingsToDoCopy = parserTwoOutput.evaluate();
-            //if (thingsToDo.equivalentTo(thingsToDoCopy)) {
-            //  System.out.println("working voting");
-            //  thingsToDo.execute();
-            //} else {
-            //   System.out.println("ERROR VOTING");
-            // }
+            ActionList thingsToDoCopy = parserTwoOutput.evaluate(this);
+            if (thingsToDo.equivalentTo(thingsToDoCopy)) {
+              //System.out.println("working voting");
+              thingsToDo.execute();
+            } else {
+               //System.out.println("ERROR VOTING");
+            }
             thingsToDo.execute();
-
             return;
         }
     }
