@@ -128,7 +128,7 @@ public class MainUI extends Application {
                     ctc.update();
                     tkcm.update();
                     tkm.update();
-                    //tnm.update();
+                    tnm.update();
                     tnc.update();
                     try {
                         Thread.sleep(1); // FIXME, add variable timing
@@ -174,8 +174,6 @@ public class MainUI extends Application {
         @Override
         public void handle(ActionEvent event) {
             Stage newWindow = new Stage();
-            if (tkm == null)
-                tkm = new TkM(tnc);
             tkm.showGUI(newWindow);
 
         }
@@ -187,7 +185,7 @@ public class MainUI extends Application {
     class TrainModelButtonHandler implements EventHandler<ActionEvent>{
         @Override
         public void handle(ActionEvent event){
-            Stage newWindow = new Stage();
+            Stage newWindow = new Stage(); // new window
             tnm.showGUI(newWindow);
         }
     }
