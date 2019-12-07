@@ -72,11 +72,14 @@ public class CTC_GUI extends Application {
     private HBox hboxAdd1, hboxAdd2, hboxAdd3, bottomControlOfModule;
     private Button deleteT, dispatchT, importSched, queueT;
 	
-	public StackPane stackAddClock;
+	public StackPane stackAddClock, stackAddThroughput;
     
     public TableView table;
     
     private Timeline timeline;
+	public int curMultiplier = 1;
+	public String tkmThroughput = "0";
+	public ImageView trackLayoutView;
     
     ObservableList<String> queuedItems;
     ListView<String> queuedTrainsView; 
@@ -93,6 +96,7 @@ public class CTC_GUI extends Application {
     CTC newCTC;
 
     public CTCTrain tempQueuedTrain = null;
+	public CTCTrain tempDispatchedTrain = null;
     
     BorderPane borderPane;
     Stage newStage;
@@ -424,8 +428,8 @@ public class CTC_GUI extends Application {
                                 }
                                 selectedTrain.setItems(dataSelectedQueuedTrain);    
                         */
-						
-						
+					//	tempDispatchedTrain = new_val;
+/*						
 						CTCViewer = new Rectangle(250,300);
 						root = new AnchorPane();
 
@@ -458,7 +462,7 @@ public class CTC_GUI extends Application {
 							}
 						}
 
-						
+*/						
                         System.out.println("SELECTED: " + new_val + " IN DISPATCHED TRAINS VIEWER.");
                     }   
         });     
@@ -489,7 +493,10 @@ public class CTC_GUI extends Application {
         
 
         //CREATE CENTER VIEW--------------------------------------------------------------
+		// build track veiwer
 		borderPane.setCenter(buildCTCDispatchViewer());
+
+/*		
         String projectBaseDir = "file:"+System.getProperty("user.dir") + "/src"; // get base dir
         String imgPath = projectBaseDir + "/CTC/trackLayout.jpg";
         Image trackLayout = new Image(imgPath);
@@ -502,24 +509,19 @@ public class CTC_GUI extends Application {
         // put imageView into center of BorderPane
     //    borderPane.setCenter(imageView);
         //---------------------------------------------------------------
-
+*/
         
         //CREATE LEFT VIEW---------------------------------------------------------------
-		stackAddClock = updateBuildClock();
+		// construct the digitalClock pieces.
+		stackAddClock = updateByRebuildingClock();
         
-        // Create Throughput view
-        throughput = new Label("Throughput = 0");
+		// Create Throughput view
+		stackAddThroughput = updateByRebuildingThroughput();
         
-        // Create Stack pane to contain clock
-        StackPane stackAddThroughput = new StackPane();
-        Rectangle addRec2 = new Rectangle(250.0, 50.0);
-        addRec2.setFill(Color.BLACK);
-        stackAddThroughput.getChildren().addAll(addRec2, throughput);
-        stackAddThroughput.setAlignment(Pos.CENTER); 
-        
-        throughput.setTextFill(Color.WHITE);
-        throughput.setStyle("-fx-font-size: 2em;");
-        
+		// get track layout image
+		trackLayoutView = getTrackImage();
+		trackLayoutView.setFitWidth(250);
+        trackLayoutView.setFitHeight(300);	
 /*  
         imgPath = projectBaseDir + "/CTC/digital_clock.jpg";
         Image clock = new Image(imgPath);
@@ -528,7 +530,7 @@ public class CTC_GUI extends Application {
         imageView2.setFitWidth(250);
         imageView2.setFitHeight(150);
 */        
-        leftVbox = new VBox(0, stackAddClock, stackAddThroughput, imageView);
+        leftVbox = new VBox(0, stackAddClock, stackAddThroughput, trackLayoutView);
         leftVbox.setStyle(cssLayout);
         // put imageView2 into left of BorderPane
         borderPane.setLeft(leftVbox);
@@ -549,8 +551,7 @@ public class CTC_GUI extends Application {
         stage.show();
     }
 	
-	public StackPane updateBuildClock(){
-        // construct the digitalClock pieces.
+	public StackPane updateByRebuildingClock(){
         digitalClock = new Label();
         
         // Create Stack pane to contain clock
@@ -568,7 +569,7 @@ public class CTC_GUI extends Application {
 //        button.setText("Start/Pause");
 
         timeline = new Timeline(
-            new KeyFrame(Duration.seconds(1),
+            new KeyFrame(Duration.seconds(curMultiplier),
             new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent t) {
@@ -584,6 +585,33 @@ public class CTC_GUI extends Application {
         timeline.play();
 
 		return stackAddClock;
+	}
+	
+	public StackPane updateByRebuildingThroughput(){
+		throughput = new Label("Throughput = " + tkmThroughput);
+        
+        // Create Stack pane to contain clock
+        stackAddThroughput = new StackPane();
+        Rectangle addRec2 = new Rectangle(250.0, 50.0);
+        addRec2.setFill(Color.BLACK);
+        stackAddThroughput.getChildren().addAll(addRec2, throughput);
+        stackAddThroughput.setAlignment(Pos.CENTER); 
+        
+        throughput.setTextFill(Color.WHITE);
+        throughput.setStyle("-fx-font-size: 2em;");	
+		
+		return stackAddThroughput;
+	}
+	
+	public ImageView getTrackImage(){
+        String projectBaseDir = "file:"+System.getProperty("user.dir") + "/src"; // get base dir
+        String imgPath = projectBaseDir + "/CTC/trackLayout.jpg";
+        Image trackLayout = new Image(imgPath);
+        // create an ImageViw object
+        ImageView temp = new ImageView(trackLayout);
+//        imageView.setFitWidth(500);
+//        imageView.setFitHeight(350);
+		return temp;
 	}
     
     public AnchorPane buildCTCDispatchViewer(){

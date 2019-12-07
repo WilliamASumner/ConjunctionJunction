@@ -53,7 +53,17 @@ public class CTC{
     }
 
     @SuppressWarnings("unchecked")
-    public void update() {
+    public void update(double curSec) {
+		// update clock 
+/*		gui.stackAddClock = gui.updateByRebuildingClock();
+		// update throughput
+		// tkm.getThroughput();
+		gui.stackAddThroughput = gui.updateByRebuildingThroughput();
+		gui.leftVbox.getChildren().addAll(0, stackAddClock, stackAddThroughput, )
+		= new VBox(0, stackAddClock, stackAddThroughput, imageView);
+        leftVbox.setStyle(cssLayout);
+		gui.leftVbox = gui.
+*/		
 		// Check 'Select a Queued Train' view for any trains ready to auto dispatch
 		if(qT.size() != 0 && !gui.queuedTrainsView.getItems().isEmpty()){
 			for(int i = 0; i < qT.size(); i++){
@@ -104,6 +114,10 @@ public class CTC{
 				}
 			}
         }
+		
+		
+		
+		
     }
 
     public void showGUI(Stage primaryStage) {
