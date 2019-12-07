@@ -130,9 +130,9 @@ public class MainUI extends Application {
 
         new AnimationTimer() { // anonymous animation timer
             public void handle(long currentNanoTime) {
-                double deltaTSec = (currentNanoTime - startNanoTime)/1000000000.0;
+                //double deltaT = (currentNanoTime - startNanoTime)/1000000000.0;
                 if (updateBoolean) {
-					System.out.println(deltaTSec);
+
                     // update all modules in succession
                     ctc.update();
                     tkcm.update();
