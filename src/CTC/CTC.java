@@ -53,7 +53,7 @@ public class CTC{
     }
 
     @SuppressWarnings("unchecked")
-    public void update(double curSec) {
+    public void update() {
 		// update clock 
 /*		gui.stackAddClock = gui.updateByRebuildingClock();
 		// update throughput
