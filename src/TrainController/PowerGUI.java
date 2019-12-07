@@ -94,7 +94,7 @@ public class PowerGUI extends Application implements EventHandler<ActionEvent> {
            primaryStage.setTitle("Power Configuration UI");
 
            KiButton.setOnAction(new KiButtonHandler());
-           KpButton.setOnAction(new KiButtonHandler());
+           KpButton.setOnAction(new KpButtonHandler());
 
            //Labels to display the current Ki and Kp values
           // Label currKi = new Label("Current Ki: " + p.getKi());

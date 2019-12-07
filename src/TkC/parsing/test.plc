@@ -21,3 +21,11 @@ endif;
 if(N85.occupancy == occupied) then
     M76.switchstate=FORK;
 endif;
+
+if(C12.switchstate == FORK) then
+    D13.speed = 0.0;
+endif;
+
+if (D19.speed == 0.3) then
+    D20.occupancy = Occupied;
+endif;

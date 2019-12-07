@@ -2,7 +2,7 @@
  * Written by Will Sumner
 */
 
-grammar Tkc;
+grammar TkcLeft;
 
 program
 :
@@ -22,13 +22,13 @@ ifstatement
 
 conditionlist
 :
-      condition
-    | condition OR  conditionlist
-    | condition AND conditionlist
+      condition                            #singleCondition
+    | conditionlist OR  condition          #conditionListOr
+    | conditionlist AND condition          #conditionListAnd
 ;
 
 condition
-:  BlockID '.' attribute EEquals value
+:  BlockID '.' attribute comparison value
 ;
 
 statementlist
@@ -48,12 +48,17 @@ attribute // can only access occupancy or switch position
     | Occupancy
 ;
 
-assignedattribute // can change more
+comparison // equals or not
+:     EEquals
+    | NEquals
+;
+
+assignedattribute // can change switch,authority,crossing,occupancy
 :
       SwitchState
     | Authority
     | CrossingState
-    | Occupancy
+    | Speed
 ;
 
 // Possible values to check for and assign
@@ -65,7 +70,13 @@ value
     | CrossingStateValue
     | SignalStateValue
     | OccupancyValue
+    | SpeedValue
 ;
+
+BlockID
+: [A-Z] DIGIT+
+;
+
 
 SwitchStateValue
 :
@@ -92,10 +103,14 @@ OccupancyValue
     | UNOCCUPIED
 ;
 
-BlockID
-: [A-Z] DIGIT+
+SpeedValue
+:
+    FLOAT
 ;
 
+FLOAT
+: [0-9]*'.'[0-9]+
+;
 Whitespace
 : [ \r\n\t]+ -> skip
 ;
@@ -123,6 +138,11 @@ Period
 : '.'
 ;
 
+Speed
+: 'speed'
+| 'SPEED'
+;
+
 Occupancy
 : 'occupancy'
 | 'OCCUPANCY'
@@ -146,6 +166,10 @@ Authority
 
 EEquals
 : '=='
+;
+
+NEquals
+: '!='
 ;
 
 Equals
@@ -220,4 +244,5 @@ fragment RParen
 fragment DIGIT
 : [0-9]
 ;
+
 

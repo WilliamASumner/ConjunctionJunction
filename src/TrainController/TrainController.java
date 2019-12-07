@@ -83,6 +83,8 @@ public class TrainController{
         }
         getAuditedSpeed();
         getAuthority();
+        currSpeed = getCurrSpeed();
+        System.out.println("Speed = " +currSpeed);
         //myGUI.updatePowerCommand();
     }
 
@@ -98,8 +100,8 @@ public class TrainController{
     
 
     public double getCurrSpeed(){
-        //return tm.getVelocity();
-        return currSpeed;
+        return tm.getVelocity();
+      //  return currSpeed;
     }
 
     public double getSetSpeed(){
@@ -259,7 +261,10 @@ public class TrainController{
         //Power.calcPowerCommand(this);
         powerOut = Power.calcPowerCommand(this);
        // System.out.println("TRAIN: " + this + " - Power CMD " + powerOut);
-        powerOut = 0.01; // TODO FIXME
+        powerOut = 0.1; // TODO FIXME
+        if(eBrakeOn || sBrakeOn){
+            powerOut = 0; 
+        }
         return powerOut;
     }
 

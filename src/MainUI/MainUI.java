@@ -1,4 +1,5 @@
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.layout.HBox;
@@ -11,17 +12,16 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.event.EventHandler;
 import javafx.event.ActionEvent;
-//import javafx.event.WindowEvent;
+import javafx.stage.WindowEvent;
 
-import javafx.animation.AnimationTimer;
+import javafx.animation.KeyFrame;
+import javafx.util.Duration;
+import javafx.animation.Timeline;
 import java.io.FileNotFoundException;
 
 public class MainUI extends Application {
-    // fields
     
     static AnchorPane root;
-    private boolean isSetup = false;
-    private SetupUI setup = new SetupUI();
     
     private Label myLabel;
     private TextField departureTime;
@@ -38,44 +38,46 @@ public class MainUI extends Application {
     private Button trainModel = null;
     private Button trainController = null;
     private Button trackController = null;
-    private Button stopButton = null;
 
-    private boolean updateBoolean = true;
+    private Button stopButton = null;
+    private Button speedUpButton = null;
+    private Button speedDownButton = null;
+
+    private Timeline timeline;
+    private int timeMultiplier = 1;
+    private Label multiplierDisplay;
+
+    private boolean isStopped = false;
 
     private TkM tkm = null;
-    //private TrackModel tkm = null;
     private CTC_GUI ctcg = null;
     private CTC     ctc = null;
-    //private CTC ctcg = null;
-    //private TrainModel tnm = null;
-    //
+
    public static void main(String[] args) {
-        // launch CTC 
-        //CTC newCTC = new CTC();
-        // launch the app
         launch();
     }
 
-   public void completeSetup() {
-       CTC.setDisable(false);
-       trackController.setDisable(false);
-       trainController.setDisable(false);
-       trainModel.setDisable(false);
-   }
-    
+
     @Override
     public void start(Stage stage)  {
+        // Module instantiations
         tnc = new TrainControllerMain();
         tnm = new TrainModelMain();
-        tkm = new TkM(tnc); // initialize track model
         tkcm = new TrackControllerMain();
+        tkm = new TkM(tnc); // initialize track model
+        ctc = new CTC();
+
+        // Track Controller Connections
         tkcm.setTrackModel(tkm);
         tkcm.createControllers();
-        ctc = new CTC();
+        tkcm.setCTC(ctc);
+
+        //CTC Connections
         ctc.addTrackModel(tkm);
         ctc.addTrackController(tkcm);
+
+        //Track Model Connections
         tkm.addTrackController(tkcm);
-        tkcm.setCTC(ctc);
 
         Label programTitle = new Label("Conjunction Junction");
         Label programTitle2= new Label("Train Simulation Software");
@@ -112,46 +114,62 @@ public class MainUI extends Application {
         );
 
         stopButton = new Button("Stop");
-        stopButton.setOnAction(
-                new stopHandler()
-        );
+        stopButton.setOnAction(new stopHandler());
+
+        speedDownButton = new Button("Slow down");
+        speedDownButton.setOnAction(new slowDownHandler());
+
+        speedUpButton = new Button("Speedup");
+        speedUpButton.setOnAction(new speedUpHandler());
+
+        HBox timeControls = new HBox(speedDownButton,stopButton,speedUpButton);
+        timeControls.setAlignment(Pos.CENTER);
+
+        multiplierDisplay = new Label("1x");
+
 
         // Put the HBox, dispatchT, and myLabel in a VBox
-        VBox vbox = new VBox(10,programTitle,programTitle2, CTC, trackController, trackModel, trainModel, trainController,stopButton);
+        VBox vbox = new VBox(10,programTitle,programTitle2, CTC, trackController, trackModel, trainModel, trainController,timeControls,multiplierDisplay);
         // set the VBox's alignment to center
         vbox.setAlignment(Pos.CENTER);
+
+        stage.setOnCloseRequest(new closeWindowHandler());
 
         // Create a scene with the VBox as its root node
         Scene scene = new Scene(vbox,300,500);
         stage.setTitle("Train Sim Home Page");
         stage.setScene(scene);
 
+        timeMultiplier = 1;
+        updateTimeline();
+
         //final long startNanoTime = System.nanoTime();
 
-        new AnimationTimer() { // anonymous animation timer
-            public void handle(long currentNanoTime) {
-                //double deltaT = (currentNanoTime - startNanoTime)/1000000000.0;
-                if (updateBoolean) {
+        stage.show();
 
-                    // update all modules in succession
+    }
+
+    /**
+     * Update timer
+     */
+    private void updateTimeline() {
+        if (timeline != null)
+            timeline.stop();
+        timeline = new Timeline(
+            new KeyFrame(Duration.millis(1000.0/timeMultiplier), // default time is 1 second per update
+            new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent t) {
                     ctc.update();
                     tkcm.update();
                     tkm.update();
-                    //tnm.update();
+                    tnm.update();
                     tnc.update();
-                    try {
-                        Thread.sleep(1);
-                    } catch (Exception e) {
-                        System.out.println(e);
-                    }
                 }
-            }
-        }.start();
-
-
-        //stage.setOnCloseRequest(new closeWindowHandler());
-        stage.show();
-
+            })
+        );
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.play();
     }
 
     /**
@@ -186,8 +204,6 @@ public class MainUI extends Application {
         @Override
         public void handle(ActionEvent event) {
             Stage newWindow = new Stage();
-            if (tkm == null)
-                tkm = new TkM(tnc);
             tkm.showGUI(newWindow);
 
         }
@@ -199,7 +215,7 @@ public class MainUI extends Application {
     class TrainModelButtonHandler implements EventHandler<ActionEvent>{
         @Override
         public void handle(ActionEvent event){
-            Stage newWindow = new Stage();
+            Stage newWindow = new Stage(); // new window
             tnm.showGUI(newWindow);
         }
     }
@@ -218,19 +234,100 @@ public class MainUI extends Application {
     class stopHandler implements EventHandler<ActionEvent>{
         @Override
         public void handle(ActionEvent event){
-            if (updateBoolean)
-                stopButton.setText("Start");
-            else
+            if (isStopped) {
                 stopButton.setText("Stop");
-            updateBoolean = !updateBoolean;
+                timeline.play();
+            } else {
+                stopButton.setText("Start");
+                timeline.stop();
+            }
+            isStopped = !isStopped;
         }
     }
 
-    /*
+    class slowDownHandler implements EventHandler<ActionEvent>{
+        @Override
+        public void handle(ActionEvent event){
+            switch (timeMultiplier) {
+                case 4:
+                    timeMultiplier = 2;
+                    break;
+                case 10:
+                    timeMultiplier = 4;
+                    break;
+                case 20:
+                    timeMultiplier = 10;
+                    break;
+                case 25:
+                    timeMultiplier = 20;
+                    break;
+                case 50:
+                    timeMultiplier = 25;
+                    break;
+                case 100:
+                    timeMultiplier = 50;
+                    break;
+                default: // 1 -> 1, 2 -> 1
+                    timeMultiplier = 1;
+            }
+            multiplierDisplay.setText(timeMultiplier+"x");
+            updateTimeline();
+        }
+    }
+
+    class speedUpHandler implements EventHandler<ActionEvent>{
+        @Override
+        public void handle(ActionEvent event){
+            switch (timeMultiplier) {
+                case 1:
+                    timeMultiplier = 2;
+                    break;
+                case 2:
+                    timeMultiplier = 4;
+                    break;
+                case 4:
+                    timeMultiplier = 10;
+                    break;
+                case 10:
+                    timeMultiplier = 20;
+                    break;
+                case 20:
+                    timeMultiplier = 25;
+                    break;
+                case 25:
+                    timeMultiplier = 50;
+                    break;
+                case 50:
+                    timeMultiplier = 100;
+                    break;
+                case 100:
+                    timeMultiplier = 100;
+                    break;
+                default:
+                    timeMultiplier = 1;
+            }
+            multiplierDisplay.setText(timeMultiplier+"x");
+            updateTimeline();
+        }
+    }
+
     class closeWindowHandler implements EventHandler<WindowEvent> {
         @Override
         public void handle(WindowEvent event) {
-            stop();
+            System.out.println("Closing...");
+            try {
+                tkcm.stop(); // stop modules
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+
+            try { // close everything
+                Platform.exit();
+                System.exit(0);
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+
         }
-    }*/
+    }
 }

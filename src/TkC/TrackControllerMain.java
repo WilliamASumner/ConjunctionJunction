@@ -52,6 +52,16 @@ public class TrackControllerMain
         guis.remove(gui);
     }
 
+    public void stop() {
+        for (TrackControllerGUI gui : guis) {
+            try {
+                gui.stop();
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+        }
+    }
+
     public String[] getControllerNames() {
         return TkNames;
     }
@@ -129,7 +139,6 @@ public class TrackControllerMain
     public boolean sendSuggestedSpeed(String blockID,double speed) {
         TrackController t = findController(blockID);
         t.sendSuggestedSpeed(blockID,speed);
-        // add stuff
         return true;
     }
 
@@ -162,27 +171,19 @@ public class TrackControllerMain
         return controller;
     }
 
-    public TrackController blockToTrackController(String blockID) {
-        return null;
-    }
-
-    public boolean updateOccupiedBlocks() {
-        return true;
-    }
-    
-    public boolean verifySafeConditions() {
+    public boolean sendSuggestedSpeedAndAuthority(Block b, double speed, Block authorityBlock) {
+        b.setAuditedSpeed(speed);
+        b.setAuditedAuthority(authorityBlock);
         return true;
     }
 
-    public boolean sendSuggestedSpeedAndAuthority(int blockID, double speed, int blockIDAuthority) {
+    public boolean sendSuggestedSpeed(Block b, double speed) {
+        b.setAuditedSpeed(speed);
         return true;
     }
 
-    public boolean sendSuggestedSpeed(int blockID, double speed) {
-        return true;
-    }
-
-    public boolean sendSuggestedAuthority(int blockID, int blockIDAuthority) {
+    public boolean sendSuggestedAuthority(Block b, Block authorityBlock) {
+        b.setAuditedAuthority(authorityBlock);
         return true;
     }
 
@@ -190,10 +191,6 @@ public class TrackControllerMain
         ctc.updateOccupancy(blockID.getBlockID());
     }
 
-    /*public void requestNewTrain(String name, double speed, String authority, Block startBlock) {
-
-
-    }*/
     public void requestNewTrain(String name, double speed, String authority, Block startBlock) {
         startBlock.setIsOccupied(true);
         startBlock.setAuditedSpeed(speed);

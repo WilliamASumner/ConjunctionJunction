@@ -1,4 +1,5 @@
 import javafx.stage.Stage;
+import java.lang.Math;
 
 public class TrainModel {
 
@@ -22,7 +23,11 @@ public class TrainModel {
     double powerCommand = 0; //kiloWatts
     double grade = 0;
     double gravity = 9.81;
+	double radiansPerGrade = 0.015708;
+	double radians = radiansPerGrade*grade;
+	double rollingFrictionCoefficient = 0.002;
     static double kilosPerPound = 0.453592;
+	double maxpower; // max acceleration at 2/3 mass
 
 
     static double trainMass = 40.9; //tons
@@ -54,15 +59,14 @@ public class TrainModel {
     double velocity = 0;
     double altvelocity = 0.01;
     double acceleration = 0;
-    double timePerUpdate = 5;
+    double timePerUpdate = 1;
 
-    public void toggleEBrakeFail()
+    public boolean toggleEBrakeFail()
     {
         if (EbrakeFail)
         {
 
             EbrakeFail=false;
-            singleTNC.setSBrakeFailure(false);
 			System.out.println("EbrakeFail is now false: "+EbrakeFail);
         
 			
@@ -70,13 +74,15 @@ public class TrainModel {
         else
         {
             EbrakeFail=true;
-            singleTNC.setSBrakeFailure(true);
 			System.out.println("EbrakeFail is now true: "+EbrakeFail);
             Ebrake = false;
 			System.out.println("Ebrake is now false: "+Ebrake);
 
         }
-        return;
+        singleTNC.setEBrakeFailure(EbrakeFail);		
+		singleTNC.getGUI().setEbrake(Ebrake);//James 
+		myGUI.setEbrake(Ebrake);
+        return EbrakeFail;
     }
 
     public void toggleSBrakeFail()
@@ -159,11 +165,20 @@ public class TrainModel {
         currBlock.isOccupied = false;
         currBlock = currBlock.getNextBlock();
         currBlock.isOccupied = true;
-        grade = currBlock.getGrade();
+        grade = currBlock.getGrade();//setGrade(currBlock.getGrade());
         currBlockLength = currBlock.getLength();
         trackModel.updateOccupancy(currBlock);
         return;
     }
+	
+	private void setGrade(double newgrade)
+	{
+		grade = newgrade;
+		System.out.println("grade: "+grade);
+		radians = radiansPerGrade*grade;
+		System.out.println("radians: "+radians);
+		
+	}
 
     private double CalcAcceleration()
     {
@@ -181,6 +196,8 @@ public class TrainModel {
         }
         double retval = 1000 * powerCommand / (estimatedmass * velocity);
         double frictionforce = 0.5 * velocity;// Not sure if correct
+        //double frictionforce = rollingFrictionCoefficient*estimatedmass*gravity*Math.sin(radians);// Not sure if correct
+		//double drag = frictionforce + estimatedmass*gravity*Math.cos(radians);
         retval = retval - (frictionforce);
         return retval;
     }
@@ -194,11 +211,12 @@ public class TrainModel {
         {
             acceleration = CalcAcceleration();
         }
-        System.out.println("Acceleration of Train "+name+": "+acceleration);
-        System.out.println("Velocity of Train "+name+": "+velocity);
+       //System.out.println("Acceleration of Train "+name+": "+acceleration);
+       //System.out.println("Velocity of Train "+name+": "+velocity);
 
         velocity = velocity + acceleration * timePerUpdate;
         if (velocity <=0) velocity =0;
+		if(velocity >20) velocity =20;//max speed is 20 m/s
 
         distanceTraveled = distanceTraveled + velocity * timePerUpdate;
 
@@ -245,7 +263,7 @@ public class TrainModel {
 		return velocity;
 	}
 
-    public void toggleEBrake()
+    public boolean toggleEBrake()
     {
         if (EbrakeFail==false)
         {
@@ -261,9 +279,11 @@ public class TrainModel {
                 Ebrake = false;
 				System.out.println("Ebrake is now false: "+Ebrake);
             }
-            //return true;
+			
+			singleTNC.getGUI().setEbrake(Ebrake);//James 
+			myGUI.setEbrake(Ebrake);
         }
-        return;// false;
+        return Ebrake;// false;
     }
 
     public void toggleSBrake()

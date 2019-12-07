@@ -78,6 +78,7 @@ public class TrainModelMainGUI extends Application implements EventHandler<Actio
       }
 
       //Called from TrainModelMain every time a train is created
+      @SuppressWarnings("unchecked")
       public void updateList(){
         trainMenu.getItems().removeAll(trainMenu.getItems());
         TrainModel[] tnmTempArray;

@@ -7,34 +7,26 @@ JARCMD         := jar -cvf
 RM              = rm -f
 MKDIR_P         = mkdir -p
 
-MAKE_DIR        = $(PWD)
-MAKE_DIR        = .
 BIN_DIR         = $(addsuffix /bin,$(MAKE_DIR))
-BIN_DIR         = ./bin
+BIN_DIR         = $(MAKE_DIR)/bin
 SEP             =;
 
 ifdef OS # windows
 	JAVAFX_PATH    = $(MAKE_DIR)/lib/javafx-sdk-11.0.2-windows/lib
+	MAKE_DIR       = .
 	SEP            = ;
 else
 	JAVAFX_PATH    = $(MAKE_DIR)/lib/javafx-sdk-11.0.2-unix/lib
+	MAKE_DIR       = ${CURDIR}
 	SEP            = :
 endif
 
+################# FLAG VARS ##################
 #NOTE: must be comma separated
 JAVAFX_MODULES  = javafx.controls,javafx.fxml
 JFLAGS         := --module-path=$(JAVAFX_PATH) --add-modules $(JAVAFX_MODULES)
 ANTLRPATH=$(MAKE_DIR)/lib/antlr-4.7.2-complete.jar
-
-############### MODULE VARS ##################
-MODULES         = TkC TkM TrC TrM CTC
-
-######### TRACK CONTROLLER #############
-TKC_MODULEFILES   = ./src/TkC/*.class
-MAIN_MODULEFILES   = ./src/MainUI/*.class
-
-#JAVAFILES      := $(addsuffix .java,$(MODULES))
-#CLASSFILES     = $(addsuffix .class,$(MODULES))
+LINT_FLAGS=-Xlint:unchecked -Xlint:deprecation
 
 ################# TEST VARS ##################
 
@@ -57,43 +49,41 @@ TTARGET        := HelloWorld
 
 default: src.txt $(TARGET_CLASS)
 
+run: src.txt $(TARGET_CLASS)
+	$(RUNCMD) $(JFLAGS) -cp "$(BIN_DIR)$(SEP)$(ANTLRPATH)" $(TARGET)
+#	$(RUNCMD) $(JFLAGS) -cp "$(BIN_DIR)" $(TARGET)
+
+# Result is dependent on all files in src dir
+$(TARGET_CLASS): $(shell find ./src -type f) src.txt
+#	$(CC) $(JFLAGS) -d $(BIN_DIR) @src.txt
+	$(CC) $(JFLAGS) $(LINT_FLAGS) -cp "$(BIN_DIR)$(SEP)$(ANTLRPATH)" -d $(BIN_DIR) @src.txt
+
+# Make antlr files if they don't already exist
+$(MAKE_DIR)/src/TkC/parsing/TkcParser.java: $(MAKE_DIR)/src/TkC/parsing/Tkc.g4 $(MAKE_DIR)/src/TkC/parsing/TkcLeft.g4
+	java -Xmx500M -cp ".$(SEP)$(ANTLRPATH)$(SEP)$(MAKE_DIR)/src/TkC/parsing/" org.antlr.v4.Tool $(MAKE_DIR)/src/TkC/parsing/Tkc.g4 -o $(MAKE_DIR)/src/TkC/parsing/
+	java -Xmx500M -cp ".$(SEP)$(ANTLRPATH)$(SEP)$(MAKE_DIR)/src/TkC/parsing/" org.antlr.v4.Tool $(MAKE_DIR)/src/TkC/parsing/TkcLeft.g4 -o $(MAKE_DIR)/src/TkC/parsing/
+
+# java build text
+src.txt: $(shell find ./src -type f) $(MAKE_DIR)/src/TkC/parsing/TkcParser.java
+	find ./src -name "*.java" > src.txt
+
+
+runv: src.txt $(TARGET_CLASS) # make part of project
+	$(RUNCMD) $(JFLAGS) -cp "$(BIN_DIR)$(SEP)$(ANTLRPATH)" $(VTARGET)
+
+runtest: $(TTARGET)
+	$(RUNCMD) $(JFLAGS) $(TTARGET)
+
 testrun: $(TESTCLASSFILES)
 	$(RUNCMD) $(JFLAGS) -cp "$(BIN_DIR)" $(TESTTARGET)
 
 $(TESTCLASSFILES): $(TESTFILE)
 	$(CC) $(JFLAGS) -d $(BIN_DIR) $(TESTFILE)
 
-run: src.txt $(TARGET_CLASS)
-	$(RUNCMD) $(JFLAGS) -cp "$(BIN_DIR)$(SEP)$(ANTLRPATH)" $(TARGET)
-#	$(RUNCMD) $(JFLAGS) -cp "$(BIN_DIR)" $(TARGET)
 
-# java build text
-src.txt: ./src/
-	find ./src -name "*.java" > src.txt
-
-
-#$(TARGET_CLASS):
-#	@$(MAKE) -C ./src/
-#	@$(MAKE) -C ./src/TkC
-#	#@$(MAKE) -C ./src/TkM
-#	#@$(MAKE) -C ./src/CTC
-#	#@$(MAKE) -C ./src/TnC
-#	#@$(MAKE) -C ./src/TnM
-#	@$(MAKE) -C ./src/MainUI default
-
-# Result is dependent on all files in src dir
-$(TARGET_CLASS): $(shell find ./src -type f)
-#	$(CC) $(JFLAGS) -d $(BIN_DIR) @src.txt
-	$(CC) $(JFLAGS) -Xlint:unchecked  -cp "$(BIN_DIR)$(SEP)$(ANTLRPATH)" -d $(BIN_DIR) @src.txt
-
-runtest: $(TTARGET)
-	$(RUNCMD) $(JFLAGS) $(TTARGET)
-
-#javafx test target
-$(TTARGET): $(TESTFILE)
-	$(CC) $(JFLAGS) $(TESTFILE)
 
 clean:
 	$(RM) $(BIN_DIR)/*.class
 	$(RM) *.class
 	$(RM) src.txt
+	$(RM) $(MAKE_DIR)/src/TkC/parsing/Tkc*.{java,interp,tokens,class}
