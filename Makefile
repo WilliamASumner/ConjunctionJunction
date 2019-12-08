@@ -15,12 +15,12 @@ ifdef OS # windows
 	JAVAFX_PATH    = $(MAKE_DIR)/lib/javafx-sdk-11.0.2-windows/lib
 	MAKE_DIR       = $(shell cygpath -ma .)
 	SEP            = ;
-	PACKAGE       := cjunction
+	PACKAGE_NAME  := cjunction
 else # unix/linux
 	JAVAFX_PATH    = $(MAKE_DIR)/lib/javafx-sdk-11.0.2-unix/lib
 	MAKE_DIR       = ${CURDIR}
 	SEP            = :
-	PACKAGE       := cjunction-unix
+	PACKAGE_NAME  := cjunction-unix
 endif
 
 ################# PATH/FLAG VARS ##################
@@ -33,17 +33,22 @@ PARSING_PATH   :=$(MAKE_DIR)/src/TkC/parsing/
 LINT_FLAGS=-Xlint:unchecked -Xlint:deprecation
 
 ################# TARGET VARS ################
+### Package Name
+PACKAGE       := cjunction
 
 ### ONE JAR
 ONEJAR_ROOT    := $(MAKE_DIR)/root
 ONEJAR_LIBS    := $(ONEJAR_ROOT)/lib/$(ANTLR)
 
+### Target files
 TARGET         := MainUI
 TARGET_CLASS   := $(MAKE_DIR)/bin/$(PACKAGE)/$(TARGET).class
-PACKAGE_DIR    := $(MAKE_DIR)/$(PACKAGE)/ConjunctionJunctionProject
-DELIVERABLE    := $(PACKAGE).zip
+PACKAGE_DIR    := $(MAKE_DIR)/$(PACKAGE_NAME)/ConjunctionJunctionProject
+DELIVERABLE    := $(PACKAGE_NAME).zip
 TARGET_JAR     := $(ONEJAR_ROOT)/main/$(PACKAGE)-module.jar
 FINAL_JAR      := $(PACKAGE_DIR)/$(PACKAGE).jar
+
+### Phony
 .PHONY         := clean runtest check_status
 
 ################# ZIP AND CP Commands      ################
