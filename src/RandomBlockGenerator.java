@@ -1,3 +1,5 @@
+package cjunction; // conjunction junction package
+
 import java.util.Random;
 import java.util.ArrayList;
 

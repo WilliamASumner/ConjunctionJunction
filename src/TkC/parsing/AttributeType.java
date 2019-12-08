@@ -1,3 +1,4 @@
+package cjunction;
 public enum AttributeType {
     OCCUPANCY,
     SPEED,
