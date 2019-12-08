@@ -15,10 +15,12 @@ ifdef OS # windows
 	JAVAFX_PATH    = $(MAKE_DIR)/lib/javafx-sdk-11.0.2-windows/lib
 	MAKE_DIR       = $(shell cygpath -ma .)
 	SEP            = ;
+	PACKAGE       := cjunction
 else # unix/linux
 	JAVAFX_PATH    = $(MAKE_DIR)/lib/javafx-sdk-11.0.2-unix/lib
 	MAKE_DIR       = ${CURDIR}
 	SEP            = :
+	PACKAGE       := cjunction-unix
 endif
 
 ################# PATH/FLAG VARS ##################
@@ -34,11 +36,9 @@ LINT_FLAGS=-Xlint:unchecked -Xlint:deprecation
 
 ### ONE JAR
 ONEJAR_ROOT    := $(MAKE_DIR)/root
-
 ONEJAR_LIBS    := $(ONEJAR_ROOT)/lib/$(ANTLR)
 
 TARGET         := MainUI
-PACKAGE        := cjunction
 TARGET_CLASS   := $(MAKE_DIR)/bin/$(PACKAGE)/$(TARGET).class
 PACKAGE_DIR    := $(MAKE_DIR)/$(PACKAGE)/ConjunctionJunctionProject
 DELIVERABLE    := $(PACKAGE).zip
