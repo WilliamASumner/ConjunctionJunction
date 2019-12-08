@@ -20,11 +20,10 @@ else # unix/linux
 	MAKE_DIR       = ${CURDIR}
 	SEP            = :
 endif
-MAKE_DIR_ABS       = ${CURDIR}
 
 ################# PATH/FLAG VARS ##################
 #NOTE: must be comma separated
-JAVAFX_MODULES  = javafx.controls,javafx.fxml
+JAVAFX_MODULES  = javafx.controls
 JFLAGS         := --module-path=$(JAVAFX_PATH) --add-modules $(JAVAFX_MODULES)
 ANTLR          := antlr-4.7.2-complete.jar
 ANTLR_LIB      :=$(MAKE_DIR)/lib/$(ANTLR)
@@ -45,12 +44,12 @@ PACKAGE_DIR    := $(MAKE_DIR)/$(PACKAGE)/ConjunctionJunctionProject
 DELIVERABLE    := $(PACKAGE).zip
 TARGET_JAR     := $(ONEJAR_ROOT)/main/$(PACKAGE)-module.jar
 FINAL_JAR      := $(PACKAGE_DIR)/$(PACKAGE).jar
-.PHONY         := clean runtest
+.PHONY         := clean runtest check_status
 
 ################# ZIP AND CP Commands      ################
 ifdef OS
 	ZIPCMD     := cd $(PACKAGE_DIR)/.. && zip -9 -r -y -q $(DELIVERABLE) . && mv $(DELIVERABLE) ../
-	DLLCP       = cp $(JAVAFX_PATH)/../bin/* $(ONEJAR_ROOT)/lib/
+	DLLCP       = cp -r $(JAVAFX_PATH)/../bin/* $(PACKAGE_DIR)
 else
 	ZIPCMD     := tar -czf $(DELIVERABLE) -C $(PACKAGE_DIR)/.. .
 endif
@@ -58,7 +57,10 @@ endif
 
 ################# Build Directives  ################
 
-default: src.txt $(TARGET_CLASS)
+default: check_status src.txt $(TARGET_CLASS)
+
+check_status:
+	./check.sh
 
 run: src.txt $(TARGET_CLASS)
 	$(RUNCMD) $(JFLAGS) -cp "$(BIN_DIR)$(SEP)$(ANTLR_LIB)" $(PACKAGE).$(TARGET)
@@ -113,9 +115,9 @@ $(ONEJAR_ROOT):
 
 # Copy required libraries to the OneJar directory
 $(ONEJAR_LIBS): $(ONEJAR_ROOT)
-	cp $(JAVAFX_PATH)/* $(ONEJAR_ROOT)/lib/
-	$(DLLCP)
+	cp -r $(JAVAFX_PATH)/ $(ONEJAR_ROOT)/lib/
 	cp $(ANTLR_LIB) $(ONEJAR_ROOT)/lib/
+	$(DLLCP)
 
 # Run partial command
 # run with runv VTARGET=class-name
