@@ -257,7 +257,7 @@ public class TrainControllerGUI extends Application implements EventHandler<Acti
         primaryStage.show();
        }
 	   
-	   public void setEbrake(boolean newEbrake)
+	public void setEbrake(boolean newEbrake)
 	{
 		 if(newEbrake){
                     eBrake.setText("E Brake: Currently ON");
@@ -266,6 +266,18 @@ public class TrainControllerGUI extends Application implements EventHandler<Acti
                 else{
                     eBrake.setText("E Brake: Currently OFF");
                     System.out.println("TrainControllerGUI: Turning Emergency Brake OFF...");
+                }
+	}  
+	
+	public void setSbrake(boolean newSbrake)
+	{
+		 if(newSbrake){
+                    sBrake.setText("S Brake: Currently ON");
+                    System.out.println("TrainControllerGUI: Turning Service Brake ON...");
+                }
+                else{
+                    sBrake.setText("S Brake: Currently OFF");
+                    System.out.println("TrainControllerGUI: Turning Service Brake OFF...");
                 }
 	}
 
@@ -295,15 +307,6 @@ public class TrainControllerGUI extends Application implements EventHandler<Acti
         public void handle(ActionEvent event){
             boolean currentState;
                 currentState = tnc.toggleServiceBrake();
-                if(currentState){
-                    sBrake.setText("S Brake: Currently ON");
-                    System.out.println("TrainControllerGUI: Turning Service Brake ON...");
-                }
-                else{
-                    sBrake.setText("S Brake: Currently OFF");
-                    System.out.println("TrainControllerGUI: Turning Service Brake OFF...");
-
-                }
         }
       }
       class lightsHandler implements EventHandler<ActionEvent>{

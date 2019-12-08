@@ -87,58 +87,55 @@ public class TrainModel {
         return EbrakeFail;
     }
 
-    public void toggleSBrakeFail()
+    public boolean toggleSBrakeFail()
     {
         if (SbrakeFail)
         {
             SbrakeFail=false;
-            singleTNC.setSBrakeFailure(false);
 			System.out.println("TrainModel: SbrakeFail is now false: "+SbrakeFail);
         }
         else
         {
             SbrakeFail=true;
             Sbrake = false;
-            singleTNC.setSBrakeFailure(true);
 			System.out.println("TrainModel: SbrakeFail is now true: "+SbrakeFail);
 			System.out.println("TrainModel: Sbrake is now false: "+Sbrake);
         }
-        return;
+		singleTNC.setSBrakeFailure(SbrakeFail);		
+		singleTNC.getGUI().setSbrake(Sbrake);//James 
+        return SbrakeFail;
     }
-    public void toggleSignalFail()
+    public boolean toggleSignalFail()
     {
         if (signalFail)
         {
             signalFail=false;
-            singleTNC.setSignalFailure(false);
 			System.out.println("TrainModel: signalFail is now false: "+signalFail);
         }
-
         else
         {
             signalFail=true;
-            singleTNC.setSignalFailure(true);
 			System.out.println("TrainModel: signalFail is now true: "+signalFail);
         }
-        return;
+        singleTNC.setSignalFailure(signalFail);
+        return signalFail;
     }
-    public void toggleEngineFail()
+    public boolean toggleEngineFail()
     {
         if (engineFail)
         {
             engineFail=false;
-            singleTNC.setEngineFailure(false);
 			System.out.println("TrainModel: engineFail is now false: "+engineFail);
         }
 
         else
         {
             engineFail=true;
-            singleTNC.setEngineFailure(true);
 			System.out.println("TrainModel: engineFail is now true: "+engineFail);
             powerCommand = 0;
         }
-        return;
+		singleTNC.setEngineFailure(engineFail);
+        return engineFail;
     }
 
     /////constructor
@@ -288,7 +285,7 @@ public class TrainModel {
         return Ebrake;// false;
     }
 
-    public void toggleSBrake()
+    public boolean toggleSBrake()
     {
         if (SbrakeFail==false && Ebrake==false)
         {
@@ -303,9 +300,12 @@ public class TrainModel {
                 Sbrake = false;
 				System.out.println("TrainModel: Sbrake is now false: "+Sbrake);
             }
+			
+			singleTNC.getGUI().setSbrake(Sbrake);//James 
+			//myGUI.setSbrake(Sbrake);
             //return true;
         }
-        return;// false;
+        return Sbrake;// false;
     }
 	
 	
