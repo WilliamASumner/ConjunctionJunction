@@ -8,7 +8,8 @@ else
     package="/tmp/pack.txt"
     temp="/tmp/temp"
 
-    for file in ${files[@]}; do
+    for file in ${files[@]}
+    do
         cat $package $file > $temp
         mv $temp ./$file
     done
