@@ -47,9 +47,10 @@ TARGET_JAR     := $(ONEJAR_ROOT)/main/$(PACKAGE)-module.jar
 FINAL_JAR      := $(PACKAGE_DIR)/$(PACKAGE).jar
 .PHONY         := clean runtest
 
-################# ZIP Commands      ################
+################# ZIP AND CP Commands      ################
 ifdef OS
 	ZIPCMD     := cd $(PACKAGE_DIR)/.. && zip -9 -r -y -q $(DELIVERABLE) . && mv $(DELIVERABLE) ../
+	DLLCP       = cp $(JAVAFX_PATH)/../bin/* $(ONEJAR_ROOT)/lib/
 else
 	ZIPCMD     := tar -czf $(DELIVERABLE) -C $(PACKAGE_DIR)/.. .
 endif
@@ -81,11 +82,11 @@ $(MAKE_DIR)/src/TkC/parsing/TkcParser.java: $(MAKE_DIR)/src/TkC/parsing/Tkc.g4 $
 package: $(DELIVERABLE)
 
 # Generate zipped deliverable, depends on final jar
-$(DELIVERABLE): $(FINAL_JAR)
+$(DELIVERABLE): $(PACKAGE_DIR) $(FINAL_JAR)
 	$(ZIPCMD)
 
 # Generate final app jar, depends on general target jar and package dir (for output)
-$(FINAL_JAR): $(PACKAGE_DIR) $(TARGET_JAR) $(ONEJAR_LIBS)
+$(FINAL_JAR): $(TARGET_JAR) $(ONEJAR_LIBS)
 	cp $(MAKE_DIR)/lib/one-jar-appgen-0.97.jar $(ONEJAR_ROOT)
 	cp $(MAKE_DIR)/manifests/boot-manifest.mf $(ONEJAR_ROOT)
 	cd $(ONEJAR_ROOT) && jar xf one-jar-appgen-0.97.jar
@@ -113,6 +114,7 @@ $(ONEJAR_ROOT):
 # Copy required libraries to the OneJar directory
 $(ONEJAR_LIBS): $(ONEJAR_ROOT)
 	cp $(JAVAFX_PATH)/* $(ONEJAR_ROOT)/lib/
+	$(DLLCP)
 	cp $(ANTLR_LIB) $(ONEJAR_ROOT)/lib/
 
 # Run partial command
@@ -129,4 +131,4 @@ clean:
 	$(RM) -r $(BIN_DIR)/$(PACKAGE)
 	$(RM) -r $(PACKAGE_DIR)
 	$(RM) $(MAKE_DIR)/$(DELIVERABLE)
-	$(RM) -r $(PACKAGE_DIR)
+	$(RM) -r $(PACKAGE)
