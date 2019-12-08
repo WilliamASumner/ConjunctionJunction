@@ -3,3 +3,6 @@ bin/
 .*.un~
 .*.swp
 src.txt
+root/
+cjunction/
+cjunction.zip
