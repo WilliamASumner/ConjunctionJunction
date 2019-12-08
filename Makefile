@@ -13,13 +13,14 @@ SEP             =;
 
 ifdef OS # windows
 	JAVAFX_PATH    = $(MAKE_DIR)/lib/javafx-sdk-11.0.2-windows/lib
-	MAKE_DIR       = .
+	MAKE_DIR       = $(shell cygpath -ma .)
 	SEP            = ;
 else # unix/linux
 	JAVAFX_PATH    = $(MAKE_DIR)/lib/javafx-sdk-11.0.2-unix/lib
 	MAKE_DIR       = ${CURDIR}
 	SEP            = :
 endif
+MAKE_DIR_ABS       = ${CURDIR}
 
 ################# PATH/FLAG VARS ##################
 #NOTE: must be comma separated
@@ -34,6 +35,7 @@ LINT_FLAGS=-Xlint:unchecked -Xlint:deprecation
 
 ### ONE JAR
 ONEJAR_ROOT    := $(MAKE_DIR)/root
+
 ONEJAR_LIBS    := $(ONEJAR_ROOT)/lib/$(ANTLR)
 
 TARGET         := MainUI
@@ -44,6 +46,13 @@ DELIVERABLE    := $(PACKAGE).zip
 TARGET_JAR     := $(ONEJAR_ROOT)/main/$(PACKAGE)-module.jar
 FINAL_JAR      := $(PACKAGE_DIR)/$(PACKAGE).jar
 .PHONY         := clean runtest
+
+################# ZIP Commands      ################
+ifdef OS
+	ZIPCMD     := cd $(PACKAGE_DIR)/.. && zip -9 -r -y -q $(DELIVERABLE) . && mv $(DELIVERABLE) ../
+else
+	ZIPCMD     := tar -czf $(DELIVERABLE) -C $(PACKAGE_DIR)/.. .
+endif
 
 
 ################# Build Directives  ################
@@ -73,7 +82,7 @@ package: $(DELIVERABLE)
 
 # Generate zipped deliverable, depends on final jar
 $(DELIVERABLE): $(FINAL_JAR)
-	tar -czf $(DELIVERABLE) -C $(PACKAGE_DIR)/.. .
+	$(ZIPCMD)
 
 # Generate final app jar, depends on general target jar and package dir (for output)
 $(FINAL_JAR): $(PACKAGE_DIR) $(TARGET_JAR) $(ONEJAR_LIBS)
