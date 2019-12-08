@@ -1,6 +1,9 @@
 # ConjunctionJunction
 Train Simulator for Team Conjunction Junction
 
+## Installation Guide
+* See the [Installation Guide](https://docs.google.com/document/d/1zlLPpr5dfsBHH6GLrXF_E6YXHDVTAXLtOWcBkD1vDFg/edit?usp=sharing)
+
 ## To run test javafx app
 * Make sure you have [OpenJDK-13](https://jdk.java.net/13)
 
