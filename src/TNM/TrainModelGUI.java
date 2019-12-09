@@ -16,8 +16,15 @@ public class TrainModelGUI extends Application {
     double mydubSpeed = 0.0;
 	boolean[] Doors = new boolean[8];
     TrainModel tnm;
+	int failures = 0;
 	
 	FlowPane flowpane;
+	
+	//Labels (just info that is displayed)
+	Label currentSpeedLabel = new Label("Current Speed is" + mydubSpeed + " m/s\n");
+	Label currentPowerLabel = new Label("Current Power is" + mydubSpeed + " kW\n");
+	Label currentPassLabel = new Label("Current Passengers is\n");
+	Label currentFailsLabel = new Label("Failures: " + failures + " \n");
 
 	//Buttons on TrainModelGUI
     Button EbrakeFailButton = new Button("EBrake: Working");
@@ -26,8 +33,6 @@ public class TrainModelGUI extends Application {
     Button SignalFailButton = new Button("Signal: Working");
 	
     Button eBrake = new Button("E BRAKE: Currently OFF");
-	
-	Label currentFailsLabel;
 
     public TrainModelGUI(TrainModel TNM)// String inName, String inBlock, double inSpeed)
     {
@@ -75,17 +80,31 @@ public class TrainModelGUI extends Application {
         SignalFailButton.setMinWidth(200);
         SignalFailButton.setMaxWidth(200);
 		
+		//Main Flowpane
 		flowpane = new FlowPane();
 		
+		//speed flowpane
+		FlowPane speed = new FlowPane();
+		speed.setStyle("-fx-border-color: black");
+		speed.getChildren().add(currentSpeedLabel); //add failures to brake flowpane
+        flowpane.getChildren().add(speed); //add brake flowpane to main flowpane
+		
+		//failures text flowpane
+		FlowPane fail1 = new FlowPane();
+		fail1.setStyle("-fx-border-color: black");		
+		fail1.getChildren().add(currentFailsLabel); //add failures to brake flowpane
+        flowpane.getChildren().add(fail1); //add brake flowpane to main flowpane
+		
+		//failure buttons flowpane
 		FlowPane fail = new FlowPane();
-		fail.setStyle("-fx-border-color: black");
+		fail.setStyle("-fx-border-color: black");		
 		fail.getChildren().add(EbrakeFailButton); //add EbrakeFailButton to brake flowpane
 		fail.getChildren().add(SbrakeFailButton); //add SbrakeFailButton to brake flowpane
 		fail.getChildren().add(EngineFailButton); //add EngineFailButton to brake flowpane
-		fail.getChildren().add(SignalFailButton); //add SignalFailButton to brake flowpane
+		fail.getChildren().add(SignalFailButton); //add SignalFailButton to brake flowpane		
         flowpane.getChildren().add(fail); //add brake flowpane to main flowpane
 		
-		
+		//ebrake button flowpane
         FlowPane brake = new FlowPane();
         brake.setStyle("-fx-border-color: black");
 		brake.getChildren().add(eBrake); //add eBrake to brake flowpane
@@ -173,12 +192,15 @@ public class TrainModelGUI extends Application {
 			{
 				EbrakeFailButton.setText("EBrake: Failed");
 				EbrakeFailButton.setStyle("-fx-text-fill: red");
+				failures++;
 			}
             else
 			{
 				EbrakeFailButton.setText("EBrake: Working");
-				EbrakeFailButton.setStyle("-fx-text-fill: black");				
+				EbrakeFailButton.setStyle("-fx-text-fill: black");
+				failures--;				
 			}
+			currentFailsLabel.setText("Failures: " + failures + " \n");
         }
     }
     
@@ -193,12 +215,15 @@ public class TrainModelGUI extends Application {
 			{
 				SbrakeFailButton.setText("SBrake: Failed");
 				SbrakeFailButton.setStyle("-fx-text-fill: red");
+				failures++;
 			}
             else
 			{
 				SbrakeFailButton.setText("SBrake: Working");
-				SbrakeFailButton.setStyle("-fx-text-fill: black");				
+				SbrakeFailButton.setStyle("-fx-text-fill: black");
+				failures--;				
 			}
+			currentFailsLabel.setText("Failures: " + failures + " \n");
         }
     }
     
@@ -213,12 +238,15 @@ public class TrainModelGUI extends Application {
 			{
 				EngineFailButton.setText("Engine: Failed");
 				EngineFailButton.setStyle("-fx-text-fill: red");
+				failures++;
 			}
             else
 			{
 				EngineFailButton.setText("Engine: Working");
-				EngineFailButton.setStyle("-fx-text-fill: black");				
+				EngineFailButton.setStyle("-fx-text-fill: black");
+				failures--;				
 			}
+			currentFailsLabel.setText("Failures: " + failures + " \n");
         }
     }
     
@@ -233,21 +261,22 @@ public class TrainModelGUI extends Application {
 			{
 				SignalFailButton.setText("Signal: Failed");
 				SignalFailButton.setStyle("-fx-text-fill: red");
+				failures++;
 			}
             else
 			{
 				SignalFailButton.setText("Signal: Working");
-				SignalFailButton.setStyle("-fx-text-fill: black");				
+				SignalFailButton.setStyle("-fx-text-fill: black");
+				failures--;				
 			}
+			currentFailsLabel.setText("Failures: " + failures + " \n");
         }
     }
     
-	public void handle(ActionEvent event)
-    {
-        if(event.getSource()==EbrakeFailButton)
-        {
-            tnm.toggleEBrakeFail();
-        }
-    }
+	public void update()
+	{
+		//System.out.println("TrainModelGUI: UPDATE IS WORKING");
+		return;
+	}
 }
 

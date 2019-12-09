@@ -79,7 +79,7 @@ public class TrainModel {
 			System.out.println("TrainModel: Ebrake is now false: "+Ebrake);
 
         }
-        singleTNC.setEBrakeFailure(EbrakeFail);		
+        //singleTNC.setEbrakeFailure(EbrakeFail);		
 		singleTNC.getGUI().setEbrake(Ebrake);//James 
 		myGUI.setEbrake(Ebrake);
         return EbrakeFail;
@@ -99,7 +99,7 @@ public class TrainModel {
 			System.out.println("TrainModel: SbrakeFail is now true: "+SbrakeFail);
 			System.out.println("TrainModel: Sbrake is now false: "+Sbrake);
         }
-		singleTNC.setSBrakeFailure(SbrakeFail);		
+		//singleTNC.setSbrakeFailure(SbrakeFail);		
 		singleTNC.getGUI().setSbrake(Sbrake);//James 
         return SbrakeFail;
     }
@@ -224,6 +224,8 @@ public class TrainModel {
 			AuditedAuthority = currBlock.getAuditedAuthority();
 			AuditedSpeed = currBlock.getAuditedSpeed();
         }
+		myGUI.currentSpeedLabel.setText("Speed: " + velocity + " \n");
+		myGUI.update();
         return;
     }
 
