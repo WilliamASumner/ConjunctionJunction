@@ -24,14 +24,20 @@ public class TrainModelGUI extends Application {
 	FlowPane flowpane;
 	
 	//Labels (just info that is displayed)
+		//speed labels
 	Label currentSpeedLabel = new Label("Current Speed is" + mydubSpeed + " m/s\n");
 	Label currentBlockLabel = new Label("Current block");
+	Label currentDistLabel = new Label("Current block");
+	Label blockLengthLabel = new Label("Current block");
 	Label currentAccelerationLabel = new Label("Current acceler");
 	Label currentMassLabel = new Label("Mass:\n");
 	Label currentDragLabel = new Label("Mass:\n");
 	Label currentPowerLabel = new Label("Current Power is" + mydubSpeed + " kW\n");
 	Label currentPassLabel = new Label("Current Passengers is\n");
 	Label currentFailsLabel = new Label("Failures: " + failures + " \n");
+	
+		//internal labels
+	Label Temp_Label = new Label("Current block");
 
 	//Buttons on TrainModelGUI
     Button EbrakeFailButton = new Button("EBrake: Working");
@@ -90,7 +96,7 @@ public class TrainModelGUI extends Application {
 		//Main Flowpane
 		flowpane = new FlowPane();
 		
-		//speed flowpane
+		//speed VBOX
 		VBox speed = new VBox();
 		speed.setStyle("-fx-border-color: black");
 		speed.getChildren().add(currentSpeedLabel); //add speedlabel to brake flowpane
@@ -99,8 +105,16 @@ public class TrainModelGUI extends Application {
 		speed.getChildren().add(currentAccelerationLabel); //add speedlabel to brake flowpane
 		speed.getChildren().add(currentDragLabel); //add speedlabel to brake flowpane
 		speed.getChildren().add(currentBlockLabel); //add speedlabel to brake flowpane
+		speed.getChildren().add(currentDistLabel); //add speedlabel to brake flowpane
+		speed.getChildren().add(blockLengthLabel); //add speedlabel to brake flowpane
 		
 		flowpane.getChildren().add(speed); //add brake flowpane to main flowpane
+		
+		//internal VBOX
+		VBox internal = new VBox();
+		internal.setStyle("-fx-border-color: black");
+		internal.getChildren().add(Temp_Label); //add speedlabel to brake flowpane
+		flowpane.getChildren().add(internal); //add brake flowpane to main flowpane
 		
 		//failures text flowpane
 		FlowPane fail1 = new FlowPane();
@@ -133,7 +147,7 @@ public class TrainModelGUI extends Application {
 	}
     @Override // not sure what this does?
     public void start(Stage primaryStage) { // entry point for all apps
-        primaryStage.setTitle("Train Model GUI"); // container for all of it
+        primaryStage.setTitle("Train Model GUI: "+ myName); // container for all of it
 
 
         initGUI();

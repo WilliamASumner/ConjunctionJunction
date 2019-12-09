@@ -20,8 +20,8 @@ public class Power{
 
     private void init(){
         //Set default values for Ki and Kp
-        Ki = 1.0;
-        Kp = 1.0;
+        Ki = 10.0;
+        Kp = 10.0;
         powerGUI = new PowerGUI(this);
     }
 
@@ -38,9 +38,9 @@ public class Power{
         KiOut = Ki * error;
         KpOut = Kp * error;
         powerOutput = KiOut + KpOut;
-        //System.out.println("Set Speed = " + tnc.getSetSpeed());
-        //System.out.println("Current Speed = " + tnc.getCurrSpeed());
-        //System.out.println("Power Command = " + powerOutput);
+        //System.out.println("Power: Set Speed = " + tnc.getSetSpeed());
+        //System.out.println("Power: Current Speed = " + tnc.getCurrSpeed());
+        //System.out.println("Power: Power Command = " + powerOutput);
         return powerOutput;
     }
 
@@ -49,10 +49,12 @@ public class Power{
     }
 
     public void setKi(double i){
-        Ki = i;
+        System.out.println("Power: Ki: " + Ki + " --> "+ i);
+		Ki = i;
     }
 
     public void setKp(double p){
+        System.out.println("Power: Kp: " + Kp + " --> "+ p);
         Kp = p;
     }
 
