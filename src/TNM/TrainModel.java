@@ -8,9 +8,7 @@ public class TrainModel {
     String name = "test name";
 	
     String AuthorityBlockID = "test Block";
-    double AuditedSpeed = 3.14;
-	Block AuditedAuthority;
-	
+    double AuditedSpeed = 3.14;	
     TrainControllerMain TNC = null;
     TrainController singleTNC = null;
     TrainModelGUI myGUI;
@@ -177,7 +175,20 @@ public class TrainModel {
 		radians = radiansPerGrade*grade;
 		System.out.println("TrainModel: radians: "+radians);
 		
-	}
+    }
+    
+    //@Returns String - Get the current block
+    public String getCurrentBlock(){
+        return currBlock.getBlockID();
+    }
+
+
+    //@Returns String - Get the Authority from the current block 
+    public String getAuthority(){
+        return currBlock.getAuthority();
+    }
+
+
 
     private double CalcAcceleration()
     {
