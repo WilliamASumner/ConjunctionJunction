@@ -263,7 +263,7 @@ public class TrainController{
         //Power.calcPowerCommand(this);
         powerOut = Power.calcPowerCommand(this);
        // System.out.println("TrainController: TRAIN: " + this + " - Power CMD " + powerOut);
-        powerOut = 0.1; // TODO FIXME
+        //powerOut = 1.0; // TODO FIXME
         if(eBrakeOn || sBrakeOn){
             powerOut = 0; 
         }

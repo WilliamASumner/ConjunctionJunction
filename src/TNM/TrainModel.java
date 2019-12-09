@@ -61,7 +61,7 @@ public class TrainModel {
     double velocity = 0;
     double altvelocity = 0.01;
     double acceleration = 0;
-    double timePerUpdate = 1;
+    double timePerUpdate = 1; //seconds
 
     public boolean toggleEBrakeFail()
     {
@@ -193,10 +193,12 @@ public class TrainModel {
         {
             powerCommand = singleTNC.calculatePower();
         }
+		
         double retval = 1000 * powerCommand / (estimatedmass * velocity);
-        double frictionforce = 0.5 * velocity;// Not sure if correct
-        //double frictionforce = rollingFrictionCoefficient*estimatedmass*gravity*Math.sin(radians);// Not sure if correct
-		//double drag = frictionforce + estimatedmass*gravity*Math.cos(radians);
+        //double frictionforce = 0.5 * velocity;// Not sure if correct
+        double frictionforce = rollingFrictionCoefficient*gravity*Math.cos(radians);// Not sure if correct
+		myGUI.currentDragLabel.setText("friction acceleration: " + frictionforce + "m/s2 \n");
+		frictionforce = frictionforce + gravity*Math.sin(radians);
         retval = retval - (frictionforce);
         return retval;
     }
@@ -226,7 +228,13 @@ public class TrainModel {
 			AuditedAuthority = currBlock.getAuditedAuthority();
 			AuditedSpeed = currBlock.getAuditedSpeed();
         }
-		myGUI.currentSpeedLabel.setText("Speed: " + velocity + " \n");
+		
+		myGUI.currentPowerLabel.setText("Power: " + powerCommand + " \n");
+		myGUI.currentBlockLabel.setText("Block: " + currBlock.getBlockID() + " \n");
+		myGUI.currentSpeedLabel.setText("Speed: " + velocity + "m/s \n");
+		myGUI.currentAccelerationLabel.setText("Acceleration: " + acceleration + "m/s2 \n");
+		myGUI.currentMassLabel.setText("Mass: " + estimatedmass + "kg \n");
+		
 		myGUI.update();
         return;
     }

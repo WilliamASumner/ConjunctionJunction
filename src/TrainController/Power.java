@@ -20,8 +20,8 @@ public class Power{
 
     private void init(){
         //Set default values for Ki and Kp
-        Ki = 50.0;
-        Kp = 50.0;
+        Ki = 1.0;
+        Kp = 1.0;
         powerGUI = new PowerGUI(this);
     }
 

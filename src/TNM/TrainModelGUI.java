@@ -6,6 +6,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Scene;
 
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
@@ -24,6 +25,10 @@ public class TrainModelGUI extends Application {
 	
 	//Labels (just info that is displayed)
 	Label currentSpeedLabel = new Label("Current Speed is" + mydubSpeed + " m/s\n");
+	Label currentBlockLabel = new Label("Current block");
+	Label currentAccelerationLabel = new Label("Current acceler");
+	Label currentMassLabel = new Label("Mass:\n");
+	Label currentDragLabel = new Label("Mass:\n");
 	Label currentPowerLabel = new Label("Current Power is" + mydubSpeed + " kW\n");
 	Label currentPassLabel = new Label("Current Passengers is\n");
 	Label currentFailsLabel = new Label("Failures: " + failures + " \n");
@@ -86,10 +91,16 @@ public class TrainModelGUI extends Application {
 		flowpane = new FlowPane();
 		
 		//speed flowpane
-		FlowPane speed = new FlowPane();
+		VBox speed = new VBox();
 		speed.setStyle("-fx-border-color: black");
-		speed.getChildren().add(currentSpeedLabel); //add failures to brake flowpane
-        flowpane.getChildren().add(speed); //add brake flowpane to main flowpane
+		speed.getChildren().add(currentSpeedLabel); //add speedlabel to brake flowpane
+		speed.getChildren().add(currentMassLabel); //add speedlabel to brake flowpane
+		speed.getChildren().add(currentPowerLabel); //add speedlabel to brake flowpane
+		speed.getChildren().add(currentAccelerationLabel); //add speedlabel to brake flowpane
+		speed.getChildren().add(currentDragLabel); //add speedlabel to brake flowpane
+		speed.getChildren().add(currentBlockLabel); //add speedlabel to brake flowpane
+		
+		flowpane.getChildren().add(speed); //add brake flowpane to main flowpane
 		
 		//failures text flowpane
 		FlowPane fail1 = new FlowPane();
