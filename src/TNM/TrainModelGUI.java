@@ -36,8 +36,10 @@ public class TrainModelGUI extends Application {
 	Label currentPassLabel = new Label("Current Passengers is\n");
 	Label currentFailsLabel = new Label("Failures: " + failures + " \n");
 	
+	
 		//internal labels
-	Label Temp_Label = new Label("Current block");
+	Label Temp_Label = new Label("Temperature");
+	Label lights_Label = new Label("Lights: OFF \n");
 
 	//Buttons on TrainModelGUI
     Button EbrakeFailButton = new Button("EBrake: Working");
@@ -114,6 +116,7 @@ public class TrainModelGUI extends Application {
 		VBox internal = new VBox();
 		internal.setStyle("-fx-border-color: black");
 		internal.getChildren().add(Temp_Label); //add speedlabel to brake flowpane
+		internal.getChildren().add(lights_Label); //add speedlabel to brake flowpane
 		flowpane.getChildren().add(internal); //add brake flowpane to main flowpane
 		
 		//failures text flowpane

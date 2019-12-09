@@ -245,6 +245,7 @@ public class TrainModel {
 		myGUI.Temp_Label.setText("Temperature:\t" + String.format("%.2f", temperature)+ " degrees F \n");
 		
 		
+		
 		myGUI.update();
         return;
     }
@@ -258,9 +259,17 @@ public class TrainModel {
     public void toggleLights()
     {
         if (lights)
+		{
+			
             lights = false;
+			myGUI.lights_Label.setText("Lights: OFF \n");
+		}
         else
+		{
+			
             lights = true;
+			myGUI.lights_Label.setText("Lights: ON \n");
+		}
         return;
     }
 
