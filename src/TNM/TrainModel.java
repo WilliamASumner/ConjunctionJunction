@@ -14,8 +14,9 @@ public class TrainModel {
     TrainModelGUI myGUI;
     Block currBlock;
     TkM trackModel = null;
+    
 
-
+    Block AuditedAuthority;
     boolean[] Doors = new boolean[8];
     boolean lights = false;
     double temperature = 70;
@@ -185,7 +186,7 @@ public class TrainModel {
 
     //@Returns String - Get the Authority from the current block 
     public String getAuthority(){
-        return currBlock.getAuthority();
+        return currBlock.getAuditedAuthority().getBlockID();
     }
 
 
