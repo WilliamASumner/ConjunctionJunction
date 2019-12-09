@@ -1,3 +1,5 @@
+package cjunction; // conjunction junction package
+
 import java.awt.Desktop;
 import java.io.File;
 import java.io.FileInputStream;
@@ -356,32 +358,32 @@ public class TrackControllerGUI extends Application {
         crossBox.getSelectionModel().selectFirst();
         crossBox.setOnAction(new CrossStateHandler());
 
-        String[] BlockStatuses = {"SIGNAL FAILURE", "RAIL FAILURE"};
+        /*String[] BlockStatuses = {"SIGNAL FAILURE", "RAIL FAILURE"};
         ObservableList<String> BStates = FXCollections.observableArrayList();
         for (String option: BlockStatuses) {
             BStates.addAll(option);
         }
         ComboBox<String> BlockBox = new ComboBox<String>(BStates);
         BlockBox.getSelectionModel().selectFirst();
-        BlockBox.setOnAction(new FailureListHandler());
+        BlockBox.setOnAction(new FailureListHandler()); */
 
 
         Label sw = new Label("  Switch:");
         Label cr = new Label("  Crossing:");
-        Label statusBoxLabel = new Label("  Block Status:");
+        //Label statusBoxLabel = new Label("  Block Status:");
 
         Region spacer4 = new Region();
         Region spacer5 = new Region();
-        Region spacer6 = new Region();
+        //Region spacer6 = new Region();
         HBox.setHgrow(spacer4,Priority.ALWAYS);
         HBox.setHgrow(spacer5,Priority.ALWAYS);
-        HBox.setHgrow(spacer6,Priority.ALWAYS);
+        //HBox.setHgrow(spacer6,Priority.ALWAYS);
 
         sStateBox = new HBox(sw,spacer4,switchBox);
         cStateBox = new HBox(cr,spacer5,crossBox);
-        bStatusBox = new HBox(statusBoxLabel,spacer6,BlockBox);
+        //bStatusBox = new HBox(statusBoxLabel,spacer6,BlockBox);
 
-        VBox lowerRight = new VBox(sStateBox,cStateBox,bStatusBox);
+        VBox lowerRight = new VBox(sStateBox,cStateBox);//,bStatusBox);
         lowerRight.setSpacing(8);
 
         GridPane.setConstraints(lowerRight,1,2);

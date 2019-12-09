@@ -1,0 +1,34 @@
+// TrackController #5
+// Controls:
+// I47 Crossing
+// J52 Switch
+
+// Crossing I47
+// Previous: I46
+// Next: I48
+
+// If train coming
+if (I47.occupancy == occupied or I48.occupancy == occupied or I46.occupancy == occupied) then
+    I47.crossingstate = down;
+endif;
+
+// If no train coming
+if (I46.occupancy != occupied and I48.occupancy != occupied and I47.occupancy != occupied) then
+    I47.crossingstate = up;
+endif;
+
+
+// Unsafe condition checking - will override in case of impending collision
+// no trains should be on any rails near the switch
+// this assumes all trains will be 1 block apart at least to prevent a deadlock
+if (J52.occupancy == occupied and J51.occupancy == occupied) then
+    J52.authority = J52;
+endif;
+
+if (J52.occupancy == occupied and J53.occupancy == occupied) then
+    J52.authority = J52;
+endif;
+
+if (J52.occupancy == occupied and N64.occupancy == occupied) then
+    J52.authority = J52;
+endif;

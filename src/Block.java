@@ -1,3 +1,5 @@
+package cjunction; // conjunction junction package
+
 public class Block
 {
     String LineColor;

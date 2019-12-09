@@ -1,3 +1,5 @@
+package cjunction; // conjunction junction package
+
 import javafx.application.Application;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;

@@ -1,3 +1,5 @@
+package cjunction; // conjunction junction package
+
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Scanner;

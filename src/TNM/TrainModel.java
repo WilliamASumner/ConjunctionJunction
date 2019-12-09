@@ -1,3 +1,5 @@
+package cjunction; // conjunction junction package
+
 import javafx.stage.Stage;
 import java.lang.Math;
 
