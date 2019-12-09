@@ -1,3 +1,6 @@
+package cjunction;
+// // conjunction junction package
+//
 // Java includes
 import javafx.stage.Stage;
 

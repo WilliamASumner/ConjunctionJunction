@@ -1,3 +1,5 @@
+package cjunction; // conjunction junction package
+
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;

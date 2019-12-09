@@ -1,3 +1,5 @@
+package cjunction; // conjunction junction package
+
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -45,23 +47,44 @@ public class TrainModelGUI extends Application {
 	public void initGUI()
 	{
 		
-		eBrake.setStyle("-fx-text-fill: red");
+		eBrake.setStyle("-fx-text-fill: black");
         eBrake.setMinWidth(400);
         eBrake.setMaxWidth(400);
         eBrake.setMinWidth(200);
         eBrake.setMaxWidth(200);
 		
-		EbrakeFailButton.setStyle("-fx-text-fill: red");
+		EbrakeFailButton.setStyle("-fx-text-fill: black");
         EbrakeFailButton.setMinWidth(400);
         EbrakeFailButton.setMaxWidth(400);
         EbrakeFailButton.setMinWidth(200);
         EbrakeFailButton.setMaxWidth(200);
 		
+		SbrakeFailButton.setStyle("-fx-text-fill: black");
+        SbrakeFailButton.setMinWidth(400);
+        SbrakeFailButton.setMaxWidth(400);
+        SbrakeFailButton.setMinWidth(200);
+        SbrakeFailButton.setMaxWidth(200);
+		
+		EngineFailButton.setStyle("-fx-text-fill: black");
+        EngineFailButton.setMinWidth(400);
+        EngineFailButton.setMaxWidth(400);
+        EngineFailButton.setMinWidth(200);
+        EngineFailButton.setMaxWidth(200);
+		
+		SignalFailButton.setStyle("-fx-text-fill: black");
+        SignalFailButton.setMinWidth(400);
+        SignalFailButton.setMaxWidth(400);
+        SignalFailButton.setMinWidth(200);
+        SignalFailButton.setMaxWidth(200);
+		
 		flowpane = new FlowPane();
 		
 		FlowPane fail = new FlowPane();
 		fail.setStyle("-fx-border-color: black");
-		fail.getChildren().add(EbrakeFailButton); //add eBrake to brake flowpane
+		fail.getChildren().add(EbrakeFailButton); //add EbrakeFailButton to brake flowpane
+		fail.getChildren().add(SbrakeFailButton); //add SbrakeFailButton to brake flowpane
+		fail.getChildren().add(EngineFailButton); //add EngineFailButton to brake flowpane
+		fail.getChildren().add(SignalFailButton); //add SignalFailButton to brake flowpane
         flowpane.getChildren().add(fail); //add brake flowpane to main flowpane
 		
 		
@@ -73,6 +96,9 @@ public class TrainModelGUI extends Application {
 		
         eBrake.setOnAction(new eBrakeHandler());
         EbrakeFailButton.setOnAction(new eBrakeFailHandler());
+        SbrakeFailButton.setOnAction(new sBrakeFailHandler());
+        EngineFailButton.setOnAction(new engineFailHandler());
+        SignalFailButton.setOnAction(new signalFailHandler());
 		
 	}
     @Override // not sure what this does?
@@ -116,10 +142,12 @@ public class TrainModelGUI extends Application {
 	{
 		 if(newEbrake){
                     eBrake.setText("E Brake: Currently ON");
+					eBrake.setStyle("-fx-text-fill: red");
                     System.out.println("TrainModelGUI: Emergency Brake ON...");
                 }
                 else{
                     eBrake.setText("E Brake: Currently OFF");
+					eBrake.setStyle("-fx-text-fill: black");
                     System.out.println("TrainModelGUI: Emergency Brake OFF...");
                 }
 	}
@@ -146,10 +174,72 @@ public class TrainModelGUI extends Application {
 			if(currentState)
 			{
 				EbrakeFailButton.setText("EBrake: Failed");
+				EbrakeFailButton.setStyle("-fx-text-fill: red");
 			}
             else
 			{
-				EbrakeFailButton.setText("EBrake: Working");				
+				EbrakeFailButton.setText("EBrake: Working");
+				EbrakeFailButton.setStyle("-fx-text-fill: black");				
+			}
+        }
+    }
+    
+	class sBrakeFailHandler implements EventHandler<ActionEvent>
+	{
+        @Override
+        public void handle(ActionEvent event)
+		{
+            boolean currentState;
+            currentState = tnm.toggleSBrakeFail();
+			if(currentState)
+			{
+				SbrakeFailButton.setText("SBrake: Failed");
+				SbrakeFailButton.setStyle("-fx-text-fill: red");
+			}
+            else
+			{
+				SbrakeFailButton.setText("SBrake: Working");
+				SbrakeFailButton.setStyle("-fx-text-fill: black");				
+			}
+        }
+    }
+    
+	class engineFailHandler implements EventHandler<ActionEvent>
+	{
+        @Override
+        public void handle(ActionEvent event)
+		{
+            boolean currentState;
+            currentState = tnm.toggleEngineFail();
+			if(currentState)
+			{
+				EngineFailButton.setText("Engine: Failed");
+				EngineFailButton.setStyle("-fx-text-fill: red");
+			}
+            else
+			{
+				EngineFailButton.setText("Engine: Working");
+				EngineFailButton.setStyle("-fx-text-fill: black");				
+			}
+        }
+    }
+    
+	class signalFailHandler implements EventHandler<ActionEvent>
+	{
+        @Override
+        public void handle(ActionEvent event)
+		{
+            boolean currentState;
+            currentState = tnm.toggleSignalFail();
+			if(currentState)
+			{
+				SignalFailButton.setText("Signal: Failed");
+				SignalFailButton.setStyle("-fx-text-fill: red");
+			}
+            else
+			{
+				SignalFailButton.setText("Signal: Working");
+				SignalFailButton.setStyle("-fx-text-fill: black");				
 			}
         }
     }

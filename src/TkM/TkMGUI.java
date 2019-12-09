@@ -1,3 +1,5 @@
+package cjunction; // conjunction junction package
+
 import javafx.application.Application;
 import javafx.scene.Scene;
 //import javafx.fxml.FXMLLoader;

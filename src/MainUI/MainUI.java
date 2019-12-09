@@ -1,3 +1,5 @@
+package cjunction; // conjunction junction package
+
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
@@ -179,9 +181,9 @@ public class MainUI extends Application {
         @Override
         public void handle(ActionEvent event) {
             Stage newWindow = new Stage();
-			newWindow.setTitle("CTC Module");
-			newWindow.setWidth(1100);
-			newWindow.setHeight(630);
+            newWindow.setTitle("CTC Module");
+            newWindow.setWidth(1100);
+            newWindow.setHeight(630);
             ctc.showGUI(newWindow);
         }
     }

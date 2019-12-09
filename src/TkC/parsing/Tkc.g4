@@ -58,7 +58,6 @@ assignedattribute // can change switch,authority,crossing,occupancy
       SwitchState
     | Authority
     | CrossingState
-    | Speed
 ;
 
 // Possible values to check for and assign
@@ -70,7 +69,6 @@ value
     | CrossingStateValue
     | SignalStateValue
     | OccupancyValue
-    | SpeedValue
 ;
 
 BlockID
@@ -103,11 +101,6 @@ OccupancyValue
     | UNOCCUPIED
 ;
 
-SpeedValue
-:
-    FLOAT
-;
-
 FLOAT
 : [0-9]*'.'[0-9]+
 ;
@@ -136,11 +129,6 @@ Semicolon
 
 Period
 : '.'
-;
-
-Speed
-: 'speed'
-| 'SPEED'
 ;
 
 Occupancy
