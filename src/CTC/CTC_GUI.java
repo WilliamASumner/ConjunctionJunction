@@ -1,8 +1,6 @@
 package cjunction; // conjunction junction package
 
 import javafx.application.Application;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.util.Duration;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -17,6 +15,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.geometry.Pos;
 import javafx.geometry.Insets;
 import javafx.scene.layout.GridPane;
+import javafx.scene.control.Tooltip;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.ComboBoxListCell;
@@ -39,9 +38,13 @@ import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.StrokeType;
+import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.scene.input.MouseEvent;
+import javafx.util.Duration;
 
 import java.util.Arrays;
 import java.util.List;
@@ -65,11 +68,16 @@ public class CTC_GUI extends Application {
     private ObservableList<String> data = FXCollections.observableArrayList(), dataSelectedQueuedTrain = FXCollections.observableArrayList();
     ListView<String> stopsListView, selectedTrain = new ListView<String>(dataSelectedQueuedTrain);
     
-    private VBox vboxMaintain, vboxAdd, vboxQueued, rightVbox, leftVbox;
+    public VBox vboxMaintain, vboxAdd, vboxQueued, rightVbox, leftVbox, tempVbox;
 	
-	Rectangle CTCViewer;
-	AnchorPane root;
+	boolean toggle = true;
+	public AnchorPane root;
+	public Rectangle tempRec;
+	Rectangle rect = null;
+	public static final Duration ONE = Duration.millis(1);
+	public Tooltip t;
 	public static HashMap<String,String> greenLine = new HashMap<String,String>();
+	public static HashMap<String,String> redLine = new HashMap<String,String>();	
 	
     private HBox hboxAdd1, hboxAdd2, hboxAdd3, bottomControlOfModule;
     private Button deleteT, dispatchT, importSched, queueT;
@@ -78,8 +86,7 @@ public class CTC_GUI extends Application {
     
     public TableView table;
     
-    private Timeline timeline;
-	public int curMultiplier = 1;
+	public int seconds = Calendar.getInstance().get(Calendar.SECOND), minutes = Calendar.getInstance().get(Calendar.MINUTE), hours = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
 	public String tkmThroughput = "0";
 	public ImageView trackLayoutView;
     
@@ -91,6 +98,19 @@ public class CTC_GUI extends Application {
     private String[] TrackTypes = {"Green Line", "Red Line"};
     private String[] SwitchBlocks = new String[]{"G12", "G29", "G58", "G62", "G76", "G86", 
                                     "R9", "R15", "R27", "R32", "R38", "R43", "R52"};
+									
+	private String[] SwitchBlocksGreen = new String[]{"C12", "G29", "J58", "J62", "M76", "O86"};
+	List<String> switchArrayGreen = Arrays.asList(SwitchBlocksGreen);
+	private String[] SwitchBlocksRed = new String[]{"C9", "E15", "H27", "H32", "H38", "H43", "J52"};								
+	List<String> switchArrayRed = Arrays.asList(SwitchBlocksRed);
+	
+	String[] greenStations =  {"PIONEER","EDGEBROOK","STATION", "WHITED", 
+						"SOUTH BANK", "CENTRAL", "INGLEWOOD",
+						"OVERBROOK", "GLENBURY", "DORMONT",
+						"MT LEBANON", "POPLAR", "CASTLE SHANNON",
+						"DORMONT2", "GLENBURY2", "OVERBROOK2", 
+						"INGLEWOOD2", "CENTRAL2"};
+									
     private List<String> list = Arrays.asList(SwitchBlocks);
     
     private Scene scene;
@@ -118,7 +138,7 @@ public class CTC_GUI extends Application {
         newStage = stage;
         newCTC = nctc;
 
-        BorderPane borderPane = new BorderPane();
+        borderPane = new BorderPane();
         // Create a BorderPane object
         borderPane.setStyle("-fx-border-insets: 5;\n");
         
@@ -143,8 +163,9 @@ public class CTC_GUI extends Application {
                             // Remove previously added items 
                             comboChooseBlock.getItems().clear();
                             // Add blocks that the green line contains
-                            for (int i = 1; i <= 150; i++)
-                                comboChooseBlock.getItems().add("G"+i);
+                            //for (int i = 1; i <= 150; i++)
+							for(Map.Entry<String, String> block: greenLine.entrySet())
+                                comboChooseBlock.getItems().add(block.getValue());
                             // Add listener such that when block is chosen, populate checkbox to reflect
                             // whether or not the chosen block is switch...
                             comboChooseBlock.getSelectionModel().selectedItemProperty().addListener(
@@ -154,7 +175,7 @@ public class CTC_GUI extends Application {
                                             // If chosen block is a switch
                                             if(list.contains(new_val)){
                                                 // block to be sent to Track Controller
-                                                chosenBlock = new_val;
+                                                chosenBlock = new_val + "greenline";
                                                 cb1.setIndeterminate(false);
                                                 cb1.setSelected(false);
                                                 cb2.setIndeterminate(false);
@@ -164,7 +185,7 @@ public class CTC_GUI extends Application {
                                             }
                                             else{
                                                 // block to be sent to Track Controller
-                                                chosenBlock = new_val;
+                                                chosenBlock = new_val + "greenline";
                                                 cb1.setIndeterminate(false);
                                                 cb1.setSelected(false);
                                                 cb2.setIndeterminate(false);
@@ -178,8 +199,8 @@ public class CTC_GUI extends Application {
                             // Remove previously added items 
                             comboChooseBlock.getItems().clear();
                             // Add blocks that the red line contains
-                            for (int i = 1; i <= 76; i++)
-                                comboChooseBlock.getItems().add("R"+i);
+                            for (Map.Entry<String, String> block: redLine.entrySet())
+                                comboChooseBlock.getItems().add(block.getValue());
                             // Add listener such that when block is chosen, populate checkbox to reflect
                             // whether or not the chosen block is switch...
                             comboChooseBlock.getSelectionModel().selectedItemProperty().addListener(
@@ -189,7 +210,7 @@ public class CTC_GUI extends Application {
                                             // If chosen block is a switch
                                             if(list.contains(new_val)){
                                                 // block to be sent to Track Controller
-                                                chosenBlock = new_val;                                              
+                                                chosenBlock = new_val + "redline";                                              
                                                 cb1.setIndeterminate(false);
                                                 cb1.setSelected(false);
                                                 cb2.setIndeterminate(false);
@@ -199,7 +220,7 @@ public class CTC_GUI extends Application {
                                             }
                                             else{
                                                 // block to be sent to Track Controller
-                                                chosenBlock = new_val;                                              
+                                                chosenBlock = new_val + "redline";                                              
                                                 cb1.setIndeterminate(false);
                                                 cb1.setSelected(false);
                                                 cb2.setIndeterminate(false);
@@ -420,16 +441,6 @@ public class CTC_GUI extends Application {
             new ChangeListener<Object>() {
                 public void changed(ObservableValue<? extends Object> ov, 
                     Object old_val, Object new_val) {
-                        /*
-                                selectedTrain.setEditable(true);
-                                // Remove previously selected trains schedules
-                                dataSelectedQueuedTrain.removeAll("Add Stop");
-                                selectedTrain.setItems(dataSelectedQueuedTrain);
-                                for (int i = 0; i < 18; i++) {
-                                    dataSelectedQueuedTrain.add("Add Stop");
-                                }
-                                selectedTrain.setItems(dataSelectedQueuedTrain);    
-                        */
 					//	tempDispatchedTrain = new_val;
 /*						
 						CTCViewer = new Rectangle(250,300);
@@ -497,41 +508,29 @@ public class CTC_GUI extends Application {
         //CREATE CENTER VIEW--------------------------------------------------------------
 		// build track veiwer
 		borderPane.setCenter(buildCTCDispatchViewer());
-
-/*		
-        String projectBaseDir = "file:"+System.getProperty("user.dir") + "/src"; // get base dir
-        String imgPath = projectBaseDir + "/CTC/trackLayout.jpg";
-        Image trackLayout = new Image(imgPath);
-        // create an ImageViw object
-        ImageView imageView = new ImageView(trackLayout);
-//        imageView.setFitWidth(500);
-//        imageView.setFitHeight(350);
-        imageView.setFitWidth(250);
-        imageView.setFitHeight(300);
-        // put imageView into center of BorderPane
-    //    borderPane.setCenter(imageView);
         //---------------------------------------------------------------
-*/
+
         
         //CREATE LEFT VIEW---------------------------------------------------------------
-		// construct the digitalClock pieces.
-		stackAddClock = updateByRebuildingClock();
-        
+		// Create Stack pane to contain clock
+        stackAddClock = new StackPane();
+        Rectangle addRec = new Rectangle(250.0, 50.0);
+        addRec.setFill(Color.BLACK);
+        stackAddClock.getChildren().addAll(addRec, updateClock());
+        stackAddClock.setAlignment(Pos.CENTER); 
+		
 		// Create Throughput view
-		stackAddThroughput = updateByRebuildingThroughput();
+        stackAddThroughput = new StackPane();
+        Rectangle addRec2 = new Rectangle(250.0, 50.0);
+        addRec2.setFill(Color.BLACK);
+        stackAddThroughput.getChildren().addAll(addRec2, updateThroughput());
+        stackAddThroughput.setAlignment(Pos.CENTER); 
         
 		// get track layout image
-		trackLayoutView = getTrackImage();
+		trackLayoutView = getTrackView();
 		trackLayoutView.setFitWidth(250);
         trackLayoutView.setFitHeight(300);	
-/*  
-        imgPath = projectBaseDir + "/CTC/digital_clock.jpg";
-        Image clock = new Image(imgPath);
-        // create an ImageViw object
-        ImageView imageView2 = new ImageView(clock);
-        imageView2.setFitWidth(250);
-        imageView2.setFitHeight(150);
-*/        
+       
         leftVbox = new VBox(0, stackAddClock, stackAddThroughput, trackLayoutView);
         leftVbox.setStyle(cssLayout);
         // put imageView2 into left of BorderPane
@@ -553,59 +552,43 @@ public class CTC_GUI extends Application {
         stage.show();
     }
 	
-	public StackPane updateByRebuildingClock(){
+	public Label updateClock(){
         digitalClock = new Label();
-        
-        // Create Stack pane to contain clock
-        stackAddClock = new StackPane();
-        Rectangle addRec = new Rectangle(250.0, 50.0);
-        addRec.setFill(Color.BLACK);
-        stackAddClock.getChildren().addAll(addRec, digitalClock);
-        stackAddClock.setAlignment(Pos.CENTER); 
-        
         digitalClock.setTextFill(Color.WHITE);
         digitalClock.setStyle("-fx-font-size: 3em;");
         digitalClock.setId("digitalClock");
-        
-//        Button button = new Button();
-//        button.setText("Start/Pause");
+		
+		if(seconds == 59){
+			seconds = 0;
+			if(minutes == 59){
+				minutes = 0;
+				if(hours == 24)
+					hours = 0;
+				else
+					hours++;
+			}
+			else
+				minutes++;
+		}
+		else
+			seconds++;
+		
+		String hourString   = pad(2, '0', hours + "");
+		String minuteString = pad(2, '0', minutes + "");
+		String secondString = pad(2, '0', seconds + "");
+		digitalClock.setText(hourString + ":" + minuteString + ":" + secondString);
 
-        timeline = new Timeline(
-            new KeyFrame(Duration.seconds(curMultiplier),
-            new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent t) {
-                    Calendar calendar = Calendar.getInstance();
-                    String hourString   = pad(2, '0', calendar.get(Calendar.HOUR_OF_DAY) + "");
-                    String minuteString = pad(2, '0', calendar.get(Calendar.MINUTE) + "");
-                    String secondString = pad(2, '0', calendar.get(Calendar.SECOND) + "");
-                    digitalClock.setText(hourString + ":" + minuteString + ":" + secondString);
-                }
-            })
-        );
-        timeline.setCycleCount(Timeline.INDEFINITE);
-        timeline.play();
-
-		return stackAddClock;
+		return digitalClock;
 	}
 	
-	public StackPane updateByRebuildingThroughput(){
-		throughput = new Label("Throughput = " + tkmThroughput);
-        
-        // Create Stack pane to contain clock
-        stackAddThroughput = new StackPane();
-        Rectangle addRec2 = new Rectangle(250.0, 50.0);
-        addRec2.setFill(Color.BLACK);
-        stackAddThroughput.getChildren().addAll(addRec2, throughput);
-        stackAddThroughput.setAlignment(Pos.CENTER); 
-        
+	public Label updateThroughput(){
+		throughput = new Label("Throughput = " + tkmThroughput); 
         throughput.setTextFill(Color.WHITE);
         throughput.setStyle("-fx-font-size: 2em;");	
-		
-		return stackAddThroughput;
+		return throughput;
 	}
 	
-	public ImageView getTrackImage(){
+	public ImageView getTrackView(){
         String projectBaseDir = "file:"+System.getProperty("user.dir") + "/src"; // get base dir
         String imgPath = projectBaseDir + "/CTC/trackLayout.jpg";
         Image trackLayout = new Image(imgPath);
@@ -616,61 +599,137 @@ public class CTC_GUI extends Application {
 		return temp;
 	}
     
-    public AnchorPane buildCTCDispatchViewer(){
-		
-		String[] alphabet = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K",
-							"L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V",
-							"W", "X", "Y", "Z"};
-							
-
-		CTCViewer = new Rectangle(250,300);
+    public AnchorPane buildCTCDispatchViewer(){				
 		root = new AnchorPane();
 
-int columns = 40, rows = 40, horizontal = 10, vertical = 10;
-        Rectangle rect = null;
-        for (int i = 0; i < columns; ++i) {
-            for (int j = 0; j < rows; ++j) {
+		int columns = 40, rows = 40, horizontal = 10, vertical = 10;
+		for (int i = 0; i < columns; ++i) {
+			for (int j = 0; j < rows; ++j) {
 				String temp = "" + i + "," + j;
+				rect = new Rectangle(horizontal * j, vertical * i, horizontal, vertical);
 				if(greenLine.containsKey(temp)){
-					rect = new Rectangle(horizontal * j, vertical * i, horizontal, vertical);
-					rect.setStroke(Color.GREEN);
-					root.getChildren().add(rect);					
-				}	
-				else{
-					rect = new Rectangle(horizontal * j, vertical * i, horizontal, vertical);
-					rect.setStroke(Color.BLACK);
-					root.getChildren().add(rect);
-				
+					// check if current ij combo is within greenline, if so, check if is also station
+					if(newCTC.stationToBlockGreen.containsValue(greenLine.get(temp))){
+						rect.setId("g"+greenLine.get(temp));
+						setRectangleToBlockType(greenLine.get(temp), rect, "greenstation");						
+						
+					/*	rect.setOnMouseClicked(new EventHandler<MouseEvent>()
+						{
+							@Override
+							public void handle(MouseEvent t) {
+								String temp = t.toString();
+								for(String station: greenStations){
+									if(temp.contains(station)){
+										int beg = temp.indexOf(station);
+										int end = temp.indexOf(",");
+										System.out.println(temp.substring(beg, end));
+									}
+								}
+							}   
+						}); */
+					}
+					else if(switchArrayGreen.contains(greenLine.get(temp))){
+						//rect.setId(switchArrayGreen.get(Integer.parseInt(greenLine.get(temp))));
+						rect.setId("g"+greenLine.get(temp));
+						setRectangleToBlockType(greenLine.get(temp), rect, "greenswitch");																		
+						
+						rect.setOnMouseClicked(new EventHandler<MouseEvent>()
+						{
+							@Override
+							public void handle(MouseEvent t) {
+								String temp = t.toString();
+								for(String switches: switchArrayGreen){
+									if(temp.contains(switches)){
+										String tempId = "#" + "g" + switches;
+										tempRec = (Rectangle)root.lookup(tempId);
+										// each new click, toggle the switch
+										if(toggle){
+											tempRec.setWidth(10);
+											tempRec.setHeight(5);
+											toggle = false;
+										}
+										else{
+											tempRec.setWidth(5);
+											tempRec.setHeight(10);
+											toggle = true;	
+										}
+									}
+								}
+							}   
+						});						
+						
+					}
+					else{
+						rect.setId("g" + greenLine.get(temp));
+						rect.setStroke(Color.GREEN);				
+					}						
 				}
-            }
-        }
+				else if(redLine.containsKey(temp)){
+					// check if current ij combo is within greenline, if so, check if is also station
+					if(newCTC.stationToBlockRed.containsValue(redLine.get(temp))){
+						rect.setId("r" + redLine.get(temp));
+						setRectangleToBlockType(redLine.get(temp), rect, "redstation");																		
+						
+					/*	rect.setOnMouseClicked(new EventHandler<MouseEvent>()
+						{
+							@Override
+							public void handle(MouseEvent t) {
+								String temp = t.toString();
+								for(String station: greenStations){
+									if(temp.contains(station)){
+										int beg = temp.indexOf(station);
+										int end = temp.indexOf(",");
+										System.out.println(temp.substring(beg, end));
+									}
+								}
+							}   
+						}); */
+					}
+					else if(switchArrayRed.contains(redLine.get(temp))){
+						//rect.setId(switchArrayRed.get(Integer.parseInt(greenLine.get(temp))));
 
-		
+						rect.setId("r" + redLine.get(temp));						
+						setRectangleToBlockType(redLine.get(temp), rect, "redswitch");																														
+						
+						rect.setOnMouseClicked(new EventHandler<MouseEvent>()
+						{
+							@Override
+							public void handle(MouseEvent t) {
+								String temp = t.toString();
+								for(String switches: switchArrayRed){
+									if(temp.contains(switches)){
+										String tempId = "#" + "r" + switches;
+										tempRec = (Rectangle)root.lookup(tempId);
+										// each new click, toggle the switch
+										if(toggle){
+											tempRec.setWidth(10);
+											tempRec.setHeight(5);
+											toggle = false;
+										}
+										else{
+											tempRec.setWidth(5);
+											tempRec.setHeight(10);
+											toggle = true;	
+										}
+									}
+								}
+							}   
+						});						
+						
+					}
+					else{
+						rect.setId("r" + redLine.get(temp));
+						rect.setStroke(Color.RED);				
+					}						
+				}
+				else
+					rect.setStroke(Color.BLACK);
+				// Add rect to root
+				root.getChildren().add(rect);
+			}
+		}	
 
-
-
-/*		
-		for(int i = 0; i < 25; i++){
-			
-			StackPane stackAdd = new StackPane();
-			Rectangle addTrainRec = new Rectangle(50.0, 20.0);
-			addTrainRec.setFill(Color.BLACK);
-			addTrainRec.setRotate(30);
-			addTrainRec.setX(i + 5.5);
-			addTrainRec.setY(i + 5.5);
-			//stackAdd.getChildren().add(addTrainRec, "A");
-			//stackAdd.setAlignment(Pos.CENTER);   		
-			
-			CTCViewer.add(addTrainRec);
-		}
-*/		
-		
-		
-		
 		return root;
-		
-		
-		
 	}
     
     public TrainModel getTrainModel(){
@@ -686,6 +745,44 @@ int columns = 40, rows = 40, horizontal = 10, vertical = 10;
 
         return sb.toString();
     }
+
+	public void setRectangleToBlockType(String id, Rectangle rect, String typeOfBlock){
+		// parse block typeOfBlock
+		if(typeOfBlock.equals("greenstation")){	
+			t = new Tooltip(newCTC.blockToStationGreen.get(id));
+			t.setShowDelay(ONE);
+			Tooltip.install(rect, t);
+			rect.setFill(Color.GREEN);
+			rect.setStroke(Color.WHITE);
+			rect.setStrokeWidth(3.0);
+			rect.setStrokeType(StrokeType.CENTERED);			
+		}
+		else if(typeOfBlock.equals("redstation")){
+			t = new Tooltip(newCTC.blockToStationRed.get(id));
+			t.setShowDelay(ONE);
+			Tooltip.install(rect, t);
+			rect.setFill(Color.RED);
+			rect.setStroke(Color.WHITE);
+			rect.setStrokeWidth(3.0);
+			rect.setStrokeType(StrokeType.CENTERED);			
+		}
+		else if(typeOfBlock.equals("greenswitch")){
+			rect.setFill(Color.BLACK);
+			rect.setStroke(Color.WHITE);
+			rect.setWidth(5);
+			t = new Tooltip("Toggle Switch " + id);
+			t.setShowDelay(ONE);
+			Tooltip.install(rect, t);	
+		}
+		else if(typeOfBlock.equals("redswitch")){
+			rect.setFill(Color.BLACK);
+			rect.setStroke(Color.WHITE);
+			rect.setWidth(5);
+			t = new Tooltip("Toggle Switch " + id);
+			t.setShowDelay(ONE);
+			Tooltip.install(rect, t);
+		}
+	}
 
     public StackPane getStackPane(Text textAdd, double length){
         // Create StackPane for pronounced viewer section title
@@ -742,12 +839,61 @@ int columns = 40, rows = 40, horizontal = 10, vertical = 10;
     class repairCheckBoxHandler implements EventHandler<ActionEvent>{
         @Override
         public void handle(ActionEvent event){
+			String tempId = "";
+			String sendBlockCTC = "";
             // if chosen block is yet to be selected, ignore this event
             if(chosenBlock.equals(""));
-            else// SEND TO CTC REPAIR BLOCK
-                // only when selected
-                if(cb1.isSelected())
-                    newCTC.repairBlock(chosenBlock);    
+            else{// SEND TO CTC REPAIR BLOCK only when selected
+				// check if chosen block is green line or red line
+				if(chosenBlock.contains("greenline")){
+					String[] blk = chosenBlock.split("greenline");
+					sendBlockCTC = blk[0];
+					tempId = "#" + "g" + blk[0];
+				}
+				else{
+					String[] blk = chosenBlock.split("redline");
+					sendBlockCTC = blk[0];
+					tempId = "#" + "r" + blk[0];
+				}		
+				// see if repair box is checked, if so repair, if not, repairing is over
+                if(cb1.isSelected()){
+					newCTC.repairBlock(sendBlockCTC); 
+					// Get rect object to paint ctc viewer
+					tempRec = (Rectangle)root.lookup(tempId);	
+					tempRec.setFill(Color.ORANGE);
+					Tooltip t = new Tooltip("REPAIRING BLOCK");
+					t.setShowDelay(ONE);
+					Tooltip.install(tempRec, t);
+				}
+				else{
+//                    newCTC.repairBlock(sendBlockCTC); 
+					// Get rect object to paint ctc viewer
+					tempRec = (Rectangle)root.lookup(tempId);					
+					if(tempId.contains("g")){
+						// Check if block is a station, switch, or track
+						if(newCTC.blockToStationGreen.containsKey(sendBlockCTC))
+							setRectangleToBlockType(sendBlockCTC, tempRec, "greenstation");
+						else if(switchArrayGreen.contains(sendBlockCTC))
+							setRectangleToBlockType(sendBlockCTC, tempRec, "greenswitch");							
+						else{
+							tempRec.setFill(Color.BLACK);
+							tempRec.setStroke(Color.GREEN);
+						}
+					}
+					else{
+						// Check if block is a station, switch, or track						
+						if(newCTC.blockToStationRed.containsKey(sendBlockCTC))
+							setRectangleToBlockType(sendBlockCTC, tempRec, "redstation");
+						else if(switchArrayRed.contains(sendBlockCTC))
+							setRectangleToBlockType(sendBlockCTC, tempRec, "redswitch");							
+						else{
+							tempRec.setFill(Color.BLACK);
+							tempRec.setStroke(Color.RED);
+						}	
+					}						
+				}
+				
+			}	
         }
     }
     
@@ -757,12 +903,46 @@ int columns = 40, rows = 40, horizontal = 10, vertical = 10;
     class closeCheckBoxHandler implements EventHandler<ActionEvent>{
         @Override
         public void handle(ActionEvent event){
+			String tempId = "";
+			String sendBlockCTC = "";			
             // if chosen block is yet to be selected, ignore this event
             if(chosenBlock.equals(""));
-            else// SEND TO CTC CLOSE BLOCK
-                // only when selected
-                if(cb2.isSelected())
+            else{// SEND TO CTC CLOSE BLOCK only when selected
+				// check if chosen block is green line or red line
+				if(chosenBlock.contains("greenline")){
+					String[] blk = chosenBlock.split("greenline");
+					sendBlockCTC = blk[0];
+					tempId = "#" + "g" + blk[0];
+				}
+				else{
+					String[] blk = chosenBlock.split("redline");
+					sendBlockCTC = blk[0];
+					tempId = "#" + "r" + blk[0];
+				}		
+				// see if close box is checked, if so close, if not, closing is over				
+                if(cb2.isSelected()){
                     newCTC.closeBlock(chosenBlock);
+					// Get rect object to paint ctc viewer
+					tempRec = (Rectangle)root.lookup(tempId);	
+					tempRec.setFill(Color.RED);
+					Tooltip t = new Tooltip("CLOSED BLOCK");
+					t.setShowDelay(ONE);
+					Tooltip.install(tempRec, t);						
+				}
+				else{
+              //      newCTC.repairBlock(sendBlockCTC); 
+					// Get rect object to paint ctc viewer
+					tempRec = (Rectangle)root.lookup(tempId);					
+					tempRec.setFill(Color.BLACK);
+					if(tempId.contains("g"))					
+						tempRec.setStroke(Color.GREEN);
+					else
+						tempRec.setStroke(Color.RED);						
+					Tooltip t = new Tooltip("CLOSED BLOCK");
+					//remove tooltip
+					Tooltip.uninstall(tempRec, t);
+				}						
+			}				
         }
     }
 
@@ -913,7 +1093,7 @@ int columns = 40, rows = 40, horizontal = 10, vertical = 10;
 					selectedTrain.getItems().clear();   // no queued trains, remove all 
 														//  selected schedules from view
 				newCTC.deleteQueuedTrain(tempQueuedTrain); // delete train from queued trains
-			}
+			}			
         }
     }
     
@@ -1028,5 +1208,54 @@ int columns = 40, rows = 40, horizontal = 10, vertical = 10;
 		
 		greenLine.put("15,6", "Z150");
 		
+		// SET RED LINE
+		redLine.put("6,29", "A1");redLine.put("5,29", "A2");redLine.put("4,29", "A3");
+		
+		redLine.put("3,30", "B4");redLine.put("2,31", "B5");redLine.put("2,32", "B6");
+		
+		redLine.put("2,33", "C7");redLine.put("3,34", "C8");redLine.put("4,35", "C9");
+		
+		redLine.put("5,35", "D10");redLine.put("6,34", "D11");redLine.put("7,33", "D12");
+		
+		redLine.put("7,32", "E13");redLine.put("7,31", "E14");redLine.put("7,30", "E15");
+		
+		redLine.put("7,29", "F16");redLine.put("7,28", "F17");redLine.put("7,27", "F18");
+		redLine.put("7,26", "F19");redLine.put("7,25", "F20");
+		
+		redLine.put("7,24", "G21");redLine.put("7,23", "G22");redLine.put("7,22", "G23");
+		
+		redLine.put("7,21", "H24");redLine.put("8,21", "H25");redLine.put("9,21", "H26");
+		redLine.put("10,21", "H27");redLine.put("11,21", "H28");redLine.put("12,21", "H29");
+		redLine.put("13,21", "H30");redLine.put("14,21", "H31");redLine.put("15,21", "H32");
+		redLine.put("16,21", "H33");redLine.put("17,21", "H34");redLine.put("18,21", "H35");
+		redLine.put("19,21", "H36");redLine.put("21,21", "H37");redLine.put("23,21", "H38");
+		redLine.put("24,21", "H39");redLine.put("25,21", "H40");redLine.put("26,21", "H41");
+		redLine.put("27,21", "H42");redLine.put("28,21", "H43");redLine.put("29,21", "H44");
+		redLine.put("30,21", "H45");
+		
+		redLine.put("30,20", "I46");redLine.put("30,19", "I47");redLine.put("30,18", "I48");
+		
+		redLine.put("30,17", "J49");redLine.put("30,16", "J50");redLine.put("30,15", "J51");
+		redLine.put("30,14", "J52");redLine.put("30,13", "J53");redLine.put("30,12", "J54");
+		
+		redLine.put("29,11", "K55");redLine.put("28,10", "K56");redLine.put("27,9", "K57");
+		
+		redLine.put("26,9", "L58");redLine.put("25,9", "L59");redLine.put("24,9", "L60");
+		
+		redLine.put("24,10", "M61");redLine.put("25,11", "M62");redLine.put("26,12", "M63");
+		
+		redLine.put("27,13", "N64");redLine.put("28,13", "N65");redLine.put("29,14", "N66");
+		
+		redLine.put("28,20", "O67");
+
+		redLine.put("27,19", "P68");redLine.put("26,19", "P69");redLine.put("25,19", "P70");
+
+		redLine.put("24,20", "Q71");
+
+		redLine.put("15,20", "R72");
+
+		redLine.put("14,19", "S73");redLine.put("13,19", "S74");redLine.put("12,19", "S75");	
+
+		redLine.put("11,20", "T76");		
 	}
 }
