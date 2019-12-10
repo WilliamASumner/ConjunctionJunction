@@ -254,6 +254,64 @@ public class TrainModel {
     {
         Doors = input;
 		myGUI.Doors = input;
+		if(input[0])
+		{
+			myGUI.Rdoor1_Label.setText("Rdoor1: Open \n");
+		}
+		else{
+			myGUI.Rdoor1_Label.setText("Rdoor1: Closed \n");
+		}
+		if(input[1])
+		{
+			myGUI.Rdoor2_Label.setText("Rdoor2: Open \n");
+		}
+		else{
+			myGUI.Rdoor2_Label.setText("Rdoor2: Closed \n");
+		}
+		if(input[2])
+		{
+			myGUI.Rdoor3_Label.setText("Rdoor3: Open \n");
+		}
+		else{
+			myGUI.Rdoor3_Label.setText("Rdoor3: Closed \n");
+		}
+		if(input[3])
+		{
+			myGUI.Rdoor4_Label.setText("Rdoor4: Open \n");
+		}
+		else{
+			myGUI.Rdoor4_Label.setText("Rdoor4: Closed \n");
+		}
+		if(input[4])
+		{
+			myGUI.Ldoor1_Label.setText("Ldoor1: Open \n");
+		}
+		else{
+			myGUI.Ldoor1_Label.setText("Ldoor1: Closed \n");
+		}
+		if(input[5])
+		{
+			myGUI.Ldoor2_Label.setText("Ldoor2: Open \n");
+		}
+		else{
+			myGUI.Ldoor2_Label.setText("Ldoor2: Closed \n");
+		}
+		if(input[6])
+		{
+			myGUI.Ldoor3_Label.setText("Ldoor3: Open \n");
+		}
+		else{
+			myGUI.Ldoor3_Label.setText("Ldoor3: Closed \n");
+		}
+		if(input[7])
+		{
+			myGUI.Ldoor4_Label.setText("Ldoor4: Open \n");
+		}
+		else{
+			myGUI.Ldoor4_Label.setText("Ldoor4: Closed \n");
+		}
+		System.out.println("TrainModel: Doors changed");
+        
     }
 
     public void toggleLights()

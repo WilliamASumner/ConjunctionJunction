@@ -40,6 +40,17 @@ public class TrainModelGUI extends Application {
 		//internal labels
 	Label Temp_Label = new Label("Temperature");
 	Label lights_Label = new Label("Lights: OFF \n");
+	
+	Label Ldoor1_Label = new Label("Ldoor1: Closed \n");
+	Label Ldoor2_Label = new Label("Ldoor2: Closed \n");
+	Label Ldoor3_Label = new Label("Ldoor3: Closed \n");
+	Label Ldoor4_Label = new Label("Ldoor4: Closed \n");
+	
+	Label Rdoor1_Label = new Label("Rdoor1: Closed \n");
+	Label Rdoor2_Label = new Label("Rdoor2: Closed \n");
+	Label Rdoor3_Label = new Label("Rdoor3: Closed \n");
+	Label Rdoor4_Label = new Label("Rdoor4: Closed \n");
+	
 
 	//Buttons on TrainModelGUI
     Button EbrakeFailButton = new Button("EBrake: Working");
@@ -117,7 +128,20 @@ public class TrainModelGUI extends Application {
 		internal.setStyle("-fx-border-color: black");
 		internal.getChildren().add(Temp_Label); //add speedlabel to brake flowpane
 		internal.getChildren().add(lights_Label); //add speedlabel to brake flowpane
+		
+		internal.getChildren().add(Rdoor1_Label); //add speedlabel to brake flowpane
+		internal.getChildren().add(Rdoor2_Label); //add speedlabel to brake flowpane
+		internal.getChildren().add(Rdoor3_Label); //add speedlabel to brake flowpane
+		internal.getChildren().add(Rdoor4_Label); //add speedlabel to brake flowpane
+		
+		internal.getChildren().add(Ldoor1_Label); //add speedlabel to brake flowpane
+		internal.getChildren().add(Ldoor2_Label); //add speedlabel to brake flowpane
+		internal.getChildren().add(Ldoor3_Label); //add speedlabel to brake flowpane
+		internal.getChildren().add(Ldoor4_Label); //add speedlabel to brake flowpane
+		
 		flowpane.getChildren().add(internal); //add brake flowpane to main flowpane
+		
+		
 		
 		//failures text flowpane
 		FlowPane fail1 = new FlowPane();
