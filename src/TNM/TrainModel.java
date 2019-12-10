@@ -42,6 +42,8 @@ public class TrainModel {
     {
         currPassengers = input;
         estimatedmass = kilosPerPound*(2000*trainMass + passMass*currPassengers);
+		myGUI.pass_Label.setText("Passengers:\t" + currPassengers + " \n");
+		
         return;
     }
 

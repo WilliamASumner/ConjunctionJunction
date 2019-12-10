@@ -31,7 +31,7 @@ public class TrainModelGUI extends Application {
 	Label currentMassLabel = new Label("Mass:\n");
 	Label currentDragLabel = new Label("Mass:\n");
 	Label currentPowerLabel = new Label("Current Power is" + mydubSpeed + " kW\n");
-	Label currentPassLabel = new Label("Current Passengers is\n");
+	Label pass_Label = new Label("Passengers: 0 \n");
 	Label currentFailsLabel = new Label("Failures: " + failures + " \n");
 	
 	
@@ -124,6 +124,8 @@ public class TrainModelGUI extends Application {
 		speed.getChildren().add(currentAccelerationLabel); //add speedlabel to brake flowpane
 		speed.getChildren().add(currentDragLabel); //add speedlabel to brake flowpane
 		speed.getChildren().add(currentDistLabel); //add speedlabel to brake flowpane
+		speed.getChildren().add(pass_Label); //add speedlabel to brake flowpane
+		
 		
 		flowpane.getChildren().add(speed); //add brake flowpane to main flowpane
 		
