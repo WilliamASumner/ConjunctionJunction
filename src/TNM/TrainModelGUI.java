@@ -32,7 +32,7 @@ public class TrainModelGUI extends Application {
 	Label currentMassLabel = new Label("Mass:\n");
 	Label currentDragLabel = new Label("Mass:\n");
 	Label currentPowerLabel = new Label("Current Power is" + mydubSpeed + " kW\n");
-	Label pass_Label = new Label("Passengers: 0 \n");
+	Label pass_Label = new Label("Passengers: 0/222 \n");
 	Label currentFailsLabel = new Label("Failures: " + failures + " \n");
 	
 	
@@ -58,6 +58,8 @@ public class TrainModelGUI extends Application {
 	Label underground_Label = new Label("Current block");
 	Label grade_Label = new Label("Current block");
 	Label linecolor_Label = new Label("Current block");
+	Label beaconData_Label = new Label("Current block");
+	
 	
 	
 
@@ -163,6 +165,7 @@ public class TrainModelGUI extends Application {
 		block_VBOX.getChildren().add(grade_Label); //add speedlabel to brake flowpane
 		block_VBOX.getChildren().add(AudSpeed_Label); //add speedlabel to brake flowpane
 		block_VBOX.getChildren().add(AudAuth_Label); //add speedlabel to brake flowpane
+		block_VBOX.getChildren().add(beaconData_Label); //add speedlabel to brake flowpane
 		
 		flowpane.getChildren().add(block_VBOX); //add brake flowpane to main flowpane
 		

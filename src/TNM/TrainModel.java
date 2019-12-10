@@ -9,6 +9,7 @@ public class TrainModel {
     String name = "test name";
 	
     String AuthorityBlockID = "test Block";
+	String beaconData = "Default Beacon Data";
     double AuditedSpeed = 3.14;
 	Block AuditedAuthority;
 	
@@ -35,14 +36,16 @@ public class TrainModel {
 
     static double trainMass = 40.9; //tons
     static int currPassengers = 0; 
+	int maxPassengers = 222;
     static double passMass = 180; // pounds
     static double estimatedmass = kilosPerPound*(2000*trainMass + passMass*currPassengers);//kilos of train
     TrainControllerMain TNC_Main = null;
     public void setPassenger(int input)
     {
         currPassengers = input;
+		if(currPassengers > maxPassengers)currPassengers=maxPassengers;
         estimatedmass = kilosPerPound*(2000*trainMass + passMass*currPassengers);
-		myGUI.pass_Label.setText("Passengers:\t" + currPassengers + " \n");
+		myGUI.pass_Label.setText("Passengers:\t" + currPassengers + "/222 \n");
 		
         return;
     }
@@ -121,6 +124,7 @@ public class TrainModel {
 			System.out.println("TrainModel: signalFail is now true: "+signalFail);
         }
         singleTNC.setSignalFailure(signalFail);
+		//myGUI.beaconData_Label.setText("Beacon Data:\t" + getBeaconData() + "\n");
         return signalFail;
     }
     public boolean toggleEngineFail()
@@ -254,6 +258,7 @@ public class TrainModel {
 		myGUI.currentMassLabel.setText("Mass:\t" + estimatedmass + " kg \n");
 		myGUI.Temp_Label.setText("Temperature:\t" + String.format("%.2f", temperature)+ " degrees F \n");
 		
+		myGUI.beaconData_Label.setText("Beacon Data:\t" + getBeaconData() + "\n");
 		myGUI.AudSpeed_Label.setText("AuditedSpeed:\t" + AuditedSpeed + " m/s\n");
 		myGUI.AudAuth_Label.setText("AuditedAuthority:\t" + AuditedAuthority + " \n");
 		
@@ -431,6 +436,18 @@ public class TrainModel {
 	public String getName()
 	{
 		return name;
+	}
+	
+	public String getBeaconData()
+	{
+		if(signalFail)return "FAILURE";
+		return beaconData;
+	}
+	
+	public String setBeaconData(String input)
+	{
+		beaconData = input;
+		return beaconData;
 	}
 
 
