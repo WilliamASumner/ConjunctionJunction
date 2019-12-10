@@ -168,6 +168,9 @@ public class TrainModel {
         grade = currBlock.getGrade();//setGrade(currBlock.getGrade());
         currBlockLength = currBlock.getLength();
         trackModel.updateOccupancy(currBlock);
+		
+		myGUI.blockLengthLabel.setText("Block length:\t" + currBlockLength + " m\n");
+		myGUI.currentBlockLabel.setText("Block:\t" + currBlock.getBlockID() + " \n");
         return;
     }
 	
@@ -233,16 +236,17 @@ public class TrainModel {
 			AuditedAuthority = currBlock.getAuditedAuthority();
 			AuditedSpeed = currBlock.getAuditedSpeed();
 			
-			myGUI.blockLengthLabel.setText("Block length:\t" + currBlockLength + " m\n");
         }
 		
 		myGUI.currentPowerLabel.setText("Power:\t" + String.format("%.6f", powerCommand) + " kW\n");
-		myGUI.currentBlockLabel.setText("Block:\t" + currBlock.getBlockID() + " \n");
 		myGUI.currentDistLabel.setText("Position:\t" + String.format("%.6f", distanceTraveled) + " m\n");
 		myGUI.currentSpeedLabel.setText("Speed:\t" + String.format("%.6f", velocity) + " m/s \n");
 		myGUI.currentAccelerationLabel.setText("Acceleration:\t" + String.format("%.6f", acceleration)+ " m/s2 \n");
 		myGUI.currentMassLabel.setText("Mass:\t" + estimatedmass + " kg \n");
 		myGUI.Temp_Label.setText("Temperature:\t" + String.format("%.2f", temperature)+ " degrees F \n");
+		
+		myGUI.AudSpeed_Label.setText("AuditedSpeed:\t" + AuditedSpeed + " m/s\n");
+		myGUI.AudAuth_Label.setText("AuditedAuthority:\t" + AuditedAuthority + " \n");
 		
 		
 		

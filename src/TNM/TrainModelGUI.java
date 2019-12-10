@@ -26,9 +26,7 @@ public class TrainModelGUI extends Application {
 	//Labels (just info that is displayed)
 		//speed labels
 	Label currentSpeedLabel = new Label("Current Speed is" + mydubSpeed + " m/s\n");
-	Label currentBlockLabel = new Label("Current block");
 	Label currentDistLabel = new Label("Current block");
-	Label blockLengthLabel = new Label("Current block");
 	Label currentAccelerationLabel = new Label("Current acceler");
 	Label currentMassLabel = new Label("Mass:\n");
 	Label currentDragLabel = new Label("Mass:\n");
@@ -51,6 +49,11 @@ public class TrainModelGUI extends Application {
 	Label Rdoor3_Label = new Label("Rdoor3: Closed \n");
 	Label Rdoor4_Label = new Label("Rdoor4: Closed \n");
 	
+		//block info
+	Label currentBlockLabel = new Label("Current block");
+	Label blockLengthLabel = new Label("Current block");
+	Label AudSpeed_Label = new Label("Current block");
+	Label AudAuth_Label = new Label("Current block");
 
 	//Buttons on TrainModelGUI
     Button EbrakeFailButton = new Button("EBrake: Working");
@@ -117,9 +120,7 @@ public class TrainModelGUI extends Application {
 		speed.getChildren().add(currentPowerLabel); //add speedlabel to brake flowpane
 		speed.getChildren().add(currentAccelerationLabel); //add speedlabel to brake flowpane
 		speed.getChildren().add(currentDragLabel); //add speedlabel to brake flowpane
-		speed.getChildren().add(currentBlockLabel); //add speedlabel to brake flowpane
 		speed.getChildren().add(currentDistLabel); //add speedlabel to brake flowpane
-		speed.getChildren().add(blockLengthLabel); //add speedlabel to brake flowpane
 		
 		flowpane.getChildren().add(speed); //add brake flowpane to main flowpane
 		
@@ -141,7 +142,16 @@ public class TrainModelGUI extends Application {
 		
 		flowpane.getChildren().add(internal); //add brake flowpane to main flowpane
 		
+		//block_VBOX
 		
+		VBox block_VBOX = new VBox();
+		block_VBOX.setStyle("-fx-border-color: black");
+		block_VBOX.getChildren().add(currentBlockLabel); //add speedlabel to brake flowpane
+		block_VBOX.getChildren().add(blockLengthLabel); //add speedlabel to brake flowpane
+		block_VBOX.getChildren().add(AudSpeed_Label); //add speedlabel to brake flowpane
+		block_VBOX.getChildren().add(AudAuth_Label); //add speedlabel to brake flowpane
+		
+		flowpane.getChildren().add(block_VBOX); //add brake flowpane to main flowpane
 		
 		//failures text flowpane
 		FlowPane fail1 = new FlowPane();
