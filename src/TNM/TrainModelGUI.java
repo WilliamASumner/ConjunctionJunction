@@ -26,6 +26,7 @@ public class TrainModelGUI extends Application {
 	//Labels (just info that is displayed)
 		//speed labels
 	Label currentSpeedLabel = new Label("Current Speed is" + mydubSpeed + " m/s\n");
+	currentSpeedLabel.setTextFill(Color.web("#0076a3"));
 	Label currentDistLabel = new Label("Current block");
 	Label currentAccelerationLabel = new Label("Current acceler");
 	Label currentMassLabel = new Label("Mass:\n");
