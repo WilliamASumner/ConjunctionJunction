@@ -3,6 +3,9 @@ package cjunction; // conjunction junction package
 import java.io.*; 
 import javafx.stage.Stage;
 import java.util.*; 
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.StrokeLineCap;
 
 public class CTC{
     int throughput;
@@ -16,6 +19,9 @@ public class CTC{
 
     public static HashMap<String,String> stationToBlockRed = new HashMap<String,String>();
     public static HashMap<String,String> stationToBlockGreen = new HashMap<String,String>();
+	
+    public static HashMap<String,String> blockToStationRed = new HashMap<String,String>();
+    public static HashMap<String,String> blockToStationGreen = new HashMap<String,String>();
 	
     public void init() {
 		
@@ -39,6 +45,26 @@ public class CTC{
         stationToBlockGreen.put("CENTRAL2","W141");
 		stationToBlockGreen.put("yard","a0");
 		
+		blockToStationGreen.put("A2", "PIONEER");
+        blockToStationGreen.put("C9", "EDGEBROOK");
+        blockToStationGreen.put("D16", "STATION");
+        blockToStationGreen.put("F22", "WHITED");
+        blockToStationGreen.put("G31", "SOUTH BANK");
+        blockToStationGreen.put("I39", "CENTRAL");
+        blockToStationGreen.put("I48", "INGLEWOOD");
+        blockToStationGreen.put("I57", "OVERBROOK");
+        blockToStationGreen.put("K65", "GLENBURY");
+        blockToStationGreen.put("L73", "DORMONT");
+        blockToStationGreen.put("N77", "MT LEBANON");
+        blockToStationGreen.put("O88", "POPLAR");
+        blockToStationGreen.put("P96", "CASTLE SHANNON");
+        blockToStationGreen.put("T105", "DORMONT2");
+        blockToStationGreen.put("U114", "GLENBURY2");
+        blockToStationGreen.put("W123", "OVERBROOK2");
+        blockToStationGreen.put("W132", "INGLEWOOD2");
+        blockToStationGreen.put("W141", "CENTRAL2");
+		blockToStationGreen.put("a0", "yard");
+		
 		stationToBlockRed.put("SHADYSIDE", "C7");
 		stationToBlockRed.put("HERRON AVE", "F16");
 		stationToBlockRed.put("SWISSVILLE", "G21");
@@ -48,6 +74,16 @@ public class CTC{
 		stationToBlockRed.put("STATION SQUARE", "I48");
 		stationToBlockRed.put("SOUTH HILLS JUNCTION", "L60");
 		stationToBlockRed.put("yard","a0");
+		
+		blockToStationRed.put("C7", "SHADYSIDE");
+		blockToStationRed.put("F16", "HERRON AVE");
+		blockToStationRed.put("G21", "SWISSVILLE");
+		blockToStationRed.put("H25", "PENN STATION");
+		blockToStationRed.put("H35", "STEEL PLAZA");
+		blockToStationRed.put("H45", "FIRST AVE");
+		blockToStationRed.put("I48", "STATION SQUARE");
+		blockToStationRed.put("L60", "SOUTH HILLS JUNCTION");
+		blockToStationRed.put("a0", "yard");		
 	}
 
     public CTC() { // for testing
@@ -56,16 +92,18 @@ public class CTC{
 
     @SuppressWarnings("unchecked")
     public void update() {
-		// update clock 
-/*		gui.stackAddClock = gui.updateByRebuildingClock();
-		// update throughput
-		// tkm.getThroughput();
-		gui.stackAddThroughput = gui.updateByRebuildingThroughput();
-		gui.leftVbox.getChildren().addAll(0, stackAddClock, stackAddThroughput, )
-		= new VBox(0, stackAddClock, stackAddThroughput, imageView);
-        leftVbox.setStyle(cssLayout);
-		gui.leftVbox = gui.
-*/		
+		if(gui == null)
+			return;
+		
+		//update clock
+		gui.stackAddClock.getChildren().remove(gui.digitalClock);
+		gui.stackAddClock.getChildren().addAll(gui.updateClock());
+
+//		update throughput
+//		tkm.getThroughput();
+//		gui.stackAddThroughput.getChildren().remove(gui.throughput);
+//		gui.stackAddThroughput.getChildren().addAll(gui.updateThroughput());
+		
 		// Check 'Select a Queued Train' view for any trains ready to auto dispatch
 		if(qT.size() != 0 && !gui.queuedTrainsView.getItems().isEmpty()){
 			for(int i = 0; i < qT.size(); i++){
@@ -114,18 +152,98 @@ public class CTC{
 					// Send authority to track controller
 					trckCntrl.sendSuggestedAuthority(tempT.getCurBlkID(), tempT.getAuthority());
 				}
+				// Send each update authority and cur block
+				trckCntrl.sendSuggestedAuthority(tempT.getCurBlkID(), tempT.getAuthority());
+			
+				
+				// get rectangle in CTC train viewer that matches with train's block
+//				String tempId = "#" + tempT.getCurBlkID();
+				// NEED TO SEE IF CURRENT BLOCK IS A SWITCH, SO CAN CHANGE STATUS...
+				//System.out.println(tempId);
+	//			gui.tempRec = (Rectangle)gui.root.lookup(tempId);
+				//System.out.println(gui.tempRec);
+				// Paint the rect a different color
+		//		gui.tempRec.setFill(Color.YELLOW);
+				
+			//	gui.tempRec.setFill(Color.GREEN);
+			//	gui.tempRec.setStroke(Color.BLACK);
+				//gui.tempRec.setWidth(5);
+				//gui.tempRec.setHeight(5);				
+			//	gui.tempRec.setStrokeDashOffset(22);
+			//	gui.tempRec.setStrokeLineCap(StrokeLineCap.ROUND);
+			//	gui.tempRec.setStrokeLineJoin(lineJoin);
+			//	gui.tempRec.setStrokeMiterLimit(miterLimit);
+			//	gui.tempRec.setStrokeType(strokeType);
+			//	gui.tempRec.setStrokeWidth(2);
 			}
         }
+/*		
+		// Reset ctc viewer
+		//Start with green line
+		for(Map.Entry<String, String> block: greenLine.entrySet()){
+			// get rectangle in CTC train viewer that matches with train's block
+			String tempId = "#" + block.getValue();
+			// Get rect object
+			gui.tempRec = (Rectangle)gui.root.lookup(tempId);
+			//check if current rect is occupied by train
+			if(gui.tempRec.getFill()==Color.YELLOW)
+				continue;
+			// Check if current recgt is being repaired
+			// last for 2 mins
+			if(gui.tempRec.getFill()==Color.ORANGE){
+				//if(curTime)
+				// 2 mins to repair
+				
+				//Check if a stationToBlockGreen
+				if(blockToStationGreen.containsKey(block.getValue)){
+					
+				}
+				gui.tempRec.setFill(color.BLACK);
+				gui.tempRec.setStroke(color.GREEN);
+			}
+			
+		}
+*/		
+		// NEED TO SEE IF CURRENT BLOCK IS A SWITCH, SO CAN CHANGE STATUS...
+		//System.out.println(tempId);
 		
+
 		
-		
+							
+
+/*
+				String temp = "" + i + "," + j;
+				if(gui.greenLine.containsKey(temp)){
+					// if train's schedule contains this block--highlight route
+					if(tempT.schedule.contains(temp)){
+						rect = new Rectangle(horizontal * j, vertical * i, horizontal, vertical);
+						rect.setStroke(Color.YELLOW);
+						root.getChildren().add(rect);					
+
+					}
+					else{
+						rect = new Rectangle(horizontal * j, vertical * i, horizontal, vertical);
+						rect.setStroke(Color.GREEN);
+						root.getChildren().add(rect);	
+					}
+				}	
+				else{
+					rect = new Rectangle(horizontal * j, vertical * i, horizontal, vertical);
+					rect.setStroke(Color.BLACK);
+					root.getChildren().add(rect);
+				
+				}
+			}
+		}
+
+*/	
 		
     }
 
     public void showGUI(Stage primaryStage) {
         if (gui == null)
             gui = new CTC_GUI(this, primaryStage);
-        gui.start(primaryStage);
+		gui.start(primaryStage);
     }
 
 

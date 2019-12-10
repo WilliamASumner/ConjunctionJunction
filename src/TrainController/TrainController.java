@@ -24,7 +24,7 @@ public class TrainController{
     boolean[] Doors = new boolean[8];
     double powerCommand;
     double temperature = 70.0;
-    // Block currBlock;
+    String currBlock;
     boolean eBrakeOn;
     boolean sBrakeOn;
     boolean isAutomaticMode = true;
@@ -131,12 +131,12 @@ public class TrainController{
 
     //Updates train's audited speed limit from the train model
     public void getAuditedSpeed(){
-       // auditedSpeed = tm.getAuditedSpeed();
+        auditedSpeed = tm.getAuditedSpeed();
     }
 
     //Updates train's authority from the train model
     public void getAuthority(){
-      //  authority = tm.getAuthority();
+        authority = tm.getAuthority();
     }
 
     //Updates train's authority from the train model

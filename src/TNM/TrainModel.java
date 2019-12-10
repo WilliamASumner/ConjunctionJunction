@@ -11,15 +11,14 @@ public class TrainModel {
     String AuthorityBlockID = "test Block";
 	String beaconData = "Default Beacon Data";
     double AuditedSpeed = 3.14;
-	Block AuditedAuthority;
-	
     TrainControllerMain TNC = null;
     TrainController singleTNC = null;
     TrainModelGUI myGUI;
     Block currBlock;
     TkM trackModel = null;
+    
 
-
+    Block AuditedAuthority;
     boolean[] Doors = new boolean[8];
     boolean lights = false;
     double temperature = 70;
@@ -195,7 +194,20 @@ public class TrainModel {
 		radians = radiansPerGrade*grade;
 		System.out.println("TrainModel: radians: "+radians);
 		
-	}
+    }
+    
+    //@Returns String - Get the current block
+    public String getCurrentBlock(){
+        return currBlock.getBlockID();
+    }
+
+
+    //@Returns String - Get the Authority from the current block 
+    public String getAuthority(){
+        return currBlock.getAuditedAuthority().getBlockID();
+    }
+
+
 
     private double CalcAcceleration()
     {
