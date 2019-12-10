@@ -161,7 +161,7 @@ public class TrainModel {
 
         trackModel = tm;
         name = Stringname;
-        AuthorityBlockID = ABlock;
+        if(ABlock!=null)AuthorityBlockID = ABlock;
         AuditedSpeed = ASpeed;
 
         initTrainModelGUI();
@@ -204,7 +204,7 @@ public class TrainModel {
 
     //@Returns String - Get the Authority from the current block 
     public String getAuthority(){
-        return currBlock.getAuditedAuthority().getBlockID();
+        return AuthorityBlockID;
     }
 
 
@@ -232,7 +232,7 @@ public class TrainModel {
         //double frictionforce = 0.5 * velocity;// Not sure if correct
         double frictionforce = rollingFrictionCoefficient*gravity*Math.cos(radians);// Not sure if correct
 		frictionforce = frictionforce + gravity*Math.sin(radians);//force of gravity
-		myGUI.currentDragLabel.setText("Friction+drag:\t" + String.format("%.6f", frictionforce)+ "m/s2 \n");
+		myGUI.currentDragLabel.setText("Friction+drag:\t" + String.format("%.6f", frictionforce)+ " m/s2 \n");
         retval = retval - (frictionforce);
         return retval;
     }
@@ -241,6 +241,9 @@ public class TrainModel {
     {
         
 		AuditedAuthority = currBlock.getAuditedAuthority();
+		if(AuditedAuthority!=null)
+			AuthorityBlockID=AuditedAuthority.getBlockID();//sometimes its randomly null
+		
 		AuditedSpeed = currBlock.getAuditedSpeed();
 		if (Sbrake ==false && Ebrake==false)
         {

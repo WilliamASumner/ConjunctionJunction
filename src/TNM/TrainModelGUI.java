@@ -32,7 +32,7 @@ public class TrainModelGUI extends Application {
 	Label currentMassLabel = new Label("Mass:\n");
 	Label currentDragLabel = new Label("Mass:\n");
 	Label currentPowerLabel = new Label("Current Power is" + mydubSpeed + " kW\n");
-	Label pass_Label = new Label("Passengers: 0/222 \n");
+	Label pass_Label = new Label("Passengers:\t0/222 \n");
 	Label simtime_Label = new Label("Simulated seconds/update: 1");
 	Label currentFailsLabel = new Label("Failures: " + failures + " \n");
 	
