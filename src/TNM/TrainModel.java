@@ -170,7 +170,9 @@ public class TrainModel {
         trackModel.updateOccupancy(currBlock);
 		
 		myGUI.blockLengthLabel.setText("Block length:\t" + currBlockLength + " m\n");
+		myGUI.grade_Label.setText("Grade:\t" + grade + " \n");
 		myGUI.currentBlockLabel.setText("Block:\t" + currBlock.getBlockID() + " \n");
+		myGUI.underground_Label.setText("Underground:\t" + currBlock.getIsUnderground() + " \n");
         return;
     }
 	

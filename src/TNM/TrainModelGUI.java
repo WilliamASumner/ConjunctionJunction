@@ -39,7 +39,7 @@ public class TrainModelGUI extends Application {
 	Label Temp_Label = new Label("Temperature");
 	Label lights_Label = new Label("Lights: OFF \n");
 	
-	Label Ldoor1_Label = new Label("Ldoor1: Closed \n");
+	Label Ldoor1_Label = new Label("Ldoor1: Closed ");
 	Label Ldoor2_Label = new Label("Ldoor2: Closed \n");
 	Label Ldoor3_Label = new Label("Ldoor3: Closed \n");
 	Label Ldoor4_Label = new Label("Ldoor4: Closed \n");
@@ -54,6 +54,9 @@ public class TrainModelGUI extends Application {
 	Label blockLengthLabel = new Label("Current block");
 	Label AudSpeed_Label = new Label("Current block");
 	Label AudAuth_Label = new Label("Current block");
+	Label underground_Label = new Label("Current block");
+	Label grade_Label = new Label("Current block");
+	
 
 	//Buttons on TrainModelGUI
     Button EbrakeFailButton = new Button("EBrake: Working");
@@ -148,6 +151,8 @@ public class TrainModelGUI extends Application {
 		block_VBOX.setStyle("-fx-border-color: black");
 		block_VBOX.getChildren().add(currentBlockLabel); //add speedlabel to brake flowpane
 		block_VBOX.getChildren().add(blockLengthLabel); //add speedlabel to brake flowpane
+		block_VBOX.getChildren().add(underground_Label); //add speedlabel to brake flowpane
+		block_VBOX.getChildren().add(grade_Label); //add speedlabel to brake flowpane
 		block_VBOX.getChildren().add(AudSpeed_Label); //add speedlabel to brake flowpane
 		block_VBOX.getChildren().add(AudAuth_Label); //add speedlabel to brake flowpane
 		
