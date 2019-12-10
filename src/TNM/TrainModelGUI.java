@@ -70,8 +70,8 @@ public class TrainModelGUI extends Application {
     Button EngineFailButton = new Button("Engine: Working");
     Button SignalFailButton = new Button("Signal: Working");
 	
-    Button eBrake = new Button("E BRAKE: Currently OFF");
-    Button sBrake = new Button("S BRAKE: Currently OFF");
+    Button eBrake = new Button("EMERGENCY BRAKE: Currently OFF");
+    Button sBrake = new Button("SERVICE BRAKE: Currently OFF");
 
     public TrainModelGUI(TrainModel TNM)// String inName, String inBlock, double inSpeed)
     {
@@ -250,12 +250,12 @@ public class TrainModelGUI extends Application {
 	public void setEbrake(boolean newEbrake)
 	{
 		 if(newEbrake){
-                    eBrake.setText("E Brake: Currently ON");
+                    eBrake.setText("EMERGENCY BRAKE: Currently ON");
 					eBrake.setStyle("-fx-text-fill: red");
                     System.out.println("TrainModelGUI: Emergency Brake ON...");
                 }
                 else{
-                    eBrake.setText("E Brake: Currently OFF");
+                    eBrake.setText("EMERGENCY BRAKE: Currently OFF");
 					eBrake.setStyle("-fx-text-fill: black");
                     System.out.println("TrainModelGUI: Emergency Brake OFF...");
                 }
@@ -264,12 +264,12 @@ public class TrainModelGUI extends Application {
 	public void setSbrake(boolean newSbrake)
 	{
 		 if(newSbrake){
-                    sBrake.setText("S Brake: Currently ON");
+                    sBrake.setText("SERVICE BRAKE: Currently ON");
 					sBrake.setStyle("-fx-text-fill: red");
                     System.out.println("TrainModelGUI: Service Brake ON...");
                 }
                 else{
-                    sBrake.setText("S Brake: Currently OFF");
+                    sBrake.setText("SERVICE BRAKE: Currently OFF");
 					sBrake.setStyle("-fx-text-fill: black");
                     System.out.println("TrainModelGUI: Service Brake OFF...");
                 }

@@ -188,9 +188,9 @@ public class TrainController{
 
     //Set speed of train to new driverSetSpeed, only if it not above
     //speed limit
-    public boolean setNewSpeed(double driverSetSpeed){
+    public boolean setNewSpeed(double input){
         if(!isAutomaticMode){
-            currSpeed = driverSetSpeed;
+            driverSetSpeed = input;
             return true;
         }
         return false;
