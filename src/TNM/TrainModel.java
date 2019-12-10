@@ -68,6 +68,8 @@ public class TrainModel {
     double altvelocity = 0.01;
     double acceleration = 0;
     double timePerUpdate = 1; //seconds
+	//if you change timePerUpdate, uncomment the following line.
+	//myGUI.simtime_Label.setText("Simulated seconds/update: "+String.format("%.3f", timePerUpdate));
 
     public boolean toggleEBrakeFail()
     {
@@ -176,8 +178,8 @@ public class TrainModel {
         trackModel.updateOccupancy(currBlock);
 		
 		myGUI.blockLengthLabel.setText("Block length:\t" + currBlockLength + " m\n");
-		myGUI.grade_Label.setText("Grade:\t" + grade + " \n");
-		myGUI.currentBlockLabel.setText("Block:\t" + currBlock.getBlockID() + " \n");
+		myGUI.grade_Label.setText("Grade:\t\t" + grade + " \n");
+		myGUI.currentBlockLabel.setText("Block:\t\t" + currBlock.getBlockID() + " \n");
 		//myGUI.currentBlockLabel.setStyle("-fx-text-fill: red");
         //System.out.println("TrainModel: Red");
 		
@@ -256,10 +258,10 @@ public class TrainModel {
 		myGUI.currentSpeedLabel.setText("Speed:\t" + String.format("%.6f", velocity) + " m/s \n");
 		myGUI.currentAccelerationLabel.setText("Acceleration:\t" + String.format("%.6f", acceleration)+ " m/s2 \n");
 		myGUI.currentMassLabel.setText("Mass:\t" + estimatedmass + " kg \n");
-		myGUI.Temp_Label.setText("Temperature:\t" + String.format("%.2f", temperature)+ " degrees F \n");
+		myGUI.Temp_Label.setText("Temperature:\t" + String.format("%.1f", temperature)+ " F \n");
 		
-		myGUI.beaconData_Label.setText("Beacon Data:\t" + getBeaconData() + "\n");
-		myGUI.AudSpeed_Label.setText("AuditedSpeed:\t" + AuditedSpeed + " m/s\n");
+		myGUI.beaconData_Label.setText("Beacon Data:\n" + getBeaconData() + "\n");
+		myGUI.AudSpeed_Label.setText("AuditedSpeed:\t\t" + AuditedSpeed + " m/s\n");
 		myGUI.AudAuth_Label.setText("AuditedAuthority:\t" + AuditedAuthority + " \n");
 		
 		
@@ -407,7 +409,7 @@ public class TrainModel {
             }
 			
 			singleTNC.getGUI().setSbrake(Sbrake);//James 
-			//myGUI.setSbrake(Sbrake);
+			myGUI.setSbrake(Sbrake);
             //return true;
         }
         return Sbrake;// false;

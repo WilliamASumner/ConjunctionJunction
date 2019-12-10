@@ -33,6 +33,7 @@ public class TrainModelGUI extends Application {
 	Label currentDragLabel = new Label("Mass:\n");
 	Label currentPowerLabel = new Label("Current Power is" + mydubSpeed + " kW\n");
 	Label pass_Label = new Label("Passengers: 0/222 \n");
+	Label simtime_Label = new Label("Simulated seconds/update: 1");
 	Label currentFailsLabel = new Label("Failures: " + failures + " \n");
 	
 	
@@ -70,6 +71,7 @@ public class TrainModelGUI extends Application {
     Button SignalFailButton = new Button("Signal: Working");
 	
     Button eBrake = new Button("E BRAKE: Currently OFF");
+    Button sBrake = new Button("S BRAKE: Currently OFF");
 
     public TrainModelGUI(TrainModel TNM)// String inName, String inBlock, double inSpeed)
     {
@@ -92,6 +94,12 @@ public class TrainModelGUI extends Application {
         eBrake.setMaxWidth(400);
         eBrake.setMinWidth(200);
         eBrake.setMaxWidth(200);
+		
+		sBrake.setStyle("-fx-text-fill: black");
+        sBrake.setMinWidth(400);
+        sBrake.setMaxWidth(400);
+        sBrake.setMinWidth(200);
+        sBrake.setMaxWidth(200);
 		
 		EbrakeFailButton.setStyle("-fx-text-fill: black");
         EbrakeFailButton.setMinWidth(400);
@@ -124,17 +132,35 @@ public class TrainModelGUI extends Application {
 		VBox speed = new VBox();
 		speed.setStyle("-fx-border-color: black");
 		speed.getChildren().add(currentSpeedLabel); //add speedlabel to brake flowpane
-		
 		//currentSpeedLabel.setTextFill(Color.web("#ff0000", 0.8));
-		speed.getChildren().add(currentMassLabel); //add speedlabel to brake flowpane
 		speed.getChildren().add(currentPowerLabel); //add speedlabel to brake flowpane
 		speed.getChildren().add(currentAccelerationLabel); //add speedlabel to brake flowpane
 		speed.getChildren().add(currentDragLabel); //add speedlabel to brake flowpane
 		speed.getChildren().add(currentDistLabel); //add speedlabel to brake flowpane
 		speed.getChildren().add(pass_Label); //add speedlabel to brake flowpane
+		speed.getChildren().add(currentMassLabel); //add speedlabel to brake flowpane
+		speed.getChildren().add(simtime_Label); //add speedlabel to brake flowpane
+		
 		
 		
 		flowpane.getChildren().add(speed); //add brake flowpane to main flowpane
+		
+		
+		//block_VBOX
+		
+		VBox block_VBOX = new VBox();
+		block_VBOX.setStyle("-fx-border-color: black");
+		block_VBOX.getChildren().add(currentBlockLabel); //add speedlabel to brake flowpane
+		block_VBOX.getChildren().add(linecolor_Label); //add speedlabel to brake flowpane
+		block_VBOX.getChildren().add(blockLengthLabel); //add speedlabel to brake flowpane
+		block_VBOX.getChildren().add(underground_Label); //add speedlabel to brake flowpane
+		block_VBOX.getChildren().add(grade_Label); //add speedlabel to brake flowpane
+		block_VBOX.getChildren().add(AudSpeed_Label); //add speedlabel to brake flowpane
+		block_VBOX.getChildren().add(AudAuth_Label); //add speedlabel to brake flowpane
+		block_VBOX.getChildren().add(beaconData_Label); //add speedlabel to brake flowpane
+		
+		flowpane.getChildren().add(block_VBOX); //add brake flowpane to main flowpane
+		
 		
 		//internal VBOX
 		VBox internal = new VBox();
@@ -153,21 +179,6 @@ public class TrainModelGUI extends Application {
 		internal.getChildren().add(Ldoor4_Label); //add speedlabel to brake flowpane
 		
 		flowpane.getChildren().add(internal); //add brake flowpane to main flowpane
-		
-		//block_VBOX
-		
-		VBox block_VBOX = new VBox();
-		block_VBOX.setStyle("-fx-border-color: black");
-		block_VBOX.getChildren().add(currentBlockLabel); //add speedlabel to brake flowpane
-		block_VBOX.getChildren().add(linecolor_Label); //add speedlabel to brake flowpane
-		block_VBOX.getChildren().add(blockLengthLabel); //add speedlabel to brake flowpane
-		block_VBOX.getChildren().add(underground_Label); //add speedlabel to brake flowpane
-		block_VBOX.getChildren().add(grade_Label); //add speedlabel to brake flowpane
-		block_VBOX.getChildren().add(AudSpeed_Label); //add speedlabel to brake flowpane
-		block_VBOX.getChildren().add(AudAuth_Label); //add speedlabel to brake flowpane
-		block_VBOX.getChildren().add(beaconData_Label); //add speedlabel to brake flowpane
-		
-		flowpane.getChildren().add(block_VBOX); //add brake flowpane to main flowpane
 		
 		//failures text flowpane
 		FlowPane fail1 = new FlowPane();
@@ -188,6 +199,7 @@ public class TrainModelGUI extends Application {
         FlowPane brake = new FlowPane();
         brake.setStyle("-fx-border-color: black");
 		brake.getChildren().add(eBrake); //add eBrake to brake flowpane
+		brake.getChildren().add(sBrake); //add eBrake to brake flowpane
         flowpane.getChildren().add(brake); //add brake flowpane to main flowpane
 		
 		
@@ -248,6 +260,21 @@ public class TrainModelGUI extends Application {
                     System.out.println("TrainModelGUI: Emergency Brake OFF...");
                 }
 	}
+	
+	public void setSbrake(boolean newSbrake)
+	{
+		 if(newSbrake){
+                    sBrake.setText("S Brake: Currently ON");
+					sBrake.setStyle("-fx-text-fill: red");
+                    System.out.println("TrainModelGUI: Service Brake ON...");
+                }
+                else{
+                    sBrake.setText("S Brake: Currently OFF");
+					sBrake.setStyle("-fx-text-fill: black");
+                    System.out.println("TrainModelGUI: Service Brake OFF...");
+                }
+	}
+
 
     //Action Listeners
 	class eBrakeHandler implements EventHandler<ActionEvent>
