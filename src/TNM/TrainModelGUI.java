@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
@@ -26,7 +27,6 @@ public class TrainModelGUI extends Application {
 	//Labels (just info that is displayed)
 		//speed labels
 	Label currentSpeedLabel = new Label("Current Speed is" + mydubSpeed + " m/s\n");
-	currentSpeedLabel.setTextFill(Color.web("#0076a3"));
 	Label currentDistLabel = new Label("Current block");
 	Label currentAccelerationLabel = new Label("Current acceler");
 	Label currentMassLabel = new Label("Mass:\n");
@@ -57,6 +57,8 @@ public class TrainModelGUI extends Application {
 	Label AudAuth_Label = new Label("Current block");
 	Label underground_Label = new Label("Current block");
 	Label grade_Label = new Label("Current block");
+	Label linecolor_Label = new Label("Current block");
+	
 	
 
 	//Buttons on TrainModelGUI
@@ -120,6 +122,8 @@ public class TrainModelGUI extends Application {
 		VBox speed = new VBox();
 		speed.setStyle("-fx-border-color: black");
 		speed.getChildren().add(currentSpeedLabel); //add speedlabel to brake flowpane
+		
+		//currentSpeedLabel.setTextFill(Color.web("#ff0000", 0.8));
 		speed.getChildren().add(currentMassLabel); //add speedlabel to brake flowpane
 		speed.getChildren().add(currentPowerLabel); //add speedlabel to brake flowpane
 		speed.getChildren().add(currentAccelerationLabel); //add speedlabel to brake flowpane
@@ -153,6 +157,7 @@ public class TrainModelGUI extends Application {
 		VBox block_VBOX = new VBox();
 		block_VBOX.setStyle("-fx-border-color: black");
 		block_VBOX.getChildren().add(currentBlockLabel); //add speedlabel to brake flowpane
+		block_VBOX.getChildren().add(linecolor_Label); //add speedlabel to brake flowpane
 		block_VBOX.getChildren().add(blockLengthLabel); //add speedlabel to brake flowpane
 		block_VBOX.getChildren().add(underground_Label); //add speedlabel to brake flowpane
 		block_VBOX.getChildren().add(grade_Label); //add speedlabel to brake flowpane

@@ -174,8 +174,11 @@ public class TrainModel {
 		myGUI.blockLengthLabel.setText("Block length:\t" + currBlockLength + " m\n");
 		myGUI.grade_Label.setText("Grade:\t" + grade + " \n");
 		myGUI.currentBlockLabel.setText("Block:\t" + currBlock.getBlockID() + " \n");
-		myGUI.currentBlockLabel.setStyle("-fx-color: red");
+		//myGUI.currentBlockLabel.setStyle("-fx-text-fill: red");
+        //System.out.println("TrainModel: Red");
+		
 		myGUI.underground_Label.setText("Underground:\t" + currBlock.getIsUnderground() + " \n");
+		myGUI.linecolor_Label.setText("Line Color:\t" + currBlock.getLineColor() + " \n");
         return;
     }
 	
@@ -233,6 +236,7 @@ public class TrainModel {
 		if(velocity >20) velocity =20;//max speed is 20 m/s
 
         distanceTraveled = distanceTraveled + velocity * timePerUpdate;
+		//myGUI.currentBlockLabel.setStyle("-fx-color: black");
 
         if (distanceTraveled > currBlockLength)
         {
@@ -242,10 +246,6 @@ public class TrainModel {
 			AuditedSpeed = currBlock.getAuditedSpeed();
 			
         }
-		else{
-			
-			myGUI.currentBlockLabel.setStyle("-fx-color: black");
-		}
 		
 		myGUI.currentPowerLabel.setText("Power:\t" + String.format("%.6f", powerCommand) + " kW\n");
 		myGUI.currentDistLabel.setText("Position:\t" + String.format("%.6f", distanceTraveled) + " m\n");
