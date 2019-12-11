@@ -9,8 +9,8 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage; 
 public class Power{
-    public static double Ki = 50.0;
-    public static double Kp = 50.0;
+    public static double Ki = 1.0;
+    public static double Kp = 1.0;
     private double powerOutput;
     private PowerGUI powerGUI;
 
@@ -20,8 +20,8 @@ public class Power{
 
     private void init(){
         //Set default values for Ki and Kp
-        Ki = 10.0;
-        Kp = 10.0;
+        Ki = 1.0;
+        Kp = 1.0;
         powerGUI = new PowerGUI(this);
     }
 

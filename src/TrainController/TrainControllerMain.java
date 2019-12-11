@@ -54,33 +54,32 @@ public class TrainControllerMain{
 
     //Called when train controller is created
     void initGUI(){
-        myGUI = new TrainControllerMainGUI(this);
-        
+        myGUI = new TrainControllerMainGUI(this);    
     }
 
   
-
+    /*create the Power class object, called by 
+    TrainControllerMainGUI the first time 
+    that the Power gui is opened*/
     public Power initPower(){
         p = new Power();
+        return p;
+    }
+
+    /*get the Power class object, called by 
+    TrainControllerMainGUI to reference the power
+    object to open the power GUI*/
+    public Power getPower(){
         return p;
     }
 
     //Called when train controller selected from main menu
     void showGUI(Stage primaryStage){
         myGUI.start(primaryStage);
-        // Scene scene = new Scene(GUI);
-        // primaryStage.setScene(scene);
-        // primaryStage.show();
+
     }
 
-    //Called when train controller selected from main menu
-    void showGUI(Stage primaryStage, TrainController tnc){
-        TrainControllerGUI myGUI = tnc.getGUI();
-        myGUI.start(primaryStage);
-        // Scene scene = new Scene(GUI);
-        // primaryStage.setScene(scene);
-        // primaryStage.show();
-    }
+   
   public TrainController[] getTrainArray(){
       return tncArray;
   }
