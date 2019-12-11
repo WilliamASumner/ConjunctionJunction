@@ -7,6 +7,7 @@ import javafx.collections.ObservableList;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.stage.Stage;
+import javafx.stage.FileChooser;
 import javafx.scene.Scene;
 import javafx.scene.Group;
 import javafx.scene.layout.HBox;
@@ -56,6 +57,10 @@ import java.util.regex.Matcher;
 
 public class CTC_GUI extends Application {
     // fields
+	
+	private final FileChooser fileChooser = new FileChooser();
+	private final String resourceDir = System.getProperty("user.dir") + "/rsrc";
+	
     Label throughput, digitalClock;
     private TextField departureTime, suggAuthority, suggSpeed, trainName, speed;
     private ComboBox<String> comboAuthority, comboChooseTrack, comboChooseTrackMaintain, comboChooseBlock;
@@ -95,6 +100,8 @@ public class CTC_GUI extends Application {
     ListView<String> queuedTrainsView; 
     
     private ArrayList<String> sched = new ArrayList<String>(5);
+	
+	private ArrayList<String> importedTrains = new ArrayList<String>(5);
     
     private String[] TrackTypes = {"Green Line", "Red Line"};
     private String[] SwitchBlocks = new String[]{"G12", "G29", "G58", "G62", "G76", "G86", 
@@ -105,7 +112,7 @@ public class CTC_GUI extends Application {
 	private String[] SwitchBlocksRed = new String[]{"C9", "E15", "H27", "H32", "H38", "H43", "J52"};								
 	List<String> switchArrayRed = Arrays.asList(SwitchBlocksRed);
 	
-	String[] greenStations =  {"PIONEER","EDGEBROOK","STATION", "WHITED", 
+	String[] greenStations =  {"PIONEER","EDGEBROOK","GRANT STREET", "WHITED", 
 						"SOUTH BANK", "CENTRAL", "INGLEWOOD",
 						"OVERBROOK", "GLENBURY", "DORMONT",
 						"MT LEBANON", "POPLAR", "CASTLE SHANNON",
@@ -306,7 +313,7 @@ public class CTC_GUI extends Application {
         // Create 'Import Schedule' button
         importSched = new Button("Import Schedule");
         // Register the event handler
-  //      dispatchT.setOnAction(new DispatchButtonHandler());       
+        importSched.setOnAction(new ImportButtonHandler());       
         
         // create a TextField for inputting speed of train
         speed = new TextField();        
@@ -725,9 +732,9 @@ public class CTC_GUI extends Application {
 				else if(yard.containsKey(temp)){
 					String line = yard.get(temp);
 					if(line.equals("GREENYARD"))
-						rect.setFill(Color.GREEN);
+						rect.setStroke(Color.GREEN);
 					else if(line.equals("REDYARD"))
-						rect.setFill(Color.RED);
+						rect.setStroke(Color.RED);
 					else
 					rect.setFill(Color.GREY);	
 				}				
@@ -754,6 +761,27 @@ public class CTC_GUI extends Application {
 
         return sb.toString();
     }
+
+	public void paintTrainRect(String name, Rectangle rect){
+		rect.setFill(Color.YELLOW);
+		t = new Tooltip(name);
+		t.setShowDelay(ONE);
+		Tooltip.install(rect, t);		
+	}
+
+	public void resetRectangleTrackBlock(Rectangle rect, String line){
+		// parse line
+		if(line.equals("green")){	
+			rect.setFill(Color.BLACK);
+			rect.setStroke(Color.GREEN);
+			Tooltip.uninstall(rect, t);
+		}
+		else if(line.equals("red")){
+			rect.setFill(Color.BLACK);
+			rect.setStroke(Color.RED);	
+			Tooltip.uninstall(rect, t);
+		}		
+	}
 
 	public void setRectangleToBlockType(String id, Rectangle rect, String typeOfBlock){
 		// parse block typeOfBlock
@@ -816,7 +844,7 @@ public class CTC_GUI extends Application {
             currentLine = "green";
             // Add green line station names
             namesGreenLine.addAll(
-                "PIONEER","EDGEBROOK","STATION", "WHITED", 
+                "PIONEER","EDGEBROOK","GRANT STREET", "WHITED", 
                 "SOUTH BANK", "CENTRAL", "INGLEWOOD",
                 "OVERBROOK", "GLENBURY", "DORMONT",
                 "MT LEBANON", "POPLAR", "CASTLE SHANNON",
@@ -941,7 +969,7 @@ public class CTC_GUI extends Application {
 					Tooltip.install(tempRec, t);						
 				}
 				else{
-                    newCTC.repairBlock(sendBlockCTC); 
+                    newCTC.closeBlock(sendBlockCTC); 
 					// Get rect object to paint ctc viewer
 					tempRec = (Rectangle)root.lookup(tempId);
 					if(tempId.contains("g")){
@@ -974,6 +1002,110 @@ public class CTC_GUI extends Application {
     }  
 
     /**
+     * Event handler class for importSched button.
+     */
+	class ImportButtonHandler implements EventHandler<ActionEvent>{
+        @Override
+        public void handle(ActionEvent event){
+            fileChooser.setTitle("Choose a Schedule in CSV Format");
+            fileChooser.setInitialDirectory(new File(resourceDir));
+            fileChooser.getExtensionFilters().addAll(
+                    new FileChooser.ExtensionFilter("CSV File","*.csv"),
+                    new FileChooser.ExtensionFilter("All Files","*.*")
+            );
+
+			// Open file chooser
+            File file = fileChooser.showOpenDialog(newStage);
+            if (file != null) {
+				// Read input file to buffer
+				BufferedReader br = null;				
+                try {
+                    System.out.println("opening file: " + file);
+					br = new BufferedReader(new FileReader(file));
+                } catch (FileNotFoundException ex) {
+                    System.out.println("Error: could not open file");
+                }
+
+				// Read data
+				try{
+					//Skip first line (contains header descriptions)
+					String boguLine = br.readLine();
+					boguLine = br.readLine();
+					String[] splitSchedInfo;
+					// Name each train...
+					String train = "Train ";
+					// Count each stop from sched
+					int countStops = 0;
+					CTCTrain tempTrain = null;
+					// Read individual lines of file
+					for(int i = 0;br.ready(); i++) {
+						String nextLine = br.readLine();
+						// Split each line's info by comma
+						splitSchedInfo = nextLine.split(",");
+						// Get only those that contain train stops(predetermined to == 41)
+						if(splitSchedInfo.length == 41){
+
+//							if(sched.size() == 0);
+//							else
+//								sched.clear();	
+							System.out.println(countStops);
+							// Parse each line's info(each line is a station stop)
+							// (each line contains each trains arrival time at THIS station)
+							// Count each train from sched
+							int trainCount = 0;							
+							for(int j = 0; j < splitSchedInfo.length; j++){
+								// Get station stops
+								if(splitSchedInfo[j].contains("STATION")){
+									String[] splitStation = splitSchedInfo[j].split(";");
+									String station = splitStation[1];
+									//System.out.print(station +",");
+								}
+								if(splitSchedInfo[j].contains(":")){
+									// Create all trains in schedule once
+									if(countStops == 0){
+										// Create CTCTrain to add to queued train viewer
+//										tempTrain = new CTCTrain(newCTC.getTkM());	
+										// Set name
+//										tempTrain.setName(train + trainCount);
+										//Set line
+//										tempTrain.setLine("green");	
+										//Add station, index, time to station
+//										tempTrain.addToSchedule(station, countStops, splitSchedInfo[j]);
+										//Add to array 
+//										importedTrains.add(trainCount++, tempTrain);
+										System.out.print(splitSchedInfo[j] +",");
+										System.out.println(trainCount++);
+									}
+									else{
+//										tempTrain = importedTrains.get(trainCount++);
+										//Add station, index, time to station
+//										tempTrain.addToSchedule(station, countStops, splitSchedInfo[j]);										
+//										importedTrains.add(trainCount, tempTrain);
+					//					System.out.print(splitSchedInfo[j] +",");
+					//					System.out.println(trainCount++);										
+									}
+//									sched.add(countStops++, station)									
+//									System.out.print(splitSchedInfo[j] +",");
+									
+								}
+							}						
+							System.out.println();	
+							++countStops;
+						}
+					}						
+				}
+				catch(IOException e){
+					System.out.println(e);
+				}	
+
+            }
+			
+		}
+	}
+
+
+
+    /**
      * Event handler class for queueT button.
      */
     class QueueButtonHandler implements EventHandler<ActionEvent>{
@@ -985,7 +1117,7 @@ public class CTC_GUI extends Application {
             String tName = trainName.getText();
             String speedMPH = speed.getText();
 			boolean numeric = true;
-			// Check if inputted spead is double
+			// Check if inputted speed is double
 			try{
 				double spd = Double.parseDouble(speedMPH);
 			}
@@ -1034,7 +1166,6 @@ public class CTC_GUI extends Application {
 				alert.showAndWait();				
 			}
 			else{
-            
 				// Create temporary CTCTrain to add to queued train viewer
 				CTCTrain tempTrain = new CTCTrain(newCTC.getTkM());
 				//Set line

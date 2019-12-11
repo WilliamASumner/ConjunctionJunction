@@ -6,7 +6,7 @@ import java.util.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeLineCap;
-
+import javafx.scene.control.Tooltip;
 public class CTC{
     int throughput;
     TrackControllerMain trckCntrl;
@@ -27,7 +27,7 @@ public class CTC{
 		
         stationToBlockGreen.put("PIONEER","A2");
         stationToBlockGreen.put("EDGEBROOK","C9");
-        stationToBlockGreen.put("STATION","D16");
+        stationToBlockGreen.put("GRANT STREET","D16");
         stationToBlockGreen.put("WHITED","F22");
         stationToBlockGreen.put("SOUTH BANK","G31");
         stationToBlockGreen.put("CENTRAL","I39");
@@ -47,7 +47,7 @@ public class CTC{
 		
 		blockToStationGreen.put("A2", "PIONEER");
         blockToStationGreen.put("C9", "EDGEBROOK");
-        blockToStationGreen.put("D16", "STATION");
+        blockToStationGreen.put("D16", "GRANT STREET");
         blockToStationGreen.put("F22", "WHITED");
         blockToStationGreen.put("G31", "SOUTH BANK");
         blockToStationGreen.put("I39", "CENTRAL");
@@ -137,6 +137,7 @@ public class CTC{
 			for(int i = 0; i < dT.size(); i++)
 				if(dT.get(i).getCurBlkID().equals("a0"))
 					dT.remove(i);
+					
 				
 			// Remove the table items	
             gui.table.getItems().removeAll(gui.table.getItems());
@@ -155,33 +156,41 @@ public class CTC{
 						gui.setRectangleToBlockType(blkType, gui.tempRec, "greenstation");
 					else if(gui.switchArrayGreen.contains(blkType))
 						gui.setRectangleToBlockType(blkType, gui.tempRec, "greenswitch");							
-					else{
-						gui.tempRec.setFill(Color.BLACK);
-						gui.tempRec.setStroke(Color.GREEN);
-						//Tooltip.uninstall(gui.tempRec, t);							
-					}
+					else
+						gui.resetRectangleTrackBlock(gui.tempRec, "green");							
 				}
 				else{
 					// get rectangle in CTC train viewer that matches with train's prev block
 					tempId = "#r" + tempT.getPrevBlkID();
-					gui.tempRec = (Rectangle)gui.root.lookup(tempId);						
+//					System.out.println(tempId);
+					gui.tempRec = (Rectangle)gui.root.lookup(tempId);	
 					// Check if block is a station, switch, or track						
 					if(blockToStationRed.containsKey(blkType))
 						gui.setRectangleToBlockType(blkType, gui.tempRec, "redstation");
 					else if(gui.switchArrayRed.contains(blkType))
 						gui.setRectangleToBlockType(blkType, gui.tempRec, "redswitch");							
-					else{
-						gui.tempRec.setFill(Color.BLACK);
-						gui.tempRec.setStroke(Color.RED);
-						//Tooltip.uninstall(tempRec, t);		
-					}	
+					else
+						gui.resetRectangleTrackBlock(gui.tempRec, "red");	
 				}						
 
+				// Update current train location on dynamic map
+				if(tempT.getLine().equals("green"))
+					tempId = "#g" + tempT.getCurBlkID();// get rectangle that matches with train's cur block
+				else
+					tempId = "#r" + tempT.getCurBlkID();// get rectangle that matches with train's cur block
+				gui.tempRec = (Rectangle)gui.root.lookup(tempId);	
+				// Paint the rect a different color
+				gui.paintTrainRect(tempT.getName(), gui.tempRec);
+				// Save cur block to change back later
+				tempT.setPrevBlkID(tempT.getCurBlkID());				
 				
-				// update dispatched trains viewer
+				// update dispatched trains table
                 gui.table.getItems().add(tempT);
+				
+				if(tempT.getAuthority().equals("a0"));//Dont need to update its authority...skip		
 				// check if dispatched trains cur authority == cur block
-				if(tempT.getCurBlkID().equals(tempT.getAuthority())){
+				else if(tempT.getCurBlkID().equals(tempT.getAuthority())){
+					//
 					// DWELL AT STATION
 //					if(){
 //	
@@ -197,78 +206,8 @@ public class CTC{
 				}
 				// Send authority and cur block constantly
 				trckCntrl.sendSuggestedAuthority(tempT.getCurBlkID(), tempT.getAuthority());
-			
-				
-				
-				if(tempT.getLine().equals("green"))
-					tempId = "#g" + tempT.getCurBlkID();// get rectangle that matches with train's cur block
-				else
-					tempId = "#r" + tempT.getCurBlkID();// get rectangle that matches with train's cur block
-
-				gui.tempRec = (Rectangle)gui.root.lookup(tempId);	
-				// Paint the rect a different color
-				gui.tempRec.setFill(Color.YELLOW);
-				// Save cur block to change back later
-				tempT.setPrevBlkID(tempT.getCurBlkID());
 			}
-        }
-		
-		
-/*		
-		
-		// Reset ctc viewer
-		//Start with green line
-		for(Map.Entry<String, String> block: greenLine.entrySet()){
-			// get rectangle in CTC train viewer that matches with train's block
-			String tempId = "#" + block.getValue();
-			// Get rect object
-			gui.tempRec = (Rectangle)gui.root.lookup(tempId);
-			//check if current rect is occupied by train
-			if(gui.tempRec.getFill()==Color.YELLOW)
-				continue;
-			// Check if current rect is being repaired
-			// last for 2 mins
-//			if(gui.tempRec.getFill()==Color.ORANGE){
-				//if(curTime)
-				// 2 mins to repair
-				
-			//Check if a station
-			if(blockToStationGreen.containsKey(block.getValue)){
-				
-			}
-				gui.tempRec.setFill(color.BLACK);
-				gui.tempRec.setStroke(color.GREEN);
-			}
-			
-		}
-*/		
-/*
-				String temp = "" + i + "," + j;
-				if(gui.greenLine.containsKey(temp)){
-					// if train's schedule contains this block--highlight route
-					if(tempT.schedule.contains(temp)){
-						rect = new Rectangle(horizontal * j, vertical * i, horizontal, vertical);
-						rect.setStroke(Color.YELLOW);
-						root.getChildren().add(rect);					
-
-					}
-					else{
-						rect = new Rectangle(horizontal * j, vertical * i, horizontal, vertical);
-						rect.setStroke(Color.GREEN);
-						root.getChildren().add(rect);	
-					}
-				}	
-				else{
-					rect = new Rectangle(horizontal * j, vertical * i, horizontal, vertical);
-					rect.setStroke(Color.BLACK);
-					root.getChildren().add(rect);
-				
-				}
-			}
-		}
-
-*/	
-		
+        }			
     }
 
     public void showGUI(Stage primaryStage) {
