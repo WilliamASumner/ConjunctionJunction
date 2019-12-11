@@ -199,6 +199,14 @@ public class Block
         return nextBlockID;
     }
 
+    Block getNextBlockIDFork() {
+        return nextBlockIDFork;
+    }
+
+    void setNextBlockIDFork(Block newNextFork) {
+        newNextFork = nextBlockIDFork;
+    }
+
     Block getPrevBlock() {
         return prevBlockID;
     }
@@ -247,7 +255,7 @@ public class Block
         return crossingState;
     }
 
-    
+
     public void setCrossingState(CrossingState c) {
          crossingState = c;
     }

@@ -24,7 +24,7 @@ public class TrainController{
     boolean[] Doors = new boolean[8];
     double powerCommand;
     double temperature = 70.0;
-    // Block currBlock;
+    String currBlock;
     boolean eBrakeOn;
     boolean sBrakeOn;
     boolean isAutomaticMode = true;
@@ -37,15 +37,6 @@ public class TrainController{
     TrainModel tm;
     TrainControllerGUI myGUI;
     
-    // //Train Controller Constructor
-    // public TrainController(String name, String authority, double speed, TrainModel tm){
-    //     auditedSpeed = speed;
-    //     authority = authority;
-    //     trainName = name;
-    //     trainModel = tm;
-    //     initGUI();
-    // }
-    //
     //Train Controller Constructor
     public TrainController(){
         auditedSpeed = 0.0;
@@ -94,36 +85,33 @@ public class TrainController{
     void showGUI(Stage primaryStage){
         System.out.println("TrainController: Hello from Train Controller:" + this);
         myGUI.start(primaryStage);
-        // Scene scene = new Scene(GUI);
-        // primaryStage.setScene(scene);
-        // primaryStage.show();
     }
 
     
 
     public double getCurrSpeed(){
         return tm.getVelocity();
-      //  return currSpeed;
     }
+
 
     public double getSetSpeed(){
         //if we are in automatic mode, then the set speed
         //is the audited speed limit of the track
         if(isAutomaticMode){
-            if(auditedSpeed > 0){
+            if(auditedSpeed >= 0){
                 return auditedSpeed;
             }
             else{
-                return 50.0;
+                return 0;
             }
         }
         //if we are in manual mode, return driver set speed
         else{
-            if(driverSetSpeed > 0){
+            if(driverSetSpeed >= 0){
                 return driverSetSpeed;
             }
             else{
-                return 50.0;
+                return 0;
             }
             
         }
@@ -131,12 +119,12 @@ public class TrainController{
 
     //Updates train's audited speed limit from the train model
     public void getAuditedSpeed(){
-       // auditedSpeed = tm.getAuditedSpeed();
+        auditedSpeed = tm.getAuditedSpeed();
     }
 
     //Updates train's authority from the train model
     public void getAuthority(){
-      //  authority = tm.getAuthority();
+        authority = tm.getAuthority();
     }
 
     //Updates train's authority from the train model
@@ -162,6 +150,14 @@ public class TrainController{
 
     //Driver sets train controller mode to automatic
     public void setAutomaticMode(){
+        /*
+        Note: when we switch from automatic to manual mode we begin using
+        the driverSetSpeed as the new set speed for the power calculations
+        so as to not have the speed of the train affected by switching
+        from auto to manual mode we set the driverSetSpeed to the current
+        speed of the train
+        */
+        driverSetSpeed = currSpeed;
         isAutomaticMode = true;
     }
 
@@ -188,9 +184,9 @@ public class TrainController{
 
     //Set speed of train to new driverSetSpeed, only if it not above
     //speed limit
-    public boolean setNewSpeed(double driverSetSpeed){
+    public boolean setNewSpeed(double input){
         if(!isAutomaticMode){
-            currSpeed = driverSetSpeed;
+            driverSetSpeed = input;
             return true;
         }
         return false;
@@ -263,7 +259,7 @@ public class TrainController{
         //Power.calcPowerCommand(this);
         powerOut = Power.calcPowerCommand(this);
        // System.out.println("TrainController: TRAIN: " + this + " - Power CMD " + powerOut);
-        powerOut = 0.1; // TODO FIXME
+        //powerOut = 1.0; // TODO FIXME
         if(eBrakeOn || sBrakeOn){
             powerOut = 0; 
         }

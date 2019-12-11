@@ -11,6 +11,7 @@ public class CTCTrain{
         private double curSpeed;
         String departTime;
         private String curBlkID;
+		private String prevBlkID;
         public String curAuthority;
 		private int totalNumOfStationsLeftToArriveTo;
         private TkM tkm;
@@ -39,7 +40,7 @@ public class CTCTrain{
             curSpeed = 0.0;
             curBlkID = null;
             curAuthority = null;
-            schedule = null;
+            schedule = new ArrayList<String>(5);
             tkm = trackmodel;
 //          for(int i = 0; i < 21; i++)
 //              mapStationBlocks.put()
@@ -89,6 +90,13 @@ public class CTCTrain{
         }
 
         /**
+         * Set Train prev block num.
+         */ 
+        public void setPrevBlkID(String newBlkID){
+            prevBlkID = newBlkID;
+        }
+
+        /**
          * Get Block object from current block ID
          */
         public Block getCurrentBlock() {
@@ -134,6 +142,12 @@ public class CTCTrain{
             return curBlkID;
         }
 
+        /**
+         * Get Train's previous block num.
+         */         
+        public String getPrevBlkID(){
+            return prevBlkID;
+        }
 
         /**
          * Get Train speed.
@@ -165,10 +179,19 @@ public class CTCTrain{
 		}
 
         /**
+         * Add a station to Train's schedule.
+         */ 
+		public void addToSchedule(String station, int index, String timeToStation){
+			System.out.println(trainName);
+			System.out.println(station);
+			System.out.println(index);System.out.println(timeToStation);
+			//schedule.add(index, station);
+		}
+
+        /**
          * Set Train's schedule.
          */     
         public void setSchedule(ArrayList<String> sched){
-            // set schedule length
             schedule = new ArrayList<String>(5);
             // add stops to schedule
             for(int i = 0; i < sched.size(); i++)
@@ -185,10 +208,14 @@ public class CTCTrain{
             this.setAuthority(schedule.get(0));
             // NEED TO CHECK WHICH LINE TRAIN IS ON
             // TO GET SPECIFIC YARD BLOCK
-            if (line.equals("green"))
+            if (line.equals("green")){
                 this.setCurBlkID("J62");
-            else
-                this.setCurBlkID("C6");
+				this.setPrevBlkID("J62");
+			}
+            else{
+                this.setCurBlkID("C9");
+				this.setPrevBlkID("C9");	
+			}
         }
         
         /**

@@ -127,7 +127,7 @@ public class TrainControllerGUI extends Application implements EventHandler<Acti
         sBrake.setMinWidth(200);
         sBrake.setMaxWidth(200);
 
-        powerLabel = new Label("Current Power: 0 kWatts");
+        Label powerLabel = new Label("Current Power: 0 kWatts");
 
         Label modeSelectLabel = new Label("Select a Mode: "); 
         Label doorLabel = new Label("Door Status Control: "); 
@@ -147,7 +147,7 @@ public class TrainControllerGUI extends Application implements EventHandler<Acti
 
         //Uncomment first one when integrated with train model
          //driverSetSpeed = new Label("Current Set Speed Limit" + tnc.getSetSpeed());
-         driverSetSpeed = new Label("Current Set Speed Limit " + tnc.getSetSpeed() + " MPH");
+        Label driverSetSpeed = new Label("Current Set Speed Limit " + tnc.getSetSpeed() + " MPH");
 
 
 
@@ -287,7 +287,7 @@ public class TrainControllerGUI extends Application implements EventHandler<Acti
         public void handle(ActionEvent event){
             boolean test = tnc.setNewSpeed(speedSlider.getValue());
             if(test){
-                driverSetSpeed.setText("Current Set Speed Limit: " + speedSlider.getValue() + " MPH");
+                //driverSetSpeed.setText("Current Set Speed Limit: " + speedSlider.getValue() + " MPH");
                 System.out.println("TrainControllerGUI: Setting new speed of " + speedSlider.getValue());
             }
         }
@@ -457,7 +457,7 @@ public class TrainControllerGUI extends Application implements EventHandler<Acti
           @Override
           public void handle(ActionEvent event){
             tnc.setTemp(tempSlider.getValue());
-            currentTemp.setText("TrainControllerGUI: Current Temperature: " + tnc.getTemp() + " Fahrenheit");
+            currentTemp.setText("Current Temperature: " + tnc.getTemp() + " Fahrenheit");
           }
       }
       
