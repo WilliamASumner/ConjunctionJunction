@@ -15,7 +15,9 @@ import javafx.stage.Stage;
 
 public class TrainModelGUI extends Application {
 
-    String myName = "wowee";
+    boolean testmode = true;
+	
+	String myName = "wowee";
     String myAuthority = "A1";//Audited Authority Block
     double mydubSpeed = 0.0;
 	boolean[] Doors = new boolean[8];
@@ -60,6 +62,8 @@ public class TrainModelGUI extends Application {
 	Label grade_Label = new Label("Current block");
 	Label linecolor_Label = new Label("Current block");
 	Label beaconData_Label = new Label("Current block");
+	Label progress_Label = new Label("Current block");
+
 	
 	
 	
@@ -69,17 +73,20 @@ public class TrainModelGUI extends Application {
     Button SbrakeFailButton = new Button("SBrake: Working");
     Button EngineFailButton = new Button("Engine: Working");
     Button SignalFailButton = new Button("Signal: Working");
-	
     Button eBrake = new Button("EMERGENCY BRAKE: Currently OFF");
     Button sBrake = new Button("SERVICE BRAKE: Currently OFF");
+	
+	//Test buttons
+    Button add5pass_button = new Button("+5 Passengers");
+    Button rem5pass_button = new Button("-5 Passengers");
+    Button addRpass_button = new Button("+? Passengers");
+    Button remRpass_button = new Button("-? Passengers");
+    Button remApass_button = new Button("-* Passengers");
+    Button add10kw_button = new Button("+10 kW");
+    Button rem10kw_button = new Button("-10 kW");
 
     public TrainModelGUI(TrainModel TNM)// String inName, String inBlock, double inSpeed)
     {
-        /*
-           myName = inName;
-           myAuthority = inBlock;
-           mydubSpeed = inSpeed;
-           */
         tnm = TNM;
         myName = TNM.name;
         myAuthority = TNM.AuthorityBlockID;
@@ -130,18 +137,17 @@ public class TrainModelGUI extends Application {
 		
 		//speed VBOX
 		VBox speed = new VBox();
+        speed.setMinWidth(200);
 		speed.setStyle("-fx-border-color: black");
+		
 		speed.getChildren().add(currentSpeedLabel); //add speedlabel to brake flowpane
-		//currentSpeedLabel.setTextFill(Color.web("#ff0000", 0.8));
 		speed.getChildren().add(currentPowerLabel); //add speedlabel to brake flowpane
 		speed.getChildren().add(currentAccelerationLabel); //add speedlabel to brake flowpane
 		speed.getChildren().add(currentDragLabel); //add speedlabel to brake flowpane
 		speed.getChildren().add(currentDistLabel); //add speedlabel to brake flowpane
 		speed.getChildren().add(pass_Label); //add speedlabel to brake flowpane
 		speed.getChildren().add(currentMassLabel); //add speedlabel to brake flowpane
-		speed.getChildren().add(simtime_Label); //add speedlabel to brake flowpane
-		
-		
+		speed.getChildren().add(simtime_Label); //add speedlabel to brake flowpane		
 		
 		flowpane.getChildren().add(speed); //add brake flowpane to main flowpane
 		
@@ -149,22 +155,28 @@ public class TrainModelGUI extends Application {
 		//block_VBOX
 		
 		VBox block_VBOX = new VBox();
+        block_VBOX.setMinWidth(200);
 		block_VBOX.setStyle("-fx-border-color: black");
+		
 		block_VBOX.getChildren().add(currentBlockLabel); //add speedlabel to brake flowpane
 		block_VBOX.getChildren().add(linecolor_Label); //add speedlabel to brake flowpane
 		block_VBOX.getChildren().add(blockLengthLabel); //add speedlabel to brake flowpane
+		block_VBOX.getChildren().add(progress_Label); //add speedlabel to brake flowpane
 		block_VBOX.getChildren().add(underground_Label); //add speedlabel to brake flowpane
 		block_VBOX.getChildren().add(grade_Label); //add speedlabel to brake flowpane
 		block_VBOX.getChildren().add(AudSpeed_Label); //add speedlabel to brake flowpane
 		block_VBOX.getChildren().add(AudAuth_Label); //add speedlabel to brake flowpane
 		block_VBOX.getChildren().add(beaconData_Label); //add speedlabel to brake flowpane
 		
+		
 		flowpane.getChildren().add(block_VBOX); //add brake flowpane to main flowpane
 		
 		
 		//internal VBOX
 		VBox internal = new VBox();
+        block_VBOX.setMinWidth(200);
 		internal.setStyle("-fx-border-color: black");
+		
 		internal.getChildren().add(Temp_Label); //add speedlabel to brake flowpane
 		internal.getChildren().add(lights_Label); //add speedlabel to brake flowpane
 		
@@ -202,51 +214,44 @@ public class TrainModelGUI extends Application {
 		brake.getChildren().add(sBrake); //add eBrake to brake flowpane
         flowpane.getChildren().add(brake); //add brake flowpane to main flowpane
 		
+		//testing buttons flowpane
+		FlowPane test = new FlowPane();
+        test.setStyle("-fx-border-color: black");
+		test.getChildren().add(add5pass_button); //add eBrake to brake flowpane
+		test.getChildren().add(rem5pass_button); //add eBrake to brake flowpane
+		test.getChildren().add(addRpass_button); //add eBrake to brake flowpane
+		test.getChildren().add(remRpass_button); //add eBrake to brake flowpane
+		test.getChildren().add(remApass_button); //add eBrake to brake flowpane
+		test.getChildren().add(add10kw_button); //add eBrake to brake flowpane
+		test.getChildren().add(rem10kw_button); //add eBrake to brake flowpane
+        if(testmode)flowpane.getChildren().add(test); //add test flowpane to main flowpane
+		
 		
         eBrake.setOnAction(new eBrakeHandler());
         EbrakeFailButton.setOnAction(new eBrakeFailHandler());
         SbrakeFailButton.setOnAction(new sBrakeFailHandler());
         EngineFailButton.setOnAction(new engineFailHandler());
         SignalFailButton.setOnAction(new signalFailHandler());
+        add5pass_button.setOnAction(new add5pass_Handler());
+        rem5pass_button.setOnAction(new rem5pass_Handler());
+        addRpass_button.setOnAction(new addRpass_Handler());
+        remRpass_button.setOnAction(new remRpass_Handler());
+        remApass_button.setOnAction(new remApass_Handler());
+        add10kw_button.setOnAction(new add10kw_Handler());
+        rem10kw_button.setOnAction(new rem10kw_Handler());
+		
 		
 	}
     @Override // not sure what this does?
     public void start(Stage primaryStage) { // entry point for all apps
         primaryStage.setTitle("Train Model GUI: "+ myName); // container for all of it
-
-
         initGUI();
-		//int num = 0;
-/*
-        String finalstring = "Train Name: " + myName + "\nAudited Authority: " + myAuthority + "\nAudited Speed: " + mydubSpeed
-		+ "\nDoor 0: " + Doors[0]+ "\nDoor 1: " + Doors[0]+ "\nDoor 2: " + Doors[0]+ "\nDoor 3: " + Doors[0]
-		+ "\nDoor 4: " + Doors[0]+ "\nDoor 5: " + Doors[0]+ "\nDoor 6: " + Doors[0]+ "\nDoor 7: " + Doors[0];
-*/
-/*
-        Button btn = new Button();
-        btn.setText("Say 'NUMBER'");
-        btn.setOnAction(new EventHandler<ActionEvent>() {
-
-            @Override
-            public void handle(ActionEvent event) {
-                System.out.println(num);
-            }
-        });*/
-
-        //StackPane root = new StackPane();
-        //StackPane mystackpane = new StackPane();
-        //root.getChildren().add(btn);
-
-        //Label myLabel = new Label(finalstring);
-        //root.getChildren().add(myLabel);
-        //mystackpane.getChildren().add(EbrakeFailButton);
-        Scene scene = new Scene(flowpane, 500, 300);
-
+        Scene scene = new Scene(flowpane, 601, 400);
         primaryStage.setScene(scene); // content container
-        //primaryStage.setScene(new Scene(mystackpane, 300 ,250)); // content container
-
         primaryStage.show();
     }
+	
+	///Brake button text control
 	public void setEbrake(boolean newEbrake)
 	{
 		 if(newEbrake){
@@ -276,7 +281,7 @@ public class TrainModelGUI extends Application {
 	}
 
 
-    //Action Listeners
+    /////Action Listeners BUTTON STUFF
 	class eBrakeHandler implements EventHandler<ActionEvent>
 	{
         @Override
@@ -377,6 +382,69 @@ public class TrainModelGUI extends Application {
 				failures--;				
 			}
 			currentFailsLabel.setText("Failures: " + failures + " \n");
+        }
+    }
+	
+	class add5pass_Handler implements EventHandler<ActionEvent>
+	{
+        @Override
+        public void handle(ActionEvent event)
+		{
+            tnm.setPassengerEnter(5);
+        }
+    }
+    
+	class rem5pass_Handler implements EventHandler<ActionEvent>
+	{
+        @Override
+        public void handle(ActionEvent event)
+		{
+            tnm.setPassengerExit(5);
+        }
+    }
+	
+	class addRpass_Handler implements EventHandler<ActionEvent>
+	{
+        @Override
+        public void handle(ActionEvent event)
+		{
+            tnm.randPassengerEnter();
+        }
+    }
+    
+	class remRpass_Handler implements EventHandler<ActionEvent>
+	{
+        @Override
+        public void handle(ActionEvent event)
+		{
+            tnm.randPassengerExit();
+        }
+    }
+	
+	class remApass_Handler implements EventHandler<ActionEvent>
+	{
+        @Override
+        public void handle(ActionEvent event)
+		{
+            tnm.allPassengerExit();
+        }
+    }
+    
+	class add10kw_Handler implements EventHandler<ActionEvent>
+	{
+        @Override
+        public void handle(ActionEvent event)
+		{
+            tnm.myPower+=10;
+        }
+    }
+    
+	class rem10kw_Handler implements EventHandler<ActionEvent>
+	{
+        @Override
+        public void handle(ActionEvent event)
+		{
+            if(tnm.myPower>10)tnm.myPower-=10;
         }
     }
     

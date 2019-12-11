@@ -5,8 +5,10 @@ import java.lang.Math;
 //mport java.String.format;
 
 public class TrainModel {
-
-    String name = "test name";
+	
+	String name = "test name";
+	double myPower = 10;//for TEST TRAIN
+	boolean metricmode = true;
 	
     String AuthorityBlockID = "test Block";
 	String beaconData = "Default Beacon Data";
@@ -39,15 +41,61 @@ public class TrainModel {
     static double passMass = 180; // pounds
     static double estimatedmass = kilosPerPound*(2000*trainMass + passMass*currPassengers);//kilos of train
     TrainControllerMain TNC_Main = null;
-    public void setPassenger(int input)
+	
+    public int setPassenger(int input)
     {
         currPassengers = input;
 		if(currPassengers > maxPassengers)currPassengers=maxPassengers;
+		if(currPassengers < 0)currPassengers=0;
         estimatedmass = kilosPerPound*(2000*trainMass + passMass*currPassengers);
 		myGUI.pass_Label.setText("Passengers:\t" + currPassengers + "/222 \n");
-		
-        return;
+		System.out.println("TrainModel: currPassengers: "+currPassengers);
+        return currPassengers;
     }
+	public int getPassenger()
+	{
+		return currPassengers;
+	}
+	public void allPassengerExit()
+	{
+		System.out.println("TrainModel: exitingPassengers: "+currPassengers);
+		setPassenger(0);
+		return;
+	}
+	public int randPassengerExit()
+	{
+		double randPercent = Math.random();
+		int exitingPassengers = (int)Math.round(currPassengers * randPercent);
+		return setPassengerExit(exitingPassengers);
+	}
+	public int setPassengerExit(int input)
+	{
+		if(input<0)input=0;
+		if(input>currPassengers)input=currPassengers;
+		int exitingPassengers = input;
+		
+		System.out.println("TrainModel: exitingPassengers: "+exitingPassengers);
+		setPassenger(currPassengers-exitingPassengers);
+		return exitingPassengers;
+	}
+	
+	public int randPassengerEnter()
+	{
+		double randPercent = Math.random();
+		int enteringPassengers = (int)Math.round((maxPassengers - currPassengers) * randPercent);
+		return setPassengerEnter(enteringPassengers);
+	}
+	public int setPassengerEnter(int input)
+	{
+		if(input<0)input=0;
+		if(input>(maxPassengers - currPassengers))input=(maxPassengers - currPassengers);
+		int enteringPassengers = input;
+		
+		System.out.println("TrainModel: enteringPassengers: "+enteringPassengers);
+		setPassenger(currPassengers+enteringPassengers);
+		return enteringPassengers;
+	}
+	
 
     boolean EbrakeFail = false;
     boolean Ebrake = false;
@@ -74,11 +122,8 @@ public class TrainModel {
     {
         if (EbrakeFail)
         {
-
-            EbrakeFail=false;
-			System.out.println("TrainModel: EbrakeFail is now false: "+EbrakeFail);
-        
-			
+			EbrakeFail=false;
+			System.out.println("TrainModel: EbrakeFail is now false: "+EbrakeFail);			
         }
         else
         {
@@ -89,7 +134,7 @@ public class TrainModel {
 
         }
         //singleTNC.setEbrakeFailure(EbrakeFail);		
-		singleTNC.getGUI().setEbrake(Ebrake);//James 
+		if(singleTNC!=null)singleTNC.getGUI().setEbrake(Ebrake);//James 
 		myGUI.setEbrake(Ebrake);
         return EbrakeFail;
     }
@@ -109,7 +154,7 @@ public class TrainModel {
 			System.out.println("TrainModel: Sbrake is now false: "+Sbrake);
         }
 		//singleTNC.setSbrakeFailure(SbrakeFail);		
-		singleTNC.getGUI().setSbrake(Sbrake);//James 
+		if(singleTNC!=null)singleTNC.getGUI().setSbrake(Sbrake);//James 
         return SbrakeFail;
     }
     public boolean toggleSignalFail()
@@ -124,7 +169,7 @@ public class TrainModel {
             signalFail=true;
 			System.out.println("TrainModel: signalFail is now true: "+signalFail);
         }
-        singleTNC.setSignalFailure(signalFail);
+        if(singleTNC!=null)singleTNC.setSignalFailure(signalFail);
 		//myGUI.beaconData_Label.setText("Beacon Data:\t" + getBeaconData() + "\n");
         return signalFail;
     }
@@ -142,7 +187,7 @@ public class TrainModel {
 			System.out.println("TrainModel: engineFail is now true: "+engineFail);
             powerCommand = 0;
         }
-		singleTNC.setEngineFailure(engineFail);
+		if(singleTNC!=null)singleTNC.setEngineFailure(engineFail);
         return engineFail;
     }
 
@@ -157,7 +202,7 @@ public class TrainModel {
         grade = currBlock.getGrade();
         currBlockLength = currBlock.getLength();
         TNC_Main = TNCMain_input;
-        initTrainController(Stringname, ABlock, ASpeed);
+        if(TNC_Main!=null)initTrainController(Stringname, ABlock, ASpeed);
 
         trackModel = tm;
         name = Stringname;
@@ -172,9 +217,9 @@ public class TrainModel {
         currBlock.isOccupied = false;
         currBlock = currBlock.getNextBlock();
         currBlock.isOccupied = true;
-        grade = currBlock.getGrade();//setGrade(currBlock.getGrade());
+        setGrade(currBlock.getGrade());//setGrade(currBlock.getGrade());
         currBlockLength = currBlock.getLength();
-        trackModel.updateOccupancy(currBlock);
+        if(trackModel!=null)trackModel.updateOccupancy(currBlock);
 		
 		myGUI.blockLengthLabel.setText("Block length:\t" + currBlockLength + " m\n");
 		myGUI.grade_Label.setText("Grade:\t\t" + grade + " \n");
@@ -190,24 +235,20 @@ public class TrainModel {
 	private void setGrade(double newgrade)
 	{
 		grade = newgrade;
-		System.out.println("TrainModel: grade: "+grade);
+		//System.out.println("TrainModel: grade: "+grade);
 		radians = radiansPerGrade*grade;
-		System.out.println("TrainModel: radians: "+radians);
-		
+		//System.out.println("TrainModel: radians: "+radians);
     }
     
     //@Returns String - Get the current block
     public String getCurrentBlock(){
         return currBlock.getBlockID();
     }
-
-
+	
     //@Returns String - Get the Authority from the current block 
     public String getAuthority(){
         return AuthorityBlockID;
     }
-
-
 
     private double CalcAcceleration()
     {
@@ -221,7 +262,9 @@ public class TrainModel {
         }
         else
         {
-            powerCommand = singleTNC.calculatePower();
+            if(singleTNC!=null)powerCommand = singleTNC.calculatePower();
+			else
+				powerCommand = myPower;
         }
 		if (powerCommand < 0)
 		{
@@ -270,6 +313,7 @@ public class TrainModel {
 		
 		myGUI.currentPowerLabel.setText("Power:\t" + String.format("%.6f", powerCommand) + " kW\n");
 		myGUI.currentDistLabel.setText("Position:\t" + String.format("%.6f", distanceTraveled) + " m\n");
+		myGUI.progress_Label.setText("Progress:\t\t" + String.format("%.1f", distanceTraveled*100/currBlockLength) + " %\n");
 		myGUI.currentSpeedLabel.setText("Speed:\t" + String.format("%.6f", velocity) + " m/s \n");
 		myGUI.currentAccelerationLabel.setText("Acceleration:\t" + String.format("%.6f", acceleration)+ " m/s2 \n");
 		myGUI.currentMassLabel.setText("Mass:\t" + estimatedmass + " kg \n");
@@ -401,7 +445,7 @@ public class TrainModel {
 				System.out.println("TrainModel: Ebrake is now false: "+Ebrake);
             }
 			
-			singleTNC.getGUI().setEbrake(Ebrake);//James 
+			if(singleTNC!=null)singleTNC.getGUI().setEbrake(Ebrake);//James 
 			myGUI.setEbrake(Ebrake);
         }
         return Ebrake;// false;
@@ -423,7 +467,7 @@ public class TrainModel {
 				System.out.println("TrainModel: Sbrake is now false: "+Sbrake);
             }
 			
-			singleTNC.getGUI().setSbrake(Sbrake);//James 
+			if(singleTNC!=null)singleTNC.getGUI().setSbrake(Sbrake);//James 
 			myGUI.setSbrake(Sbrake);
             //return true;
         }
