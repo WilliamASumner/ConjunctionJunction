@@ -97,38 +97,26 @@ public class TrainModelGUI extends Application {
 	{
 		
 		eBrake.setStyle("-fx-text-fill: black");
-        eBrake.setMinWidth(400);
-        eBrake.setMaxWidth(400);
         eBrake.setMinWidth(200);
         eBrake.setMaxWidth(200);
 		
 		sBrake.setStyle("-fx-text-fill: black");
-        sBrake.setMinWidth(400);
-        sBrake.setMaxWidth(400);
         sBrake.setMinWidth(200);
         sBrake.setMaxWidth(200);
 		
 		EbrakeFailButton.setStyle("-fx-text-fill: black");
-        EbrakeFailButton.setMinWidth(400);
-        EbrakeFailButton.setMaxWidth(400);
         EbrakeFailButton.setMinWidth(200);
         EbrakeFailButton.setMaxWidth(200);
 		
 		SbrakeFailButton.setStyle("-fx-text-fill: black");
-        SbrakeFailButton.setMinWidth(400);
-        SbrakeFailButton.setMaxWidth(400);
         SbrakeFailButton.setMinWidth(200);
         SbrakeFailButton.setMaxWidth(200);
 		
 		EngineFailButton.setStyle("-fx-text-fill: black");
-        EngineFailButton.setMinWidth(400);
-        EngineFailButton.setMaxWidth(400);
         EngineFailButton.setMinWidth(200);
         EngineFailButton.setMaxWidth(200);
 		
 		SignalFailButton.setStyle("-fx-text-fill: black");
-        SignalFailButton.setMinWidth(400);
-        SignalFailButton.setMaxWidth(400);
         SignalFailButton.setMinWidth(200);
         SignalFailButton.setMaxWidth(200);
 		
