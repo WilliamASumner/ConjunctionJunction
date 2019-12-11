@@ -130,7 +130,7 @@ public class CTC{
 				}
 			}
 		}
-		
+		String tempId = "";
         // Update train locations
         if(dT != null && dT.size() != 0){
 			//check if cur block of a train is yard...if so remove
@@ -142,42 +142,80 @@ public class CTC{
             gui.table.getItems().removeAll(gui.table.getItems());
 			// Add the table items
             for(int i = 0; i < dT.size(); i++){
+				CTCTrain tempT = dT.get(i);		
+				
+				// Reset blocks after train's path
+				String blkType = tempT.getPrevBlkID();	
+				if(tempT.getLine().equals("green")){
+					// get rectangle in CTC train viewer that matches with train's prev block
+					tempId = "#g" + tempT.getPrevBlkID();
+					gui.tempRec = (Rectangle)gui.root.lookup(tempId);						
+					// Check if block is a station, switch, or track
+					if(blockToStationGreen.containsKey(blkType))
+						gui.setRectangleToBlockType(blkType, gui.tempRec, "greenstation");
+					else if(gui.switchArrayGreen.contains(blkType))
+						gui.setRectangleToBlockType(blkType, gui.tempRec, "greenswitch");							
+					else{
+						gui.tempRec.setFill(Color.BLACK);
+						gui.tempRec.setStroke(Color.GREEN);
+						//Tooltip.uninstall(gui.tempRec, t);							
+					}
+				}
+				else{
+					// get rectangle in CTC train viewer that matches with train's prev block
+					tempId = "#r" + tempT.getPrevBlkID();
+					gui.tempRec = (Rectangle)gui.root.lookup(tempId);						
+					// Check if block is a station, switch, or track						
+					if(blockToStationRed.containsKey(blkType))
+						gui.setRectangleToBlockType(blkType, gui.tempRec, "redstation");
+					else if(gui.switchArrayRed.contains(blkType))
+						gui.setRectangleToBlockType(blkType, gui.tempRec, "redswitch");							
+					else{
+						gui.tempRec.setFill(Color.BLACK);
+						gui.tempRec.setStroke(Color.RED);
+						//Tooltip.uninstall(tempRec, t);		
+					}	
+				}						
+
+				
 				// update dispatched trains viewer
-                gui.table.getItems().add(dT.get(i));
+                gui.table.getItems().add(tempT);
 				// check if dispatched trains cur authority == cur block
-				CTCTrain tempT = dT.get(i);
 				if(tempT.getCurBlkID().equals(tempT.getAuthority())){
+					// DWELL AT STATION
+//					if(){
+//	
+//					}
+//					else{
+//
+//					}
+
 					// Set new authority
 					tempT.setAuthority(tempT.getNextscheduleStop());
 					// Send authority to track controller
 					trckCntrl.sendSuggestedAuthority(tempT.getCurBlkID(), tempT.getAuthority());
 				}
-				// Send each update authority and cur block
+				// Send authority and cur block constantly
 				trckCntrl.sendSuggestedAuthority(tempT.getCurBlkID(), tempT.getAuthority());
 			
 				
-				// get rectangle in CTC train viewer that matches with train's block
-//				String tempId = "#" + tempT.getCurBlkID();
-				// NEED TO SEE IF CURRENT BLOCK IS A SWITCH, SO CAN CHANGE STATUS...
-				//System.out.println(tempId);
-	//			gui.tempRec = (Rectangle)gui.root.lookup(tempId);
-				//System.out.println(gui.tempRec);
-				// Paint the rect a different color
-		//		gui.tempRec.setFill(Color.YELLOW);
 				
-			//	gui.tempRec.setFill(Color.GREEN);
-			//	gui.tempRec.setStroke(Color.BLACK);
-				//gui.tempRec.setWidth(5);
-				//gui.tempRec.setHeight(5);				
-			//	gui.tempRec.setStrokeDashOffset(22);
-			//	gui.tempRec.setStrokeLineCap(StrokeLineCap.ROUND);
-			//	gui.tempRec.setStrokeLineJoin(lineJoin);
-			//	gui.tempRec.setStrokeMiterLimit(miterLimit);
-			//	gui.tempRec.setStrokeType(strokeType);
-			//	gui.tempRec.setStrokeWidth(2);
+				if(tempT.getLine().equals("green"))
+					tempId = "#g" + tempT.getCurBlkID();// get rectangle that matches with train's cur block
+				else
+					tempId = "#r" + tempT.getCurBlkID();// get rectangle that matches with train's cur block
+
+				gui.tempRec = (Rectangle)gui.root.lookup(tempId);	
+				// Paint the rect a different color
+				gui.tempRec.setFill(Color.YELLOW);
+				// Save cur block to change back later
+				tempT.setPrevBlkID(tempT.getCurBlkID());
 			}
         }
+		
+		
 /*		
+		
 		// Reset ctc viewer
 		//Start with green line
 		for(Map.Entry<String, String> block: greenLine.entrySet()){
@@ -188,29 +226,22 @@ public class CTC{
 			//check if current rect is occupied by train
 			if(gui.tempRec.getFill()==Color.YELLOW)
 				continue;
-			// Check if current recgt is being repaired
+			// Check if current rect is being repaired
 			// last for 2 mins
-			if(gui.tempRec.getFill()==Color.ORANGE){
+//			if(gui.tempRec.getFill()==Color.ORANGE){
 				//if(curTime)
 				// 2 mins to repair
 				
-				//Check if a stationToBlockGreen
-				if(blockToStationGreen.containsKey(block.getValue)){
-					
-				}
+			//Check if a station
+			if(blockToStationGreen.containsKey(block.getValue)){
+				
+			}
 				gui.tempRec.setFill(color.BLACK);
 				gui.tempRec.setStroke(color.GREEN);
 			}
 			
 		}
 */		
-		// NEED TO SEE IF CURRENT BLOCK IS A SWITCH, SO CAN CHANGE STATUS...
-		//System.out.println(tempId);
-		
-
-		
-							
-
 /*
 				String temp = "" + i + "," + j;
 				if(gui.greenLine.containsKey(temp)){
@@ -264,15 +295,15 @@ public class CTC{
     }
     
     public void repairBlock(String block){
-        
+        System.out.println("REPAIRING->"+block);
     }
     
     public void closeBlock(String block){
-        
+        System.out.println("CLOSING->"+block);
     }
     
     public void switchBlock(String block){
-        
+        System.out.println("SWITCHING->"+block);
     }
     
     /**

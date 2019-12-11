@@ -11,6 +11,7 @@ public class CTCTrain{
         private double curSpeed;
         String departTime;
         private String curBlkID;
+		private String prevBlkID;
         public String curAuthority;
 		private int totalNumOfStationsLeftToArriveTo;
         private TkM tkm;
@@ -89,6 +90,13 @@ public class CTCTrain{
         }
 
         /**
+         * Set Train prev block num.
+         */ 
+        public void setPrevBlkID(String newBlkID){
+            prevBlkID = newBlkID;
+        }
+
+        /**
          * Get Block object from current block ID
          */
         public Block getCurrentBlock() {
@@ -134,6 +142,12 @@ public class CTCTrain{
             return curBlkID;
         }
 
+        /**
+         * Get Train's previous block num.
+         */         
+        public String getPrevBlkID(){
+            return prevBlkID;
+        }
 
         /**
          * Get Train speed.
@@ -185,10 +199,14 @@ public class CTCTrain{
             this.setAuthority(schedule.get(0));
             // NEED TO CHECK WHICH LINE TRAIN IS ON
             // TO GET SPECIFIC YARD BLOCK
-            if (line.equals("green"))
+            if (line.equals("green")){
                 this.setCurBlkID("J62");
-            else
+				this.setPrevBlkID("J62");
+			}
+            else{
                 this.setCurBlkID("C6");
+				this.setPrevBlkID("J62");	
+			}
         }
         
         /**

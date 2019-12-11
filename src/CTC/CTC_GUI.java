@@ -59,7 +59,7 @@ public class CTC_GUI extends Application {
     Label throughput, digitalClock;
     private TextField departureTime, suggAuthority, suggSpeed, trainName, speed;
     private ComboBox<String> comboAuthority, comboChooseTrack, comboChooseTrackMaintain, comboChooseBlock;
-    private CheckBox cb1, cb2, cb3;
+    private CheckBox cb1, cb2;
     private String cssLayout = "-fx-border-color: #7a7a7a;\n" +
                    "-fx-border-insets: 0;\n" +
                    "-fx-border-width: 0.5;\n";
@@ -78,6 +78,7 @@ public class CTC_GUI extends Application {
 	public Tooltip t;
 	public static HashMap<String,String> greenLine = new HashMap<String,String>();
 	public static HashMap<String,String> redLine = new HashMap<String,String>();	
+	public static HashMap<String,String> yard = new HashMap<String,String>();	
 	
     private HBox hboxAdd1, hboxAdd2, hboxAdd3, bottomControlOfModule;
     private Button deleteT, dispatchT, importSched, queueT;
@@ -180,8 +181,6 @@ public class CTC_GUI extends Application {
                                                 cb1.setSelected(false);
                                                 cb2.setIndeterminate(false);
                                                 cb2.setSelected(false);
-                                                cb3.setIndeterminate(false);
-                                                cb3.setSelected(false);
                                             }
                                             else{
                                                 // block to be sent to Track Controller
@@ -189,8 +188,7 @@ public class CTC_GUI extends Application {
                                                 cb1.setIndeterminate(false);
                                                 cb1.setSelected(false);
                                                 cb2.setIndeterminate(false);
-                                                cb2.setSelected(false);
-                                                cb3.setIndeterminate(true);                                             
+                                                cb2.setSelected(false);                                           
                                             }
                                         }
                                 });
@@ -215,8 +213,6 @@ public class CTC_GUI extends Application {
                                                 cb1.setSelected(false);
                                                 cb2.setIndeterminate(false);
                                                 cb2.setSelected(false);
-                                                cb3.setIndeterminate(false);
-                                                cb3.setSelected(false);
                                             }
                                             else{
                                                 // block to be sent to Track Controller
@@ -224,8 +220,7 @@ public class CTC_GUI extends Application {
                                                 cb1.setIndeterminate(false);
                                                 cb1.setSelected(false);
                                                 cb2.setIndeterminate(false);
-                                                cb2.setSelected(false);
-                                                cb3.setIndeterminate(true);                                             
+                                                cb2.setSelected(false);                                           
                                             }
                                         }
                                 });
@@ -242,13 +237,14 @@ public class CTC_GUI extends Application {
         cb2 = new CheckBox("Close Block");
         cb2.setOnAction(new closeCheckBoxHandler());
         cb2.setIndeterminate(true);
-        cb3 = new CheckBox("Switch Block");
-        cb3.setOnAction(new switchCheckBoxHandler());
-        cb3.setIndeterminate(true);
+		Label switchLabel = new Label("Switch Block");
+		t = new Tooltip("TOGGLE A SWITCH: click the white rectangles shown in the viewer above");
+		t.setShowDelay(ONE);
+		Tooltip.install(switchLabel, t);		
                 
         // Create a VBox
         vboxMaintain = new VBox(5, getStackPane(new Text("Track Maintenance"), 250.0), hboxMaintain, 
-                new VBox(5, cb1, cb2, cb3));
+                new VBox(5, cb1, cb2, switchLabel));
         vboxMaintain.setStyle(cssLayout);
         //----------------------------------------------------------------------------
         
@@ -647,11 +643,13 @@ public class CTC_GUI extends Application {
 											tempRec.setWidth(10);
 											tempRec.setHeight(5);
 											toggle = false;
+											newCTC.switchBlock(switches);
 										}
 										else{
 											tempRec.setWidth(5);
 											tempRec.setHeight(10);
 											toggle = true;	
+											newCTC.switchBlock(switches);	
 										}
 									}
 								}
@@ -705,11 +703,13 @@ public class CTC_GUI extends Application {
 											tempRec.setWidth(10);
 											tempRec.setHeight(5);
 											toggle = false;
+											newCTC.switchBlock(switches);
 										}
 										else{
 											tempRec.setWidth(5);
 											tempRec.setHeight(10);
-											toggle = true;	
+											toggle = true;
+											newCTC.switchBlock(switches);											
 										}
 									}
 								}
@@ -722,6 +722,15 @@ public class CTC_GUI extends Application {
 						rect.setStroke(Color.RED);				
 					}						
 				}
+				else if(yard.containsKey(temp)){
+					String line = yard.get(temp);
+					if(line.equals("GREENYARD"))
+						rect.setFill(Color.GREEN);
+					else if(line.equals("REDYARD"))
+						rect.setFill(Color.RED);
+					else
+					rect.setFill(Color.GREY);	
+				}				
 				else
 					rect.setStroke(Color.BLACK);
 				// Add rect to root
@@ -861,12 +870,12 @@ public class CTC_GUI extends Application {
 					// Get rect object to paint ctc viewer
 					tempRec = (Rectangle)root.lookup(tempId);	
 					tempRec.setFill(Color.ORANGE);
-					Tooltip t = new Tooltip("REPAIRING BLOCK");
+					t = new Tooltip("REPAIRING BLOCK");
 					t.setShowDelay(ONE);
 					Tooltip.install(tempRec, t);
 				}
 				else{
-//                    newCTC.repairBlock(sendBlockCTC); 
+                    newCTC.repairBlock(sendBlockCTC); 
 					// Get rect object to paint ctc viewer
 					tempRec = (Rectangle)root.lookup(tempId);					
 					if(tempId.contains("g")){
@@ -878,6 +887,7 @@ public class CTC_GUI extends Application {
 						else{
 							tempRec.setFill(Color.BLACK);
 							tempRec.setStroke(Color.GREEN);
+							Tooltip.uninstall(tempRec, t);							
 						}
 					}
 					else{
@@ -889,6 +899,7 @@ public class CTC_GUI extends Application {
 						else{
 							tempRec.setFill(Color.BLACK);
 							tempRec.setStroke(Color.RED);
+							Tooltip.uninstall(tempRec, t);		
 						}	
 					}						
 				}
@@ -921,45 +932,46 @@ public class CTC_GUI extends Application {
 				}		
 				// see if close box is checked, if so close, if not, closing is over				
                 if(cb2.isSelected()){
-                    newCTC.closeBlock(chosenBlock);
+                    newCTC.closeBlock(sendBlockCTC);
 					// Get rect object to paint ctc viewer
 					tempRec = (Rectangle)root.lookup(tempId);	
-					tempRec.setFill(Color.RED);
+					tempRec.setFill(Color.MAGENTA);
 					Tooltip t = new Tooltip("CLOSED BLOCK");
 					t.setShowDelay(ONE);
 					Tooltip.install(tempRec, t);						
 				}
 				else{
-              //      newCTC.repairBlock(sendBlockCTC); 
+                    newCTC.repairBlock(sendBlockCTC); 
 					// Get rect object to paint ctc viewer
-					tempRec = (Rectangle)root.lookup(tempId);					
-					tempRec.setFill(Color.BLACK);
-					if(tempId.contains("g"))					
-						tempRec.setStroke(Color.GREEN);
-					else
-						tempRec.setStroke(Color.RED);						
-					Tooltip t = new Tooltip("CLOSED BLOCK");
-					//remove tooltip
-					Tooltip.uninstall(tempRec, t);
-				}						
+					tempRec = (Rectangle)root.lookup(tempId);
+					if(tempId.contains("g")){
+						// Check if block is a station, switch, or track
+						if(newCTC.blockToStationGreen.containsKey(sendBlockCTC))
+							setRectangleToBlockType(sendBlockCTC, tempRec, "greenstation");
+						else if(switchArrayGreen.contains(sendBlockCTC))
+							setRectangleToBlockType(sendBlockCTC, tempRec, "greenswitch");							
+						else{
+							tempRec.setFill(Color.BLACK);
+							tempRec.setStroke(Color.GREEN);
+							Tooltip.uninstall(tempRec, t);							
+						}
+					}
+					else{
+						// Check if block is a station, switch, or track						
+						if(newCTC.blockToStationRed.containsKey(sendBlockCTC))
+							setRectangleToBlockType(sendBlockCTC, tempRec, "redstation");
+						else if(switchArrayRed.contains(sendBlockCTC))
+							setRectangleToBlockType(sendBlockCTC, tempRec, "redswitch");							
+						else{
+							tempRec.setFill(Color.BLACK);
+							tempRec.setStroke(Color.RED);
+							Tooltip.uninstall(tempRec, t);		
+						}	
+					}						
+				}	
 			}				
         }
-    }
-
-    /**
-     * Event handler class for switch block checkbox.
-     */
-    class switchCheckBoxHandler implements EventHandler<ActionEvent>{
-        @Override
-        public void handle(ActionEvent event){
-            // if chosen block is yet to be selected, ignore this event
-            if(chosenBlock.equals(""));
-            else if(list.contains(chosenBlock))// SEND TO CTC SWITCH BLOCK
-                // only when selected
-                if(cb3.isSelected())
-                    newCTC.switchBlock(chosenBlock);
-        }
-    }   
+    }  
 
     /**
      * Event handler class for queueT button.
@@ -1156,8 +1168,8 @@ public class CTC_GUI extends Application {
 		greenLine.put("20,29", "I54");greenLine.put("20,30", "I55");greenLine.put("20,31", "I56");
 		greenLine.put("20,32", "I57");
 		
-		greenLine.put("21,33", "J58");greenLine.put("22,34", "J59");greenLine.put("23,34", "J60");
-		greenLine.put("24,35", "J61");greenLine.put("25,35", "J62");
+		greenLine.put("21,33", "J58");greenLine.put("22,33", "J59");greenLine.put("23,34", "J60");
+		greenLine.put("24,34", "J61");greenLine.put("25,35", "J62");
 		
 		greenLine.put("26,35", "K63");greenLine.put("27,35", "K64");greenLine.put("28,35", "K65");
 		greenLine.put("29,35", "K66");greenLine.put("30,35", "K67");greenLine.put("31,35", "K68");
@@ -1187,10 +1199,10 @@ public class CTC_GUI extends Application {
 		greenLine.put("31,33", "T108");greenLine.put("30,33", "T109");
 		
 		greenLine.put("29,33", "U110");greenLine.put("28,33", "U111");greenLine.put("27,33", "U112");
-		greenLine.put("26,33", "U113");greenLine.put("25,33", "U114");greenLine.put("25,32", "U115");
+		greenLine.put("26,33", "U113");greenLine.put("26,32", "U114");greenLine.put("25,32", "U115");
 		greenLine.put("24,32", "U116");
 		
-		greenLine.put("23,32", "V117");greenLine.put("22,31", "V118");greenLine.put("22,30", "V119");
+		greenLine.put("23,31", "V117");greenLine.put("22,31", "V118");greenLine.put("22,30", "V119");
 		greenLine.put("22,29", "V120");greenLine.put("22,28", "V121");
 		
 		greenLine.put("22,27", "W122");greenLine.put("22,26", "W123");greenLine.put("22,25", "W124");
@@ -1209,7 +1221,7 @@ public class CTC_GUI extends Application {
 		greenLine.put("15,6", "Z150");
 		
 		// SET RED LINE
-		redLine.put("6,29", "A1");redLine.put("5,29", "A2");redLine.put("4,29", "A3");
+		redLine.put("6,30", "A1");redLine.put("5,30", "A2");redLine.put("4,30", "A3");
 		
 		redLine.put("3,30", "B4");redLine.put("2,31", "B5");redLine.put("2,32", "B6");
 		
@@ -1256,6 +1268,31 @@ public class CTC_GUI extends Application {
 
 		redLine.put("14,19", "S73");redLine.put("13,19", "S74");redLine.put("12,19", "S75");	
 
-		redLine.put("11,20", "T76");		
+		redLine.put("11,20", "T76");
+
+		// YARD	
+		yard.put("21,34","GREENYARD");yard.put("20,34","GREENYARD");yard.put("19,34","GREENYARD");
+		yard.put("18,34","GREENYARD");yard.put("17,35","GREENYARD");
+		yard.put("17,36","GREENYARD");yard.put("18,36","GREENYARD");yard.put("19,36","GREENYARD");
+		yard.put("20,36","GREENYARD");yard.put("21,36","GREENYARD");yard.put("22,36","GREENYARD");
+		yard.put("23,36","GREENYARD");yard.put("24,36","GREENYARD");yard.put("25,36","GREENYARD");
+		
+		
+		yard.put("12,35", "REDYARD");yard.put("11,35", "REDYARD");yard.put("10,35", "REDYARD");	
+		yard.put("9,35", "REDYARD");yard.put("8,36", "REDYARD");yard.put("7,36", "REDYARD");		
+		yard.put("6,36", "REDYARD");yard.put("5,36", "REDYARD");yard.put("4,36", "REDYARD");		
+		
+		yard.put("13,33", "YARD");yard.put("13,34", "YARD");yard.put("13,35", "YARD");
+		yard.put("13,36", "YARD");yard.put("13,37", "YARD");
+		
+		yard.put("14,33", "YARD");yard.put("14,34", "YARD");yard.put("14,35", "YARD");
+		yard.put("14,36", "YARD");yard.put("14,37", "YARD");
+		
+		yard.put("15,33", "YARD");yard.put("15,34", "YARD");yard.put("15,35", "YARD");
+		yard.put("15,36", "YARD");yard.put("15,37", "YARD");
+		
+		yard.put("16,33", "YARD");yard.put("16,34", "YARD");yard.put("16,35", "YARD");
+		yard.put("16,36", "YARD");yard.put("16,37", "YARD");
+		
 	}
 }
