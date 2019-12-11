@@ -59,6 +59,7 @@ public class TrainControllerMainGUI extends Application implements EventHandler<
     Button tncButton;
     Power power;
     Scene scene;
+    int i = 1;
 
     ComboBox trainMenu;
 
@@ -153,7 +154,16 @@ public class TrainControllerMainGUI extends Application implements EventHandler<
         @Override
         public void handle(ActionEvent event){
           Stage newWindow = new Stage();
-          tncMain.initPower().showGUI(newWindow);
+          
+          if(i == 1){
+            tncMain.initPower().showGUI(newWindow);
+            System.out.println("1");
+            i = 0;
+          }
+          else{
+            tncMain.getPower().showGUI(newWindow);
+            System.out.println("2");
+          }
         }
       }
 
