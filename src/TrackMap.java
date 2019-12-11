@@ -103,48 +103,48 @@ public class TrackMap {
     System.out.println(map.get(1).getLineColor().equals("Red"));
     if (map.get(1).getLineColor().equals("Red")) {
       this.orderTrack("rsrc/redOrder.csv");
-      this.addSwitches("rsrc/redSwitch.csv")
+      //this.addSwitches("rsrc/redSwitch.csv");
     }
     else if (map.get(1).getLineColor().equals("Green")) {
       this.orderTrack("rsrc/greenOrder.csv");
-    }
+    }-
 
     return map;
 
   }
 
-  public void addSwitches(String filename) {
-    if (!(filename.substring(filename.length()-3,filename.length()).equals("csv"))) {
-      return;
-    }
-
-    String csv = "";
-    try {
-      File file = new File(filename);
-      Scanner sc = new Scanner(file);
-      while (sc.hasNextLine()) {
-        csv+=sc.nextLine()+"\n";
-      }
-    }
-    catch (FileNotFoundException e){
-        System.out.println("FILE NOT FOUND");
-        System.out.println(e);
-        System.exit(1);
-    }
-    String[] csvrows = csv.split("\n");
-    for (int i = 1; i < csvrows.length-1; i++) {
-      if (csvrows[i].equals("")) {
-        break;
-      }
-
-      String[] switches = csvrows[i].split(",");
-      int bid = Integer.parseInt(switches[0].substring(1, switches[0].length()));
-      int forkbid = Integer.parseInt(switches[1].substring(1, switches[0].length()));
-      map.get(bid).setNextBlockIDFork(map.get(forkbid));
-      System.out.println(map.get(bid).getBlockID() + ", main: " + map.get(bid).getNextBlock().getBlockID() + ", fork: " + map.get(bid).getNextBlockIDFork().getBlockID());
-      }
-
-  }
+  // public void addSwitches(String filename) {
+  //   if (!(filename.substring(filename.length()-3,filename.length()).equals("csv"))) {
+  //     return;
+  //   }
+  //
+  //   String csv = "";
+  //   try {
+  //     File file = new File(filename);
+  //     Scanner sc = new Scanner(file);
+  //     while (sc.hasNextLine()) {
+  //       csv+=sc.nextLine()+"\n";
+  //     }
+  //   }
+  //   catch (FileNotFoundException e){
+  //       System.out.println("FILE NOT FOUND");
+  //       System.out.println(e);
+  //       System.exit(1);
+  //   }
+  //   String[] csvrows = csv.split("\n");
+  //   for (int i = 1; i < csvrows.length-1; i++) {
+  //     if (csvrows[i].equals("")) {
+  //       break;
+  //     }
+  //
+  //     String[] switches = csvrows[i].split(",");
+  //     int bid = Integer.parseInt(switches[0].substring(1, switches[0].length()));
+  //     int forkbid = Integer.parseInt(switches[1].substring(1, switches[0].length()));
+  //     map.get(bid).setNextBlockIDFork(map.get(forkbid));
+  //     System.out.println(map.get(bid).getBlockID() + ", main: " + map.get(bid).getNextBlock().getBlockID() + ", fork: " + map.get(bid).getNextBlockIDFork().getBlockID());
+  //     }
+  //
+  // }
 
   public void orderTrack(String filename) {
     if (!(filename.substring(filename.length()-3,filename.length()).equals("csv"))) {
