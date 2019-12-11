@@ -108,9 +108,9 @@ public class TrackMap {
   }
 
   public void orderTrack(String filename) {
-    if (!(filename.substring(filename.length()-3,filename.length()).equals("csv"))) {
-      return;
-    }
+      if (!(filename.substring(filename.length()-3,filename.length()).equals("csv"))) {
+          return;
+      }
 
     String csv = "";
     try {

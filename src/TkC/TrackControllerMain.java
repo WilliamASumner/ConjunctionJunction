@@ -7,7 +7,6 @@ import javafx.stage.Stage;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.io.*; // IO
 
 public class TrackControllerMain
 {
@@ -100,7 +99,7 @@ public class TrackControllerMain
         // Create definitions of the controllers
         TrackController tk0,tk1,tk2,tk3,tk4,tk5;
 
-        ArrayList<Block> blocks0 = new ArrayList<Block>();
+        ArrayList<Block> blocks0 = new ArrayList<Block>(); // construct block lists
         for (String blockLetter : Tk0List)
             blocks0.addAll(tm.green.getBlocksBySection(blockLetter));
 
@@ -124,14 +123,14 @@ public class TrackControllerMain
         for (String blockLetter : Tk5List)
             blocks5.addAll(tm.red.getBlocksBySection(blockLetter));
 
-        tk0 = new TrackController("green",TkNames[0],blocks0,tm,this);
+        tk0 = new TrackController("green",TkNames[0],blocks0,tm,this); // create the controllers
         tk1 = new TrackController("green",TkNames[1],blocks1,tm,this);
         tk2 = new TrackController("green",TkNames[2],blocks2,tm,this);
         tk3 = new TrackController("red",  TkNames[3],blocks3,tm,this);
         tk4 = new TrackController("red",  TkNames[4],blocks4,tm,this);
         tk5 = new TrackController("red",  TkNames[5],blocks5,tm,this);
 
-        controllers.put(TkNames[0],tk0);
+        controllers.put(TkNames[0],tk0); // save the controllers
         controllers.put(TkNames[1],tk1);
         controllers.put(TkNames[2],tk2);
         controllers.put(TkNames[3],tk3);
@@ -141,26 +140,38 @@ public class TrackControllerMain
 
     public boolean sendSuggestedSpeed(String blockID,double speed) {
         TrackController t = findController(blockID);
-        t.sendSuggestedSpeed(blockID,speed);
-        return true;
+        if (t != null) {
+            t.sendSuggestedSpeed(blockID,speed);
+            return true;
+        }
+        return false;
     }
 
     public boolean sendSuggestedAuthority(String blockID, String authorityID) {
         TrackController t = findController(blockID);
-        t.sendSuggestedAuthority(blockID,authorityID);
-        return true;
+        if (t != null) {
+            t.sendSuggestedAuthority(blockID,authorityID);
+            return true;
+        }
+        return false;
     }
 
     public boolean setSwitchState(String blockID, SwitchState s) {
         TrackController t = findController(blockID);
-        t.setSwitchState(blockID,s);
-        return true;
+        if (t != null) {
+            t.setSwitchState(blockID,s);
+            return true;
+        }
+        return false;
     }
 
     public boolean setCrossingState(String blockID, CrossingState c) {
         TrackController t = findController(blockID);
-        t.setCrossingState(blockID,c);
-        return true;
+        if (t != null) {
+            t.setCrossingState(blockID,c);
+            return true;
+        }
+        return false;
     }
 
     private TrackController findController(String blockID) {

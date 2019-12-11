@@ -15,7 +15,9 @@ public class EvaluatorListener implements TkcListener,TkcLeftListener {
     Condition currentCondition;
     Action currentAction;
     ChainType chainOp = ChainType.NONE;
+
     boolean parsingError = false;
+    String errMsg;
 
     public EvaluatorListener(TkcParser p, TrackController t) {
         p=parser;
@@ -32,6 +34,10 @@ public class EvaluatorListener implements TkcListener,TkcLeftListener {
 
     public boolean encounteredError() {
         return parsingError;
+    }
+
+    public String getErrMsg() {
+        return errMsg;
     }
 
     public EvalList getEvalList() {
@@ -95,7 +101,13 @@ public class EvaluatorListener implements TkcListener,TkcLeftListener {
 
     @Override
     public void enterCondition(TkcParser.ConditionContext ctx) {
-        currentCondition.setBlock(tkc.getBlock(ctx.BlockID().toString()));
+        Block b = tkc.getBlock(ctx.BlockID().toString());
+        if (b != null) {
+            currentCondition.setBlock(b);
+        } else {
+            errMsg = "Block " + ctx.BlockID().toString() + " not found";
+            parsingError = true;
+        }
     }
 
     @Override
@@ -126,7 +138,13 @@ public class EvaluatorListener implements TkcListener,TkcLeftListener {
     public void enterStatement(TkcParser.StatementContext ctx) {
         currentAction = new Action();
         currentAction.setActionType(ActionType.ASSIGN); // for now just assignments
-        currentAction.setBlock(tkc.getBlock(ctx.BlockID().toString()));
+        Block b = tkc.getBlock(ctx.BlockID().toString());
+        if (b != null) {
+            currentAction.setBlock(b);
+        } else {
+            errMsg = "Block " + ctx.BlockID().toString() + " not found";
+            parsingError = true;
+        }
     }
 
     @Override
@@ -192,6 +210,7 @@ public class EvaluatorListener implements TkcListener,TkcLeftListener {
     }
     @Override
     public void visitErrorNode(ErrorNode node) {
+        errMsg = "Error parsing tree";
         parsingError = true;
     }
     @Override public void enterValue(TkcParser.ValueContext ctx) { }
@@ -220,8 +239,8 @@ public class EvaluatorListener implements TkcListener,TkcLeftListener {
     public void exitIfstatement(TkcLeftParser.IfstatementContext ctx) {
         if (currentIf != null) {
             list.addIf(currentIf);
+            currentIf = null;
         }
-        currentIf = null;
     }
 
     @Override
@@ -253,7 +272,13 @@ public class EvaluatorListener implements TkcListener,TkcLeftListener {
 
     @Override
     public void enterCondition(TkcLeftParser.ConditionContext ctx) {
-        currentCondition.setBlock(tkc.getBlock(ctx.BlockID().toString()));
+        Block b = tkc.getBlock(ctx.BlockID().toString());
+        if (b != null) {
+            currentCondition.setBlock(b);
+        } else {
+            errMsg = "Block " + ctx.BlockID().toString() + " not found";
+            parsingError = true;
+        }
     }
 
     @Override

@@ -1,6 +1,5 @@
 package cjunction; // conjunction junction package
 
-import java.awt.Desktop;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -107,6 +106,7 @@ public class TrackControllerGUI extends Application {
     private Label statusVal;
     private Label occupancyVal;
     private Label currPLC;
+    private Label currStatus;
 
     private Scene scene = null;
     private Stage currentStage = null;
@@ -114,6 +114,7 @@ public class TrackControllerGUI extends Application {
     public TrackControllerGUI(TrackControllerMain m, TrackController tkc) {
         tkcm = m;
         currentController = tkc;
+        tkc.registerGui();
         currentBlock = tkcm.tm.getBlock(currentController.getControlledBlocks()[0],tkc.getLine());
         setup();
         update(); // update GUI accordingly
@@ -322,6 +323,12 @@ public class TrackControllerGUI extends Application {
         //root.getChildren().addAll(crossImageView); // middle right
         root.getChildren().addAll(middleVBox); // middle right
 
+        Label progStatusLabel = new Label("Current PLC Status: ");
+        currStatus = new Label("None"); // value of status
+
+        HBox currProgStatus = new HBox(progStatusLabel,currStatus);
+        currProgStatus.setAlignment(Pos.CENTER);
+
         Label currProgLabel = new Label("Current PLC Program: ");
         currPLC = new Label(currentController.getPLCName());
 
@@ -334,7 +341,7 @@ public class TrackControllerGUI extends Application {
         importButton.setOnAction(new ImportButtonHandler());
 
 
-        VBox PLCBox = new VBox(currProgBox,importButton);
+        VBox PLCBox = new VBox(currProgStatus,currProgBox,importButton);
         PLCBox.setAlignment(Pos.CENTER);
 
         GridPane.setConstraints(PLCBox,0,2);
@@ -488,6 +495,7 @@ public class TrackControllerGUI extends Application {
             //grey out
         }
 
+        currStatus.setText(currentController.getPLCStatus());
         // UI greying out
         //System.out.println("Current block type is" + currentBlock.getType());
         if (currentBlock.getType() == BlockType.SWITCHBLOCK) {
@@ -530,6 +538,7 @@ public class TrackControllerGUI extends Application {
         authorityVal.setText(currentBlock.getAuditedAuthority().getBlockID());
         speedVal.setText(String.valueOf(currentBlock.getAuditedSpeed()));
         currPLC.setText(currentController.getPLCName());
+        currStatus.setText(currentController.getPLCStatus());
 
         modeBox.getSelectionModel().select(currentController.getMode());
         checkUI();
@@ -553,19 +562,19 @@ public class TrackControllerGUI extends Application {
 
     public void displayFailedPLC() {
         importButton.setStyle("-fx-background-color: red");
-        //BackgroundFill redBackground = new BackgroundFill(Paint.valueOf(Color.RED.toString()),null,null);
-        //importButton.setBackground(new Background(redBackground));
     }
 
     // Handlers
     class ControllerListHandler implements EventHandler<ActionEvent> {
         @Override
         public void handle(ActionEvent event) {
+            currentController.unregisterGui();
             String newTkc = controllerBox.getSelectionModel().getSelectedItem();
             currentController = tkcm.getController(newTkc);
-            tkcm.setController(newTkc);
+            currentController.registerGui();
+            tkcm.setController(newTkc); // open this controller next time
 
-            String[] BlockNames = currentController.getControlledBlocks();//,"2","3","4","5"};
+            String[] BlockNames = currentController.getControlledBlocks();
             ObservableList<String> BoxOptionsNew = FXCollections.observableArrayList();
             for (String option: BlockNames) {
                 BoxOptionsNew.addAll(option);
@@ -595,7 +604,6 @@ public class TrackControllerGUI extends Application {
             File file = fileChooser.showOpenDialog(currentStage);
             if (file != null) {
                 try {
-                    //Desktop.getDesktop().open(file);
                     System.out.println("opening file: " + file);
                     if (currentController.setPLC(new FileInputStream(file))) {
                         currentController.setPLCName(file.getName());
@@ -610,13 +618,14 @@ public class TrackControllerGUI extends Application {
         }
     }
 
+/*
     class FailureListHandler implements EventHandler<ActionEvent>{
-
         @Override
         public void handle(ActionEvent event) {
             //System.out.println("selected new block status: " + BlockBox.getSelectionModel().getSelectedItem());
         }
     }
+*/
 
     class CrossStateHandler implements EventHandler<ActionEvent> {
         @Override
@@ -641,7 +650,6 @@ public class TrackControllerGUI extends Application {
                 currentBlock.setSwitchState(SwitchState.FORK);
             else
                 currentBlock.setSwitchState(SwitchState.MAIN);
-
             checkUI();
         }
     }
@@ -677,6 +685,17 @@ public class TrackControllerGUI extends Application {
                 currentBlock = tkcm.tm.getBlock(blockBox.getSelectionModel().getSelectedItem(),currentController.getLine());
                 checkUI();
             }
+        }
+    }
+
+    class closeWindowHandler implements EventHandler<WindowEvent> {
+        @Override
+        public void handle(WindowEvent event) { // on window close, stop overriding occupancy
+            if (occupancyCheckBox.isSelected() && currentController.countGuis() == 1) {
+                occupancyCheckBox.setSelected(false);
+                currentBlock.setIsOccupied(false);
+            }
+            currentController.unregisterGui();
         }
     }
 
