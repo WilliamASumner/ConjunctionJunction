@@ -90,9 +90,7 @@ public class TkM {
 
     public void createTrain(String name, String authority, Block b, double speed, TrainControllerMain TnC) {
         TrainModel newTrain = TrainModelMain.createTrain(name, authority, b, speed, TnC,this);
-        if (!(trains.contains(newTrain))) {
         trains.add(newTrain);
-        }
     }
 
     public void update() {
