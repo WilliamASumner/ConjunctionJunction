@@ -107,7 +107,7 @@ public class TrackMap {
     }
     else if (map.get(1).getLineColor().equals("Green")) {
       this.orderTrack("rsrc/greenOrder.csv");
-    }-
+    }
 
     return map;
 
