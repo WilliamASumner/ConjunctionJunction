@@ -37,15 +37,6 @@ public class TrainController{
     TrainModel tm;
     TrainControllerGUI myGUI;
     
-    // //Train Controller Constructor
-    // public TrainController(String name, String authority, double speed, TrainModel tm){
-    //     auditedSpeed = speed;
-    //     authority = authority;
-    //     trainName = name;
-    //     trainModel = tm;
-    //     initGUI();
-    // }
-    //
     //Train Controller Constructor
     public TrainController(){
         auditedSpeed = 0.0;
@@ -94,36 +85,33 @@ public class TrainController{
     void showGUI(Stage primaryStage){
         System.out.println("TrainController: Hello from Train Controller:" + this);
         myGUI.start(primaryStage);
-        // Scene scene = new Scene(GUI);
-        // primaryStage.setScene(scene);
-        // primaryStage.show();
     }
 
     
 
     public double getCurrSpeed(){
         return tm.getVelocity();
-      //  return currSpeed;
     }
+
 
     public double getSetSpeed(){
         //if we are in automatic mode, then the set speed
         //is the audited speed limit of the track
         if(isAutomaticMode){
-            if(auditedSpeed > 0){
+            if(auditedSpeed >= 0){
                 return auditedSpeed;
             }
             else{
-                return 50.0;
+                return 0;
             }
         }
         //if we are in manual mode, return driver set speed
         else{
-            if(driverSetSpeed > 0){
+            if(driverSetSpeed >= 0){
                 return driverSetSpeed;
             }
             else{
-                return 50.0;
+                return 0;
             }
             
         }
@@ -162,6 +150,14 @@ public class TrainController{
 
     //Driver sets train controller mode to automatic
     public void setAutomaticMode(){
+        /*
+        Note: when we switch from automatic to manual mode we begin using
+        the driverSetSpeed as the new set speed for the power calculations
+        so as to not have the speed of the train affected by switching
+        from auto to manual mode we set the driverSetSpeed to the current
+        speed of the train
+        */
+        driverSetSpeed = currSpeed;
         isAutomaticMode = true;
     }
 
