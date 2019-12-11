@@ -58,17 +58,10 @@ public class TrainControllerMainGUI extends Application implements EventHandler<
     Button powerConfigButton;
     Button tncButton;
     Power power;
+    Scene scene;
 
     ComboBox trainMenu;
 
-    public TrainControllerMainGUI(Stage primaryStage){
-      /*
-      speed = TrainController.getAuditedSpeed();
-      authority = TrainController.getAuthority();
-      name = TrainController.getName();
-	  */
-
-    }
     public TrainControllerMainGUI(TrainControllerMain tncM) {
         tncMain = tncM;
         /*
@@ -147,7 +140,10 @@ public class TrainControllerMainGUI extends Application implements EventHandler<
            primaryStage.setTitle("Train Controller Module");  
            powerConfigButton.setOnAction(new powerConfigHandler());
            tncButton.setOnAction(new tncHandler());
-           Scene scene = new Scene(flowpane, 300, 125);
+           if(scene == null){
+            scene = new Scene(flowpane, 300, 125);
+           }
+
            primaryStage.setScene(scene);
            primaryStage.show();
        }
