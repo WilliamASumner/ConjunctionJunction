@@ -54,14 +54,22 @@ public class TrainControllerMain{
 
     //Called when train controller is created
     void initGUI(){
-        myGUI = new TrainControllerMainGUI(this);
-        
+        myGUI = new TrainControllerMainGUI(this);    
     }
 
   
-
+    /*create the Power class object, called by 
+    TrainControllerMainGUI the first time 
+    that the Power gui is opened*/
     public Power initPower(){
         p = new Power();
+        return p;
+    }
+
+    /*get the Power class object, called by 
+    TrainControllerMainGUI to reference the power
+    object to open the power GUI*/
+    public Power getPower(){
         return p;
     }
 
