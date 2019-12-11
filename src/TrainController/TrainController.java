@@ -24,7 +24,7 @@ public class TrainController{
     boolean[] Doors = new boolean[8];
     double powerCommand;
     double temperature = 70.0;
-    // Block currBlock;
+    String currBlock;
     boolean eBrakeOn;
     boolean sBrakeOn;
     boolean isAutomaticMode = true;
@@ -131,12 +131,12 @@ public class TrainController{
 
     //Updates train's audited speed limit from the train model
     public void getAuditedSpeed(){
-       // auditedSpeed = tm.getAuditedSpeed();
+        auditedSpeed = tm.getAuditedSpeed();
     }
 
     //Updates train's authority from the train model
     public void getAuthority(){
-      //  authority = tm.getAuthority();
+        authority = tm.getAuthority();
     }
 
     //Updates train's authority from the train model
@@ -188,9 +188,9 @@ public class TrainController{
 
     //Set speed of train to new driverSetSpeed, only if it not above
     //speed limit
-    public boolean setNewSpeed(double driverSetSpeed){
+    public boolean setNewSpeed(double input){
         if(!isAutomaticMode){
-            currSpeed = driverSetSpeed;
+            driverSetSpeed = input;
             return true;
         }
         return false;
@@ -263,7 +263,7 @@ public class TrainController{
         //Power.calcPowerCommand(this);
         powerOut = Power.calcPowerCommand(this);
        // System.out.println("TrainController: TRAIN: " + this + " - Power CMD " + powerOut);
-        powerOut = 0.1; // TODO FIXME
+        //powerOut = 1.0; // TODO FIXME
         if(eBrakeOn || sBrakeOn){
             powerOut = 0; 
         }

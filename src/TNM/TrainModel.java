@@ -2,22 +2,23 @@ package cjunction; // conjunction junction package
 
 import javafx.stage.Stage;
 import java.lang.Math;
+//mport java.String.format;
 
 public class TrainModel {
 
     String name = "test name";
 	
     String AuthorityBlockID = "test Block";
+	String beaconData = "Default Beacon Data";
     double AuditedSpeed = 3.14;
-	Block AuditedAuthority;
-	
     TrainControllerMain TNC = null;
     TrainController singleTNC = null;
     TrainModelGUI myGUI;
     Block currBlock;
     TkM trackModel = null;
+    
 
-
+    Block AuditedAuthority;
     boolean[] Doors = new boolean[8];
     boolean lights = false;
     double temperature = 70;
@@ -34,13 +35,17 @@ public class TrainModel {
 
     static double trainMass = 40.9; //tons
     static int currPassengers = 0; 
+	int maxPassengers = 222;
     static double passMass = 180; // pounds
     static double estimatedmass = kilosPerPound*(2000*trainMass + passMass*currPassengers);//kilos of train
     TrainControllerMain TNC_Main = null;
     public void setPassenger(int input)
     {
         currPassengers = input;
+		if(currPassengers > maxPassengers)currPassengers=maxPassengers;
         estimatedmass = kilosPerPound*(2000*trainMass + passMass*currPassengers);
+		myGUI.pass_Label.setText("Passengers:\t" + currPassengers + "/222 \n");
+		
         return;
     }
 
@@ -61,7 +66,9 @@ public class TrainModel {
     double velocity = 0;
     double altvelocity = 0.01;
     double acceleration = 0;
-    double timePerUpdate = 1;
+    double timePerUpdate = 1; //seconds
+	//if you change timePerUpdate, uncomment the following line.
+	//myGUI.simtime_Label.setText("Simulated seconds/update: "+String.format("%.3f", timePerUpdate));
 
     public boolean toggleEBrakeFail()
     {
@@ -81,7 +88,7 @@ public class TrainModel {
 			System.out.println("TrainModel: Ebrake is now false: "+Ebrake);
 
         }
-        singleTNC.setEBrakeFailure(EbrakeFail);		
+        //singleTNC.setEbrakeFailure(EbrakeFail);		
 		singleTNC.getGUI().setEbrake(Ebrake);//James 
 		myGUI.setEbrake(Ebrake);
         return EbrakeFail;
@@ -101,7 +108,7 @@ public class TrainModel {
 			System.out.println("TrainModel: SbrakeFail is now true: "+SbrakeFail);
 			System.out.println("TrainModel: Sbrake is now false: "+Sbrake);
         }
-		singleTNC.setSBrakeFailure(SbrakeFail);		
+		//singleTNC.setSbrakeFailure(SbrakeFail);		
 		singleTNC.getGUI().setSbrake(Sbrake);//James 
         return SbrakeFail;
     }
@@ -118,6 +125,7 @@ public class TrainModel {
 			System.out.println("TrainModel: signalFail is now true: "+signalFail);
         }
         singleTNC.setSignalFailure(signalFail);
+		//myGUI.beaconData_Label.setText("Beacon Data:\t" + getBeaconData() + "\n");
         return signalFail;
     }
     public boolean toggleEngineFail()
@@ -153,7 +161,7 @@ public class TrainModel {
 
         trackModel = tm;
         name = Stringname;
-        AuthorityBlockID = ABlock;
+        if(ABlock!=null)AuthorityBlockID = ABlock;
         AuditedSpeed = ASpeed;
 
         initTrainModelGUI();
@@ -167,6 +175,15 @@ public class TrainModel {
         grade = currBlock.getGrade();//setGrade(currBlock.getGrade());
         currBlockLength = currBlock.getLength();
         trackModel.updateOccupancy(currBlock);
+		
+		myGUI.blockLengthLabel.setText("Block length:\t" + currBlockLength + " m\n");
+		myGUI.grade_Label.setText("Grade:\t\t" + grade + " \n");
+		myGUI.currentBlockLabel.setText("Block:\t\t" + currBlock.getBlockID() + " \n");
+		//myGUI.currentBlockLabel.setStyle("-fx-text-fill: red");
+        //System.out.println("TrainModel: Red");
+		
+		myGUI.underground_Label.setText("Underground:\t" + currBlock.getIsUnderground() + " \n");
+		myGUI.linecolor_Label.setText("Line Color:\t" + currBlock.getLineColor() + " \n");
         return;
     }
 	
@@ -177,7 +194,20 @@ public class TrainModel {
 		radians = radiansPerGrade*grade;
 		System.out.println("TrainModel: radians: "+radians);
 		
-	}
+    }
+    
+    //@Returns String - Get the current block
+    public String getCurrentBlock(){
+        return currBlock.getBlockID();
+    }
+
+
+    //@Returns String - Get the Authority from the current block 
+    public String getAuthority(){
+        return AuthorityBlockID;
+    }
+
+
 
     private double CalcAcceleration()
     {
@@ -193,10 +223,16 @@ public class TrainModel {
         {
             powerCommand = singleTNC.calculatePower();
         }
+		if (powerCommand < 0)
+		{
+			powerCommand = 0;
+		}
+		
         double retval = 1000 * powerCommand / (estimatedmass * velocity);
-        double frictionforce = 0.5 * velocity;// Not sure if correct
-        //double frictionforce = rollingFrictionCoefficient*estimatedmass*gravity*Math.sin(radians);// Not sure if correct
-		//double drag = frictionforce + estimatedmass*gravity*Math.cos(radians);
+        //double frictionforce = 0.5 * velocity;// Not sure if correct
+        double frictionforce = rollingFrictionCoefficient*gravity*Math.cos(radians);// Not sure if correct
+		frictionforce = frictionforce + gravity*Math.sin(radians);//force of gravity
+		myGUI.currentDragLabel.setText("Friction+drag:\t" + String.format("%.6f", frictionforce)+ " m/s2 \n");
         retval = retval - (frictionforce);
         return retval;
     }
@@ -205,6 +241,9 @@ public class TrainModel {
     {
         
 		AuditedAuthority = currBlock.getAuditedAuthority();
+		if(AuditedAuthority!=null)
+			AuthorityBlockID=AuditedAuthority.getBlockID();//sometimes its randomly null
+		
 		AuditedSpeed = currBlock.getAuditedSpeed();
 		if (Sbrake ==false && Ebrake==false)
         {
@@ -218,6 +257,7 @@ public class TrainModel {
 		if(velocity >20) velocity =20;//max speed is 20 m/s
 
         distanceTraveled = distanceTraveled + velocity * timePerUpdate;
+		//myGUI.currentBlockLabel.setStyle("-fx-color: black");
 
         if (distanceTraveled > currBlockLength)
         {
@@ -225,7 +265,23 @@ public class TrainModel {
             nextBlockFunc();
 			AuditedAuthority = currBlock.getAuditedAuthority();
 			AuditedSpeed = currBlock.getAuditedSpeed();
+			
         }
+		
+		myGUI.currentPowerLabel.setText("Power:\t" + String.format("%.6f", powerCommand) + " kW\n");
+		myGUI.currentDistLabel.setText("Position:\t" + String.format("%.6f", distanceTraveled) + " m\n");
+		myGUI.currentSpeedLabel.setText("Speed:\t" + String.format("%.6f", velocity) + " m/s \n");
+		myGUI.currentAccelerationLabel.setText("Acceleration:\t" + String.format("%.6f", acceleration)+ " m/s2 \n");
+		myGUI.currentMassLabel.setText("Mass:\t" + estimatedmass + " kg \n");
+		myGUI.Temp_Label.setText("Temperature:\t" + String.format("%.1f", temperature)+ " F \n");
+		
+		myGUI.beaconData_Label.setText("Beacon Data:\n" + getBeaconData() + "\n");
+		myGUI.AudSpeed_Label.setText("AuditedSpeed:\t\t" + AuditedSpeed + " m/s\n");
+		myGUI.AudAuth_Label.setText("AuditedAuthority:\t" + AuditedAuthority + " \n");
+		
+		
+		
+		myGUI.update();
         return;
     }
 
@@ -233,14 +289,80 @@ public class TrainModel {
     {
         Doors = input;
 		myGUI.Doors = input;
+		if(input[0])
+		{
+			myGUI.Rdoor1_Label.setText("Rdoor1: Open \n");
+		}
+		else{
+			myGUI.Rdoor1_Label.setText("Rdoor1: Closed \n");
+		}
+		if(input[1])
+		{
+			myGUI.Rdoor2_Label.setText("Rdoor2: Open \n");
+		}
+		else{
+			myGUI.Rdoor2_Label.setText("Rdoor2: Closed \n");
+		}
+		if(input[2])
+		{
+			myGUI.Rdoor3_Label.setText("Rdoor3: Open \n");
+		}
+		else{
+			myGUI.Rdoor3_Label.setText("Rdoor3: Closed \n");
+		}
+		if(input[3])
+		{
+			myGUI.Rdoor4_Label.setText("Rdoor4: Open \n");
+		}
+		else{
+			myGUI.Rdoor4_Label.setText("Rdoor4: Closed \n");
+		}
+		if(input[4])
+		{
+			myGUI.Ldoor1_Label.setText("Ldoor1: Open \n");
+		}
+		else{
+			myGUI.Ldoor1_Label.setText("Ldoor1: Closed \n");
+		}
+		if(input[5])
+		{
+			myGUI.Ldoor2_Label.setText("Ldoor2: Open \n");
+		}
+		else{
+			myGUI.Ldoor2_Label.setText("Ldoor2: Closed \n");
+		}
+		if(input[6])
+		{
+			myGUI.Ldoor3_Label.setText("Ldoor3: Open \n");
+		}
+		else{
+			myGUI.Ldoor3_Label.setText("Ldoor3: Closed \n");
+		}
+		if(input[7])
+		{
+			myGUI.Ldoor4_Label.setText("Ldoor4: Open \n");
+		}
+		else{
+			myGUI.Ldoor4_Label.setText("Ldoor4: Closed \n");
+		}
+		System.out.println("TrainModel: Doors changed");
+        
     }
 
     public void toggleLights()
     {
         if (lights)
+		{
+			
             lights = false;
+			myGUI.lights_Label.setText("Lights: OFF \n");
+		}
         else
+		{
+			
             lights = true;
+			myGUI.lights_Label.setText("Lights: ON \n");
+		}
         return;
     }
 
@@ -302,7 +424,7 @@ public class TrainModel {
             }
 			
 			singleTNC.getGUI().setSbrake(Sbrake);//James 
-			//myGUI.setSbrake(Sbrake);
+			myGUI.setSbrake(Sbrake);
             //return true;
         }
         return Sbrake;// false;
@@ -331,6 +453,18 @@ public class TrainModel {
 	public String getName()
 	{
 		return name;
+	}
+	
+	public String getBeaconData()
+	{
+		if(signalFail)return "FAILURE";
+		return beaconData;
+	}
+	
+	public String setBeaconData(String input)
+	{
+		beaconData = input;
+		return beaconData;
 	}
 
 

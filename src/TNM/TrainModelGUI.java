@@ -6,6 +6,8 @@ import javafx.event.EventHandler;
 import javafx.scene.Scene;
 
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
@@ -18,8 +20,49 @@ public class TrainModelGUI extends Application {
     double mydubSpeed = 0.0;
 	boolean[] Doors = new boolean[8];
     TrainModel tnm;
+	int failures = 0;
 	
 	FlowPane flowpane;
+	
+	//Labels (just info that is displayed)
+		//speed labels
+	Label currentSpeedLabel = new Label("Current Speed is" + mydubSpeed + " m/s\n");
+	Label currentDistLabel = new Label("Current block");
+	Label currentAccelerationLabel = new Label("Current acceler");
+	Label currentMassLabel = new Label("Mass:\n");
+	Label currentDragLabel = new Label("Mass:\n");
+	Label currentPowerLabel = new Label("Current Power is" + mydubSpeed + " kW\n");
+	Label pass_Label = new Label("Passengers:\t0/222 \n");
+	Label simtime_Label = new Label("Simulated seconds/update: 1");
+	Label currentFailsLabel = new Label("Failures: " + failures + " \n");
+	
+	
+		//internal labels
+	Label Temp_Label = new Label("Temperature");
+	Label lights_Label = new Label("Lights: OFF \n");
+	
+	Label Ldoor1_Label = new Label("Ldoor1: Closed ");
+	Label Ldoor2_Label = new Label("Ldoor2: Closed \n");
+	Label Ldoor3_Label = new Label("Ldoor3: Closed \n");
+	Label Ldoor4_Label = new Label("Ldoor4: Closed \n");
+	
+	Label Rdoor1_Label = new Label("Rdoor1: Closed \n");
+	Label Rdoor2_Label = new Label("Rdoor2: Closed \n");
+	Label Rdoor3_Label = new Label("Rdoor3: Closed \n");
+	Label Rdoor4_Label = new Label("Rdoor4: Closed \n");
+	
+		//block info
+	Label currentBlockLabel = new Label("Current block");
+	Label blockLengthLabel = new Label("Current block");
+	Label AudSpeed_Label = new Label("Current block");
+	Label AudAuth_Label = new Label("Current block");
+	Label underground_Label = new Label("Current block");
+	Label grade_Label = new Label("Current block");
+	Label linecolor_Label = new Label("Current block");
+	Label beaconData_Label = new Label("Current block");
+	
+	
+	
 
 	//Buttons on TrainModelGUI
     Button EbrakeFailButton = new Button("EBrake: Working");
@@ -27,9 +70,8 @@ public class TrainModelGUI extends Application {
     Button EngineFailButton = new Button("Engine: Working");
     Button SignalFailButton = new Button("Signal: Working");
 	
-    Button eBrake = new Button("E BRAKE: Currently OFF");
-	
-	Label currentFailsLabel;
+    Button eBrake = new Button("EMERGENCY BRAKE: Currently OFF");
+    Button sBrake = new Button("SERVICE BRAKE: Currently OFF");
 
     public TrainModelGUI(TrainModel TNM)// String inName, String inBlock, double inSpeed)
     {
@@ -52,6 +94,12 @@ public class TrainModelGUI extends Application {
         eBrake.setMaxWidth(400);
         eBrake.setMinWidth(200);
         eBrake.setMaxWidth(200);
+		
+		sBrake.setStyle("-fx-text-fill: black");
+        sBrake.setMinWidth(400);
+        sBrake.setMaxWidth(400);
+        sBrake.setMinWidth(200);
+        sBrake.setMaxWidth(200);
 		
 		EbrakeFailButton.setStyle("-fx-text-fill: black");
         EbrakeFailButton.setMinWidth(400);
@@ -77,20 +125,81 @@ public class TrainModelGUI extends Application {
         SignalFailButton.setMinWidth(200);
         SignalFailButton.setMaxWidth(200);
 		
+		//Main Flowpane
 		flowpane = new FlowPane();
 		
+		//speed VBOX
+		VBox speed = new VBox();
+		speed.setStyle("-fx-border-color: black");
+		speed.getChildren().add(currentSpeedLabel); //add speedlabel to brake flowpane
+		//currentSpeedLabel.setTextFill(Color.web("#ff0000", 0.8));
+		speed.getChildren().add(currentPowerLabel); //add speedlabel to brake flowpane
+		speed.getChildren().add(currentAccelerationLabel); //add speedlabel to brake flowpane
+		speed.getChildren().add(currentDragLabel); //add speedlabel to brake flowpane
+		speed.getChildren().add(currentDistLabel); //add speedlabel to brake flowpane
+		speed.getChildren().add(pass_Label); //add speedlabel to brake flowpane
+		speed.getChildren().add(currentMassLabel); //add speedlabel to brake flowpane
+		speed.getChildren().add(simtime_Label); //add speedlabel to brake flowpane
+		
+		
+		
+		flowpane.getChildren().add(speed); //add brake flowpane to main flowpane
+		
+		
+		//block_VBOX
+		
+		VBox block_VBOX = new VBox();
+		block_VBOX.setStyle("-fx-border-color: black");
+		block_VBOX.getChildren().add(currentBlockLabel); //add speedlabel to brake flowpane
+		block_VBOX.getChildren().add(linecolor_Label); //add speedlabel to brake flowpane
+		block_VBOX.getChildren().add(blockLengthLabel); //add speedlabel to brake flowpane
+		block_VBOX.getChildren().add(underground_Label); //add speedlabel to brake flowpane
+		block_VBOX.getChildren().add(grade_Label); //add speedlabel to brake flowpane
+		block_VBOX.getChildren().add(AudSpeed_Label); //add speedlabel to brake flowpane
+		block_VBOX.getChildren().add(AudAuth_Label); //add speedlabel to brake flowpane
+		block_VBOX.getChildren().add(beaconData_Label); //add speedlabel to brake flowpane
+		
+		flowpane.getChildren().add(block_VBOX); //add brake flowpane to main flowpane
+		
+		
+		//internal VBOX
+		VBox internal = new VBox();
+		internal.setStyle("-fx-border-color: black");
+		internal.getChildren().add(Temp_Label); //add speedlabel to brake flowpane
+		internal.getChildren().add(lights_Label); //add speedlabel to brake flowpane
+		
+		internal.getChildren().add(Rdoor1_Label); //add speedlabel to brake flowpane
+		internal.getChildren().add(Rdoor2_Label); //add speedlabel to brake flowpane
+		internal.getChildren().add(Rdoor3_Label); //add speedlabel to brake flowpane
+		internal.getChildren().add(Rdoor4_Label); //add speedlabel to brake flowpane
+		
+		internal.getChildren().add(Ldoor1_Label); //add speedlabel to brake flowpane
+		internal.getChildren().add(Ldoor2_Label); //add speedlabel to brake flowpane
+		internal.getChildren().add(Ldoor3_Label); //add speedlabel to brake flowpane
+		internal.getChildren().add(Ldoor4_Label); //add speedlabel to brake flowpane
+		
+		flowpane.getChildren().add(internal); //add brake flowpane to main flowpane
+		
+		//failures text flowpane
+		FlowPane fail1 = new FlowPane();
+		fail1.setStyle("-fx-border-color: black");		
+		fail1.getChildren().add(currentFailsLabel); //add failures to brake flowpane
+        flowpane.getChildren().add(fail1); //add brake flowpane to main flowpane
+		
+		//failure buttons flowpane
 		FlowPane fail = new FlowPane();
-		fail.setStyle("-fx-border-color: black");
+		fail.setStyle("-fx-border-color: black");		
 		fail.getChildren().add(EbrakeFailButton); //add EbrakeFailButton to brake flowpane
 		fail.getChildren().add(SbrakeFailButton); //add SbrakeFailButton to brake flowpane
 		fail.getChildren().add(EngineFailButton); //add EngineFailButton to brake flowpane
-		fail.getChildren().add(SignalFailButton); //add SignalFailButton to brake flowpane
+		fail.getChildren().add(SignalFailButton); //add SignalFailButton to brake flowpane		
         flowpane.getChildren().add(fail); //add brake flowpane to main flowpane
 		
-		
+		//ebrake button flowpane
         FlowPane brake = new FlowPane();
         brake.setStyle("-fx-border-color: black");
 		brake.getChildren().add(eBrake); //add eBrake to brake flowpane
+		brake.getChildren().add(sBrake); //add eBrake to brake flowpane
         flowpane.getChildren().add(brake); //add brake flowpane to main flowpane
 		
 		
@@ -103,7 +212,7 @@ public class TrainModelGUI extends Application {
 	}
     @Override // not sure what this does?
     public void start(Stage primaryStage) { // entry point for all apps
-        primaryStage.setTitle("Train Model GUI"); // container for all of it
+        primaryStage.setTitle("Train Model GUI: "+ myName); // container for all of it
 
 
         initGUI();
@@ -141,16 +250,31 @@ public class TrainModelGUI extends Application {
 	public void setEbrake(boolean newEbrake)
 	{
 		 if(newEbrake){
-                    eBrake.setText("E Brake: Currently ON");
+                    eBrake.setText("EMERGENCY BRAKE: Currently ON");
 					eBrake.setStyle("-fx-text-fill: red");
                     System.out.println("TrainModelGUI: Emergency Brake ON...");
                 }
                 else{
-                    eBrake.setText("E Brake: Currently OFF");
+                    eBrake.setText("EMERGENCY BRAKE: Currently OFF");
 					eBrake.setStyle("-fx-text-fill: black");
                     System.out.println("TrainModelGUI: Emergency Brake OFF...");
                 }
 	}
+	
+	public void setSbrake(boolean newSbrake)
+	{
+		 if(newSbrake){
+                    sBrake.setText("SERVICE BRAKE: Currently ON");
+					sBrake.setStyle("-fx-text-fill: red");
+                    System.out.println("TrainModelGUI: Service Brake ON...");
+                }
+                else{
+                    sBrake.setText("SERVICE BRAKE: Currently OFF");
+					sBrake.setStyle("-fx-text-fill: black");
+                    System.out.println("TrainModelGUI: Service Brake OFF...");
+                }
+	}
+
 
     //Action Listeners
 	class eBrakeHandler implements EventHandler<ActionEvent>
@@ -175,12 +299,15 @@ public class TrainModelGUI extends Application {
 			{
 				EbrakeFailButton.setText("EBrake: Failed");
 				EbrakeFailButton.setStyle("-fx-text-fill: red");
+				failures++;
 			}
             else
 			{
 				EbrakeFailButton.setText("EBrake: Working");
-				EbrakeFailButton.setStyle("-fx-text-fill: black");				
+				EbrakeFailButton.setStyle("-fx-text-fill: black");
+				failures--;				
 			}
+			currentFailsLabel.setText("Failures: " + failures + " \n");
         }
     }
     
@@ -195,12 +322,15 @@ public class TrainModelGUI extends Application {
 			{
 				SbrakeFailButton.setText("SBrake: Failed");
 				SbrakeFailButton.setStyle("-fx-text-fill: red");
+				failures++;
 			}
             else
 			{
 				SbrakeFailButton.setText("SBrake: Working");
-				SbrakeFailButton.setStyle("-fx-text-fill: black");				
+				SbrakeFailButton.setStyle("-fx-text-fill: black");
+				failures--;				
 			}
+			currentFailsLabel.setText("Failures: " + failures + " \n");
         }
     }
     
@@ -215,12 +345,15 @@ public class TrainModelGUI extends Application {
 			{
 				EngineFailButton.setText("Engine: Failed");
 				EngineFailButton.setStyle("-fx-text-fill: red");
+				failures++;
 			}
             else
 			{
 				EngineFailButton.setText("Engine: Working");
-				EngineFailButton.setStyle("-fx-text-fill: black");				
+				EngineFailButton.setStyle("-fx-text-fill: black");
+				failures--;				
 			}
+			currentFailsLabel.setText("Failures: " + failures + " \n");
         }
     }
     
@@ -235,21 +368,22 @@ public class TrainModelGUI extends Application {
 			{
 				SignalFailButton.setText("Signal: Failed");
 				SignalFailButton.setStyle("-fx-text-fill: red");
+				failures++;
 			}
             else
 			{
 				SignalFailButton.setText("Signal: Working");
-				SignalFailButton.setStyle("-fx-text-fill: black");				
+				SignalFailButton.setStyle("-fx-text-fill: black");
+				failures--;				
 			}
+			currentFailsLabel.setText("Failures: " + failures + " \n");
         }
     }
     
-	public void handle(ActionEvent event)
-    {
-        if(event.getSource()==EbrakeFailButton)
-        {
-            tnm.toggleEBrakeFail();
-        }
-    }
+	public void update()
+	{
+		//System.out.println("TrainModelGUI: UPDATE IS WORKING");
+		return;
+	}
 }
 
