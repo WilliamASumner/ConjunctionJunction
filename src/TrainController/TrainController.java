@@ -37,6 +37,7 @@ public class TrainController{
     TrainModel tm;
     TrainControllerGUI myGUI;
     Power myPower;
+    int set = 0;
     
     //Train Controller Constructor
     public TrainController(String name, String a, double speed, TrainModel trainModel){
@@ -63,6 +64,7 @@ public class TrainController{
         return myPower;
     }
 
+ 
 
     //Called when train controller is created
     void initGUI(){
@@ -85,7 +87,17 @@ public class TrainController{
         }
         getAuditedSpeed();
         getAuthority();
+        setCurrBlock();
         currSpeed = getCurrSpeed();
+
+        if(currSpeed > (1.05*auditedSpeed)){
+            toggleServiceBrake();
+            set = 1;
+        }
+        else if(set == 1){
+            toggleServiceBrake();
+            set = 0;
+        }
         //System.out.println("TrainController: Speed = " +currSpeed);
         //myGUI.updatePowerCommand();
     }
@@ -96,12 +108,17 @@ public class TrainController{
         myGUI.start(primaryStage);
     }
 
-    
+    public void setCurrBlock(){
+        currBlock = tm.getCurrentBlock();
+    }
+
+    public Block getCurrBlock(){
+        return currBlock;
+    }
 
     public double getCurrSpeed(){
         return tm.getVelocity();
     }
-
 
     public double getSetSpeed(){
         //if we are in automatic mode, then the set speed
@@ -148,21 +165,25 @@ public class TrainController{
     //Set engine failure, called from TrainModel
     public void setEngineFailure(boolean state){
         engineFailure = state;
+        myGUI.setPowerFailureText(state);
     }
 
     //Set track signal failure, called from TrainModel
     public void setSignalFailure(boolean state){
         trackCircuitFailure = state;
+        myGUI.setSignalFailureText(state);
     }
 
     //Set e brake failure, called from TrainModel
     public void setEBrakeFailure(boolean state){
         eBrakeFailure = state;
+        myGUI.setEBrakeFailureText(state);
     }
 
     //Set s brake failure, called from TrainModel
     public void setSBrakeFailure(boolean state){
         serviceBrakeFailure = state;
+        myGUI.setSBrakeFailureText(state);
     }
 
     //Driver sets train controller mode to automatic
@@ -283,9 +304,13 @@ public class TrainController{
         //Power.calcPowerCommand(this);
         powerOut = myPower.calcPowerCommand(this);
        // System.out.println("TrainController: TRAIN: " + this + " - Power CMD " + powerOut);
-        if(eBrakeOn || sBrakeOn){
+
+       if(currBlock != null){
+        if(eBrakeOn || sBrakeOn || currBlock.getBlockID() == authority){
             powerOut = 0; 
         }
+       }
+        
         return powerOut;
     }
 
