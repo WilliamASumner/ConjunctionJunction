@@ -234,6 +234,7 @@ public class TrainModel {
 			myGUI.blockLengthLabel.setText("Block length:\t" + currBlockLength + " m\n");
 		else
 			myGUI.blockLengthLabel.setText("Block length:\t" + String.format("%.1f", feetPERm*currBlockLength) + " ft\n");
+		
 		myGUI.grade_Label.setText("Grade:\t\t" + grade + " \n");
 		myGUI.currentBlockLabel.setText("Block:\t\t" + currBlock.getBlockID() + " \n");
 		//myGUI.currentBlockLabel.setStyle("-fx-text-fill: red");
@@ -243,6 +244,15 @@ public class TrainModel {
 		myGUI.linecolor_Label.setText("Line Color:\t" + currBlock.getLineColor() + " \n");
         return;
     }
+	
+	public void displayBlockLen()
+	{
+		
+		if(metricmode)
+			myGUI.blockLengthLabel.setText("Block length:\t" + currBlockLength + " m\n");
+		else
+			myGUI.blockLengthLabel.setText("Block length:\t" + String.format("%.1f", feetPERm*currBlockLength) + " ft\n");
+	}
 	
 	private void setGrade(double newgrade)
 	{
