@@ -72,8 +72,8 @@ public class TkMGUI extends Application {
         Block b = t.green.map.get(62);
 
         grid.setPadding(new Insets(10, 10, 10, 10));
-        grid.setVgap(5);
-        grid.setHgap(5);
+        grid.setVgap(3);
+        grid.setHgap(3);
         //Defining the Name text field
         final TextField name = new TextField();
         name.setPromptText("Enter the block ID. Ex. K65.");
@@ -95,6 +95,17 @@ public class TkMGUI extends Application {
         GridPane.setColumnSpan(label, 2);
         grid.getChildren().add(label);
 
+        final TextField temp = new TextField();
+        temp.setPromptText("Enter Temperature");
+        temp.setPrefColumnCount(10);
+        temp.getText();
+        GridPane.setConstraints(temp, 100, 10);
+        grid.getChildren().add(temp);
+        //Defining the Submit button
+        Button submitTemp = new Button("Submit");
+        GridPane.setConstraints(submitTemp, 101, 10);
+        grid.getChildren().add(submitTemp);
+
         String[] lines = {"green","red"};
         ObservableList<String> lineOptions = FXCollections.observableArrayList();
         for (String option: lines) {
@@ -113,8 +124,6 @@ public class TkMGUI extends Application {
         grid.getChildren().add(lineBox);
 
 
-
-
         //Setting an action for the Submit button
         submit.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -123,6 +132,7 @@ public class TkMGUI extends Application {
                 if ((name.getText() != null && !name.getText().isEmpty())) {
                     String s = name.getText().toString();
                     int bid = Integer.parseInt(s.substring(1, s.length()));
+                      System.out.println(t.red.map.size());
                     Block b = t.red.map.get(bid);//t.red.map.get(bid);
                     update(b);
                 } else {
@@ -130,6 +140,7 @@ public class TkMGUI extends Application {
                 }
              }
          });
+
 
         //Setting an action for the Clear button
         clear.setOnAction(new EventHandler<ActionEvent>() {
@@ -140,15 +151,19 @@ public class TkMGUI extends Application {
                 label.setText(null);
             }
         });
-        // b.setGrade(0);
-        // b.setAuditedSpeed(70);
-        // b.setLength(100);
-        // b.setBlockID("K63");
-        // b.setElevation(0);
-        // b.setLineColor("Green");
-        //b.setIsOccupied(true);
-        //b.setAuditedAuthority(t.line.map.get(20));
-        //l = new Label(b.toString());
+
+        submitTemp.setOnAction(new EventHandler<ActionEvent>() {
+
+        @Override
+            public void handle(ActionEvent e) {
+                if ((temp.getText() != null && !temp.getText().isEmpty())) {
+                    double tmp = Double.parseDouble(temp.getText().toString());
+                    t.turnOnHeater(tmp);
+                    update(b);
+                }
+             }
+           });
+
         if (line.equals("green"))
             scene = new Scene(new StackPane(t.toString(t.green, b.getBlockID()), grid), 640, 480);
         else
