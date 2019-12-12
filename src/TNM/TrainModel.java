@@ -276,8 +276,8 @@ public class TrainModel {
     }
     
     //@Returns String - Get the current block
-    public String getCurrentBlock(){
-        return currBlock.getBlockID();
+    public Block getCurrentBlock(){
+        return currBlock;
     }
 	
     //@Returns String - Get the Authority from the current block 

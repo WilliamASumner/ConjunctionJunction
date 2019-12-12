@@ -62,6 +62,8 @@ public class TrainControllerGUI extends Application implements EventHandler<Acti
     Label eBrakeFailure;
     Label signalFailure;
     Label powerFailure;
+
+    Label currBlock = new Label("Current Block = ");
    
     //Buttons on TrainControllerGUI
     Button setSpeedButton = new Button("Set Speed");
@@ -82,7 +84,9 @@ public class TrainControllerGUI extends Application implements EventHandler<Acti
 
     Label driverSetSpeed;
     Label currentTemp;
-    Label powerLabel;
+    Label powerLabel = new Label("Current Power in kWatts: 0");
+
+    int power = 0;
 
     RadioButton autoRadioButton;
     RadioButton manualRadioButton;
@@ -99,7 +103,17 @@ public class TrainControllerGUI extends Application implements EventHandler<Acti
         powerCommand = tnc.calculatePower();
     }
 
+    public void setPower(double pow){
+        if(pow > 0){
+            powerLabel.setText("Current Power in kWatts: " + String.format("%.2f", pow));
+        }
+        else{
+            powerLabel.setText("Current Power in kWatts: 0");
+        }        
+    }
+    
     public void initGUI(){
+        
         autoRadioButton = new RadioButton("Automatic");
         setTempButton = new Button("Set Temp");
 
@@ -115,15 +129,15 @@ public class TrainControllerGUI extends Application implements EventHandler<Acti
         sBrake.setMinWidth(200);
         sBrake.setMaxWidth(200);
 
-        Label powerLabel = new Label("Current Power: 0 kWatts");
+       
 
         Label modeSelectLabel = new Label("Select a Mode: "); 
-        Label doorLabel = new Label("Door Status Control: "); 
+        Label doorLabel = new Label("Door Status Control:                   "); 
 
-        sBrakeFailure = new Label("Service Brake Failure: NOT Detected");
-        eBrakeFailure = new Label("Emergency Brake Failure: NOT Detected");
-        signalFailure = new Label("Signal Brake Failure: NOT Detected");
-        powerFailure = new Label("Power Brake Failure: NOT Detected");
+        sBrakeFailure = new Label("1) Service Brake Failure: NOT Detected  ");
+        eBrakeFailure = new Label("2) Emergency Brake Failure: NOT Detected    ");
+        signalFailure = new Label("3) Signal Brake Failure: NOT Detected                    ");
+        powerFailure = new Label("4) Power Brake Failure: NOT Detected   ");
        
         Label failureTitle = new Label("Track Failure Status: ");
         
@@ -137,13 +151,10 @@ public class TrainControllerGUI extends Application implements EventHandler<Acti
          speedSlider.setShowTickLabels(true);
 
 
-        //Uncomment first one when integrated with train model
-         //driverSetSpeed = new Label("Current Set Speed Limit" + tnc.getSetSpeed());
         Label driverSetSpeed = new Label("Current Set Speed Limit " + tnc.getSetSpeed() + " MPH");
 
+         currentTemp = new Label("Current Temperature: " + String.format("%.2f", tnc.getTemp()) + " Fahrenheit");
 
-
-         currentTemp = new Label("Current Temperature: " + tnc.getTemp() + " Fahrenheit");
 
          tempSlider = new Slider(0, 80, 0);
          tempSlider.setShowTickLabels(true);
@@ -200,23 +211,19 @@ public class TrainControllerGUI extends Application implements EventHandler<Acti
          //service brake
          brake.getChildren().add(sBrake);
          brake.getChildren().add(lights);
+         brake.getChildren().add(currBlock);
          flowpane.getChildren().add(brake);
            
  
          //Panel for Door Status
-         FlowPane doorStatus = new FlowPane();
-         doorStatus.setStyle("-fx-border-color: black");
-         doorStatus.getChildren().add(doorLabel);
-         doorStatus.getChildren().add(rDoor1);
-         doorStatus.getChildren().add(rDoor2);
-         doorStatus.getChildren().add(rDoor3);
-         doorStatus.getChildren().add(rDoor4);
-         doorStatus.getChildren().add(lDoor1);
-         doorStatus.getChildren().add(lDoor2);
-         doorStatus.getChildren().add(lDoor3);
-         doorStatus.getChildren().add(lDoor4);
-         flowpane.getChildren().add(doorStatus);
+         VBox doorStatusRight = new VBox(rDoor1,rDoor2,rDoor3,rDoor4);
+         VBox doorStatusLeft = new VBox(lDoor1,lDoor2,lDoor3,lDoor4);
+
          
+         HBox doorPane = new HBox(doorStatusLeft,doorStatusRight);
+         doorPane.setStyle("-fx-border-color: black");
+         flowpane.getChildren().add(doorPane);
+
  
          setSpeedButton.setOnAction(new setSpeedHandler());
          eBrake.setOnAction(new eBrakeHandler());
@@ -240,9 +247,10 @@ public class TrainControllerGUI extends Application implements EventHandler<Acti
 
     @Override
        public void start(Stage primaryStage) {
+        primaryStage.setTitle(tnc.getName() + " - Train Controller UI");
         initGUI();
         
-        //primaryStage.setTitle(name + " - Train Controller UI");
+        
 
         
         //Label output = new Label("Train Name: " + name + "\nAudited Authority: " + authority + "\nAudited Speed Limit: " + speed); 
@@ -275,40 +283,44 @@ public class TrainControllerGUI extends Application implements EventHandler<Acti
                 }
     }
     
+    public void setCurrBlock(String s){
+        currBlock.setText("Current Block = " + s);
+    }
+
     public void setEBrakeFailureText(boolean state){
         if(state){
-            eBrakeFailure.setText("Emergency Brake Failure: Detected");
+            eBrakeFailure.setText("1) Emergency Brake Failure: Detected    ");
         }
         else{
-            eBrakeFailure.setText("Emergency Brake Failure: NOT Detected");
+            eBrakeFailure.setText("1) Emergency Brake Failure: NOT Detected    ");
         }
     }
 
     public void setSBrakeFailureText(boolean state){
         if(state){
-            signalFailure.setText("Emergency Brake Failure: Detected");
+            sBrakeFailure.setText("2) Service Brake Failure: Detected  ");
         }
         else{
-            sBrakeFailure.setText("Emergency Brake Failure: NOT Detected");
+            sBrakeFailure.setText("2) Service Brake Failure: NOT Detected  ");
         }
     }
 
     public void setSignalFailureText(boolean state){
         if(state){
-            signalFailure.setText("Emergency Brake Failure: Detected");
+            signalFailure.setText("3) Signal Failure: Detected                  ");
         }
         else{
-            signalFailure.setText("Emergency Brake Failure: NOT Detected");
+            signalFailure.setText("3) Signal Failure: NOT Detected                  ");
         }
     }
 
 
     public void setPowerFailureText(boolean state){
         if(state){
-            powerFailure.setText("Emergency Brake Failure: Detected");
+            powerFailure.setText("4) Power Failure: Detected   ");
         }
         else{
-            powerFailure.setText("Emergency Brake Failure: NOT Detected");
+            powerFailure.setText("4) Power Failure: NOT Detected   ");
         }
     }
 
@@ -488,7 +500,7 @@ public class TrainControllerGUI extends Application implements EventHandler<Acti
           @Override
           public void handle(ActionEvent event){
             tnc.setTemp(tempSlider.getValue());
-            currentTemp.setText("Current Temperature: " + tnc.getTemp() + " Fahrenheit");
+            currentTemp.setText("Current Temperature: " + String.format("%.2f", tnc.getTemp()) + " Fahrenheit");
           }
       }
       
