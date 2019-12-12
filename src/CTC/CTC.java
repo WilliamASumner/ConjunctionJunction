@@ -191,7 +191,7 @@ public class CTC{
 				// check if dispatched trains cur authority == cur block
 				else if(tempT.getCurBlkID().equals(tempT.getAuthority())){
 					//
-					// DWELL AT STATION
+					// DWELL AT STATION, COUNT FOR 4 mins across all trains
 //					if(){
 //	
 //					}
@@ -233,15 +233,18 @@ public class CTC{
         return tkm;
     }
     
-    public void repairBlock(String block){
-        System.out.println("REPAIRING->"+block);
+    public void repairBlock(String block, String line){
+//		trckCntrl.repairBlock(block,line);
+        //System.out.println("REPAIRING->"+block);
     }
     
-    public void closeBlock(String block){
-        System.out.println("CLOSING->"+block);
+    public void closeBlock(String block, String line){
+	//	trckCntrl.closeBlock(block, line);		
+        //System.out.println("CLOSING->"+block);
     }
     
-    public void switchBlock(String block){
+    public void switchBlock(String block, String line){
+		//trckCntrl.setSwitchState(block, line);				
         System.out.println("SWITCHING->"+block);
     }
     

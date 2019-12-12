@@ -101,7 +101,7 @@ public class CTC_GUI extends Application {
     
     private ArrayList<String> sched = new ArrayList<String>(5);
 	
-	private ArrayList<String> importedTrains = new ArrayList<String>(5);
+	private ArrayList<CTCTrain> importedTrains = new ArrayList<CTCTrain>(5);
     
     private String[] TrackTypes = {"Green Line", "Red Line"};
     private String[] SwitchBlocks = new String[]{"G12", "G29", "G58", "G62", "G76", "G86", 
@@ -650,13 +650,13 @@ public class CTC_GUI extends Application {
 											tempRec.setWidth(10);
 											tempRec.setHeight(5);
 											toggle = false;
-											newCTC.switchBlock(switches);
+											newCTC.switchBlock(switches, "green");
 										}
 										else{
 											tempRec.setWidth(5);
 											tempRec.setHeight(10);
 											toggle = true;	
-											newCTC.switchBlock(switches);	
+											newCTC.switchBlock(switches, "green");	
 										}
 									}
 								}
@@ -710,13 +710,13 @@ public class CTC_GUI extends Application {
 											tempRec.setWidth(10);
 											tempRec.setHeight(5);
 											toggle = false;
-											newCTC.switchBlock(switches);
+											newCTC.switchBlock(switches, "red");
 										}
 										else{
 											tempRec.setWidth(5);
 											tempRec.setHeight(10);
 											toggle = true;
-											newCTC.switchBlock(switches);											
+											newCTC.switchBlock(switches, "red");											
 										}
 									}
 								}
@@ -806,7 +806,21 @@ public class CTC_GUI extends Application {
 		else if(typeOfBlock.equals("greenswitch")){
 			rect.setFill(Color.BLACK);
 			rect.setStroke(Color.WHITE);
-			rect.setWidth(5);
+			
+			switch(newCTC.tkm.getBlock(id,"green").getSwitchState()){
+				case MAIN:
+					rect.setWidth(5);
+					rect.setHeight(10);					
+					break;
+				case FORK:
+					rect.setWidth(10);
+					rect.setHeight(5);				
+					break;
+				default:
+					System.out.println("IN DEFAULT");
+					rect.setWidth(10);
+					rect.setHeight(5);
+			}
 			t = new Tooltip("Toggle Switch " + id);
 			t.setShowDelay(ONE);
 			Tooltip.install(rect, t);	
@@ -878,6 +892,7 @@ public class CTC_GUI extends Application {
         public void handle(ActionEvent event){
 			String tempId = "";
 			String sendBlockCTC = "";
+			String lineType = "";
             // if chosen block is yet to be selected, ignore this event
             if(chosenBlock.equals(""));
             else{// SEND TO CTC REPAIR BLOCK only when selected
@@ -885,16 +900,18 @@ public class CTC_GUI extends Application {
 				if(chosenBlock.contains("greenline")){
 					String[] blk = chosenBlock.split("greenline");
 					sendBlockCTC = blk[0];
+					lineType = "green";
 					tempId = "#" + "g" + blk[0];
 				}
 				else{
 					String[] blk = chosenBlock.split("redline");
 					sendBlockCTC = blk[0];
+					lineType = "red";
 					tempId = "#" + "r" + blk[0];
 				}		
 				// see if repair box is checked, if so repair, if not, repairing is over
                 if(cb1.isSelected()){
-					newCTC.repairBlock(sendBlockCTC); 
+					newCTC.repairBlock(sendBlockCTC,lineType); 
 					// Get rect object to paint ctc viewer
 					tempRec = (Rectangle)root.lookup(tempId);	
 					tempRec.setFill(Color.ORANGE);
@@ -903,7 +920,7 @@ public class CTC_GUI extends Application {
 					Tooltip.install(tempRec, t);
 				}
 				else{
-                    newCTC.repairBlock(sendBlockCTC); 
+                    newCTC.repairBlock(sendBlockCTC,lineType); 
 					// Get rect object to paint ctc viewer
 					tempRec = (Rectangle)root.lookup(tempId);					
 					if(tempId.contains("g")){
@@ -943,7 +960,8 @@ public class CTC_GUI extends Application {
         @Override
         public void handle(ActionEvent event){
 			String tempId = "";
-			String sendBlockCTC = "";			
+			String sendBlockCTC = "";		
+			String lineType = "";
             // if chosen block is yet to be selected, ignore this event
             if(chosenBlock.equals(""));
             else{// SEND TO CTC CLOSE BLOCK only when selected
@@ -951,16 +969,18 @@ public class CTC_GUI extends Application {
 				if(chosenBlock.contains("greenline")){
 					String[] blk = chosenBlock.split("greenline");
 					sendBlockCTC = blk[0];
+					lineType = "green";
 					tempId = "#" + "g" + blk[0];
 				}
 				else{
 					String[] blk = chosenBlock.split("redline");
 					sendBlockCTC = blk[0];
+					lineType = "red";
 					tempId = "#" + "r" + blk[0];
 				}		
 				// see if close box is checked, if so close, if not, closing is over				
                 if(cb2.isSelected()){
-                    newCTC.closeBlock(sendBlockCTC);
+                    newCTC.closeBlock(sendBlockCTC,lineType);
 					// Get rect object to paint ctc viewer
 					tempRec = (Rectangle)root.lookup(tempId);	
 					tempRec.setFill(Color.MAGENTA);
@@ -969,7 +989,7 @@ public class CTC_GUI extends Application {
 					Tooltip.install(tempRec, t);						
 				}
 				else{
-                    newCTC.closeBlock(sendBlockCTC); 
+                    newCTC.closeBlock(sendBlockCTC,lineType); 
 					// Get rect object to paint ctc viewer
 					tempRec = (Rectangle)root.lookup(tempId);
 					if(tempId.contains("g")){
@@ -1048,39 +1068,40 @@ public class CTC_GUI extends Application {
 //							if(sched.size() == 0);
 //							else
 //								sched.clear();	
-							System.out.println(countStops);
+						//	System.out.println(countStops);
 							// Parse each line's info(each line is a station stop)
 							// (each line contains each trains arrival time at THIS station)
 							// Count each train from sched
-							int trainCount = 0;							
+							int trainCount = 0;	
+							String station = "";
 							for(int j = 0; j < splitSchedInfo.length; j++){
 								// Get station stops
 								if(splitSchedInfo[j].contains("STATION")){
 									String[] splitStation = splitSchedInfo[j].split(";");
-									String station = splitStation[1];
+									station = splitStation[1];
 									//System.out.print(station +",");
 								}
 								if(splitSchedInfo[j].contains(":")){
 									// Create all trains in schedule once
 									if(countStops == 0){
 										// Create CTCTrain to add to queued train viewer
-//										tempTrain = new CTCTrain(newCTC.getTkM());	
+										tempTrain = new CTCTrain(newCTC.getTkM());	
 										// Set name
-//										tempTrain.setName(train + trainCount);
+										tempTrain.setName(train + trainCount);
 										//Set line
-//										tempTrain.setLine("green");	
+										tempTrain.setLine("green");	
+										//Set Trains departure time
+										tempTrain.setDepartureTime(splitSchedInfo[j]);
 										//Add station, index, time to station
-//										tempTrain.addToSchedule(station, countStops, splitSchedInfo[j]);
+										tempTrain.addToSchedule(station, countStops);
 										//Add to array 
-//										importedTrains.add(trainCount++, tempTrain);
-										System.out.print(splitSchedInfo[j] +",");
-										System.out.println(trainCount++);
+										importedTrains.add(trainCount++, tempTrain);
+									//	System.out.print(splitSchedInfo[j] +",");
+									//	System.out.println(trainCount++);
 									}
 									else{
-//										tempTrain = importedTrains.get(trainCount++);
-										//Add station, index, time to station
-//										tempTrain.addToSchedule(station, countStops, splitSchedInfo[j]);										
-//										importedTrains.add(trainCount, tempTrain);
+										//Add station, index										
+										importedTrains.get(trainCount++).addToSchedule(station, countStops);
 					//					System.out.print(splitSchedInfo[j] +",");
 					//					System.out.println(trainCount++);										
 									}
@@ -1088,8 +1109,7 @@ public class CTC_GUI extends Application {
 //									System.out.print(splitSchedInfo[j] +",");
 									
 								}
-							}						
-							System.out.println();	
+							}							
 							++countStops;
 						}
 					}						
@@ -1099,11 +1119,14 @@ public class CTC_GUI extends Application {
 				}	
 
             }
+			importedTrains.forEach((n) -> n.finalizeTrain());
+			importedTrains.forEach((n) -> queuedItems.add(n.toString()));
+			// Add to queued trains
+			importedTrains.forEach((n) -> newCTC.queueNewTrain(n));				
+			queuedTrainsView.setItems(queuedItems);
 			
 		}
 	}
-
-
 
     /**
      * Event handler class for queueT button.

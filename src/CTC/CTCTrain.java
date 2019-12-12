@@ -181,11 +181,11 @@ public class CTCTrain{
         /**
          * Add a station to Train's schedule.
          */ 
-		public void addToSchedule(String station, int index, String timeToStation){
-			System.out.println(trainName);
-			System.out.println(station);
-			System.out.println(index);System.out.println(timeToStation);
-			//schedule.add(index, station);
+		public void addToSchedule(String station, int index){
+			if(schedule.contains(station))
+				schedule.add(index, station+"2");
+			else
+				schedule.add(index, station);
 		}
 
         /**
@@ -196,14 +196,18 @@ public class CTCTrain{
             // add stops to schedule
             for(int i = 0; i < sched.size(); i++)
                 schedule.add(i, sched.get(i));
+			finalizeTrain();
+        }
 		
+		public void finalizeTrain(){
 			//Add yard as final authority
 			// a0 is block for yard
 			schedule.add("yard");
 			
-			totalNumOfStationsLeftToArriveTo = sched.size() + 1;
+			totalNumOfStationsLeftToArriveTo = schedule.size();
 			System.out.println(totalNumOfStationsLeftToArriveTo);
 			
+			this.setSpeed("11.0");
             // Set first authority
             this.setAuthority(schedule.get(0));
             // NEED TO CHECK WHICH LINE TRAIN IS ON
@@ -215,8 +219,8 @@ public class CTCTrain{
             else{
                 this.setCurBlkID("C9");
 				this.setPrevBlkID("C9");	
-			}
-        }
+			}			
+		}
         
         /**
          * Search to see if given block is in schedule.
