@@ -46,8 +46,6 @@ public class TrackControllerMain
         //
         Block yard = tm.getBlock("A0","green");
 
-        System.out.println("HERE setting blocks");
-
         // 
         Block M75  = tm.getBlock("M75","green");
         Block M76  = tm.getBlock("M76","green"); // switch
@@ -235,9 +233,18 @@ public class TrackControllerMain
     }
 
     public boolean sendSuggestedAuthority(String blockID, String line, String authorityID) {
+        //System.out.println("SENDING " + blockID + " authority: " + authorityID);
         TrackController t = findController(blockID,line);
         if (t != null) {
             t.sendSuggestedAuthority(blockID,authorityID);
+            return true;
+        }
+        return false;
+    }
+    public boolean flipSwitchState(String blockID, String line) {
+        TrackController t = findController(blockID,line);
+        if (t != null) {
+            t.flipSwitchState(blockID);
             return true;
         }
         return false;

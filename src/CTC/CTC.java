@@ -203,10 +203,10 @@ public class CTC{
 					// Set new authority
 					tempT.setAuthority(tempT.getNextscheduleStop());
 					// Send authority to track controller
-					//trckCntrl.sendSuggestedAuthority(tempT.getCurBlkID(), tempT.getAuthority());
+					trckCntrl.sendSuggestedAuthority(tempT.getCurBlkID(), tempT.getLine(), tempT.getAuthority());
 				}
 				// Send authority and cur block constantly
-				//trckCntrl.sendSuggestedAuthority(tempT.getCurBlkID(), tempT.getAuthority());
+				trckCntrl.sendSuggestedAuthority(tempT.getCurBlkID(), tempT.getLine(), tempT.getAuthority());
 			}
         }			
     }
@@ -236,19 +236,19 @@ public class CTC{
     
     public void repairBlock(String block, String line){
 		//TODO
-//		trckCntrl.repairBlock(block,line);
+		trckCntrl.repairBlock(block,line);
         //System.out.println("REPAIRING->"+block);
     }
     
     public void closeBlock(String block, String line){
 		//TODO
-	//	trckCntrl.closeBlock(block, line);		
+		trckCntrl.closeBlock(block, line);		
         //System.out.println("CLOSING->"+block);
     }
     
     public void switchBlock(String block, String line){
 		//TODO
-		//trckCntrl.setSwitchState(block, line);				
+		trckCntrl.flipSwitchState(block, line);				
         System.out.println("SWITCHING->"+block);
     }
     
@@ -331,7 +331,7 @@ TODO:FIXME, BLOCK ID STRING AND LINE STRING
     }
 /*  
     public String getBlockSpeed(String blockID){
-        String speedLimit = trckCntrl.getSpeedLimit(blockID);
+        String speedLimit = trckCntrl.getSpeedLimit(blockID); // TODO replace with block get speedlimit
         return speedLimit;
     }*/
 }

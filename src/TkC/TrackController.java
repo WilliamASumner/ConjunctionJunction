@@ -229,6 +229,17 @@ public class TrackController
         return true;
     }
 
+    public boolean flipSwitchState(String blockID) {
+        Block b = getBlock(blockID);
+        if (b.getSwitchState() == SwitchState.MAIN) {
+            b.setSwitchState(SwitchState.FORK);
+        }else {
+            b.setSwitchState(SwitchState.MAIN);
+        }
+        return true; // success
+    }
+
+
     public boolean setSwitchState(String blockID, SwitchState s) {
         Block b = getBlock(blockID);
         b.setSwitchState(s);
