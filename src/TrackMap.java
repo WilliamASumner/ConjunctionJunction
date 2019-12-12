@@ -86,6 +86,9 @@ public class TrackMap {
                 else if (elements[6].toUpperCase().contains("CROSSING")) {
                     newBlock.setType(BlockType.CROSSBLOCK);
                 }
+                else if (elements[6].toUpperCase().contains("UNDERGROUND")) {
+                    newBlock.setIsUnderground(true);
+                }
                 newBlock.setSwitchState(SwitchState.MAIN);
                 newBlock.setCrossingState(CrossingState.UP);
 
