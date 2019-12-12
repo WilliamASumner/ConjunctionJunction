@@ -28,14 +28,14 @@ public class TrainModel {
     double powerCommand = 0; //kiloWatts
     double grade = 0;
     double gravity = 9.81;
-	double radiansPerGrade = 0.015708;
+	double radiansPerGrade = 0.015708/2;
 	double radians = radiansPerGrade*grade;
 	double rollingFrictionCoefficient = 0.002;
     static double kilosPerPound = 0.453592;
 	double maxpower; // max acceleration at 2/3 mass
 
 
-    static double trainMass = 40.9; //tons
+    static double trainMass = 1;//40.9; //tons
     static int currPassengers = 0; 
 	int maxPassengers = 222;
     static double passMass = 180; // pounds
@@ -115,8 +115,12 @@ public class TrainModel {
     double altvelocity = 0.01;
     double acceleration = 0;
     double timePerUpdate = 0.2; //seconds
-	//if you change timePerUpdate, uncomment the following line.
-	//myGUI.simtime_Label.setText("Simulated seconds/update: "+String.format("%.3f", timePerUpdate));
+
+
+	double LEN = currBlockLength;
+	double HEIT = grade*LEN/100;
+	double COS = LEN/ Math.sqrt(LEN*LEN+HEIT*HEIT);
+	double SIN = HEIT/ Math.sqrt(LEN*LEN+HEIT*HEIT);
 
     public boolean toggleEBrakeFail()
     {
@@ -199,7 +203,7 @@ public class TrainModel {
 
         currBlock = startBlock;
         currBlock.isOccupied = true;
-        grade = currBlock.getGrade();
+        setGrade(currBlock.getGrade());
         currBlockLength = currBlock.getLength();
         TNC_Main = TNCMain_input;
         if(TNC_Main!=null)initTrainController(Stringname, ABlock, ASpeed);
@@ -210,6 +214,8 @@ public class TrainModel {
         AuditedSpeed = ASpeed;
 
         initTrainModelGUI();
+		
+		myGUI.simtime_Label.setText("Simulated seconds/update: "+String.format("%.3f", timePerUpdate));
     }
 
     private void nextBlockFunc()  
@@ -235,9 +241,23 @@ public class TrainModel {
 	private void setGrade(double newgrade)
 	{
 		grade = newgrade;
-		//System.out.println("TrainModel: grade: "+grade);
+		//System.out.println("TrainModel: grade: "+grade);		
 		radians = radiansPerGrade*grade;
-		//System.out.println("TrainModel: radians: "+radians);
+		LEN = currBlockLength;
+		HEIT = grade*LEN/100;
+		COS = LEN/ Math.sqrt(LEN*LEN+HEIT*HEIT);
+		SIN = HEIT/ Math.sqrt(LEN*LEN+HEIT*HEIT);
+		/*
+		System.out.println("TrainModel: grade: "+grade);
+		System.out.println("TrainModel: radians: "+radians);
+		System.out.println("TrainModel: Math.cos(radians): "+Math.cos(radians));
+		System.out.println("TrainModel: Math.sin(radians): "+Math.sin(radians));
+		System.out.println("TrainModel: COS: "+COS);
+		System.out.println("TrainModel: SIN: "+SIN);
+		System.out.println("TrainModel: HEIT: "+HEIT);
+		System.out.println("TrainModel: LEN: "+LEN+"\n");
+		*/
+		
     }
     
     //@Returns String - Get the current block
@@ -272,17 +292,21 @@ public class TrainModel {
 		}
 		
         double retval = 1000 * powerCommand / (estimatedmass * velocity);
-        //double frictionforce = 0.5 * velocity;// Not sure if correct
-        double frictionforce = rollingFrictionCoefficient*gravity*Math.cos(radians);// Not sure if correct
-		frictionforce = frictionforce + gravity*Math.sin(radians);//force of gravity
-		myGUI.currentDragLabel.setText("Friction+drag:\t" + String.format("%.6f", frictionforce)+ " m/s2 \n");
-        retval = retval - (frictionforce);
+        //double frictionAcc = 0.5 * velocity;// Not sure if correct
+        double frictionAcc = rollingFrictionCoefficient*gravity*COS;// Not sure if correct
+		double gravAcc = gravity*SIN;//force of gravity
+		myGUI.currentFricLabel.setText("Friction Acc:\t" + String.format("%.6f", -1*(frictionAcc))+ " m/s2 \n");
+		myGUI.currentGravLabel.setText("Gravity Acc:\t" + String.format("%.6f", -1*(gravAcc))+ " m/s2 \n");
+		myGUI.currentDragLabel.setText("F+G Acc:\t" + String.format("%.6f", -1*(frictionAcc+gravAcc))+ " m/s2 \n");
+		//System.out.println("TrainModel: "+frictionAcc+" = "+rollingFrictionCoefficient+"*"+gravity+"*"+Math.cos(radians)+"+ "+gravity+"*"+Math.sin(radians));
+        
+        retval = retval - (frictionAcc+gravAcc);
+		if(velocity == altvelocity)velocity = 0;//so the train doesn't drift forward
         return retval;
     }
 
     public void update()
     {
-        //currBlock.prettyPrint();
         
 		AuditedAuthority = currBlock.getAuditedAuthority();
 		if(AuditedAuthority!=null)

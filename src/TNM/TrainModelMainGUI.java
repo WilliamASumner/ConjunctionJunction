@@ -59,13 +59,14 @@ public class TrainModelMainGUI extends Application implements EventHandler<Actio
     Button addTestTrain_btn;
     Button tnmButton;
 	
-    ComboBox trainMenu;
 	
 	Block testBlockA = new Block();
 	
 	Block testBlockB = new Block();
+	Block testBlockC = new Block();
 
-	
+    ComboBox trainMenu;
+
     public TrainModelMainGUI(Stage primaryStage)
 	{
       /*
@@ -75,7 +76,6 @@ public class TrainModelMainGUI extends Application implements EventHandler<Actio
 	  */
 
     }
-	
     public TrainModelMainGUI(TrainModelMain tnmM)
 	{
         tnmMain = tnmM;
@@ -101,7 +101,7 @@ public class TrainModelMainGUI extends Application implements EventHandler<Actio
 		{
             if (tnmArray[i] != null)
 			{    
-              trainMenu.getItems().addAll(tnmArray[i].getName());
+				trainMenu.getItems().addAll(tnmArray[i].getName());
             }
         }
 		
@@ -109,51 +109,48 @@ public class TrainModelMainGUI extends Application implements EventHandler<Actio
 	
 	private void initGUI() 
 	{
-		flowpane = new FlowPane();
-		//flowpane.setMinWidth(1000);
-		flowpane.setHgap(25);;
 
-		addTestTrain_btn = new Button("Add Test Train");
-		tnmButton= new Button("Open Train Model");
+           flowpane = new FlowPane();
+           flowpane.setHgap(25); 
 
-		//styling for our two buttons
+           addTestTrain_btn = new Button("Add Test Train");
+           tnmButton= new Button("Open Train Model");
 
-		addTestTrain_btn.setStyle("-fx-text-fill: blue");
-		addTestTrain_btn.setMinWidth(120);
-		addTestTrain_btn.setMaxWidth(120);
+           //styling for our two buttons
+		   
+           addTestTrain_btn.setStyle("-fx-text-fill: blue");
+           addTestTrain_btn.setMinWidth(120);
+		   
+           tnmButton.setStyle("-fx-text-fill: blue");
+           tnmButton.setMinWidth(120);
+           
 
-		tnmButton.setStyle("-fx-text-fill: blue");
-		tnmButton.setMinWidth(120);
-		tnmButton.setMaxWidth(120);
+           trainMenu = new ComboBox();
+         //  MenuButton trainMenu = new MenuButton("Select a train: ");
 
+         //  menuButton.getItems().addAll();
 
-		trainMenu = new ComboBox();
-		trainMenu.setMinWidth(200);
-		//  MenuButton trainMenu = new MenuButton("Select a train: ");
+           //FlowPane for power config button
+		   
+           FlowPane testtrain = new FlowPane();
 
-		//  menuButton.getItems().addAll();
-
-		//FlowPane for power config button
-
-		FlowPane testtrain = new FlowPane();
-
-		testtrain.setMinWidth(350);
-		testtrain.setStyle("-fx-border-color: black");
-		testtrain.getChildren().add(addTestTrain_btn);
-		flowpane.getChildren().add(testtrain);
-
-
-		//FlowPane for power config button
-		FlowPane trainControl = new FlowPane();
-		trainControl.setMinWidth(350);
-		trainControl.setStyle("-fx-border-color: black");
-		trainControl.getChildren().add(tnmButton);
-		trainControl.getChildren().add(trainMenu);
-		flowpane.getChildren().add(trainControl);
-
-		//Setting the margin of the pane  
-		flowpane.setMargin(addTestTrain_btn, new Insets(20, 100, 20, 20)); 
-		flowpane.setMargin(tnmButton, new Insets(20, 20, 20, 20)); 
+           testtrain.setMinWidth(300);
+           testtrain.setStyle("-fx-border-color: black");
+           testtrain.getChildren().add(addTestTrain_btn);
+           flowpane.getChildren().add(testtrain);
+		   
+          
+           //FlowPane for power config button
+           FlowPane trainControl = new FlowPane();
+           trainControl.setMinWidth(300);
+           trainControl.setStyle("-fx-border-color: black");
+           trainControl.getChildren().add(tnmButton);
+           trainControl.getChildren().add(trainMenu);
+           flowpane.getChildren().add(trainControl);
+           
+           //Setting the margin of the pane  
+           flowpane.setMargin(addTestTrain_btn, new Insets(20, 100, 20, 20)); 
+           flowpane.setMargin(tnmButton, new Insets(20, 20, 20, 20)); 
 
 	}
 
@@ -163,7 +160,7 @@ public class TrainModelMainGUI extends Application implements EventHandler<Actio
 			primaryStage.setTitle("Train Model Module");
 			addTestTrain_btn.setOnAction(new addTestTrainHandler());
 			tnmButton.setOnAction(new tnmHandler());
-			Scene scene = new Scene(flowpane, 360, 130);
+			Scene scene = new Scene(flowpane, 350, 130);
 			primaryStage.setScene(scene);
 			primaryStage.show();
 		}
@@ -176,20 +173,20 @@ public class TrainModelMainGUI extends Application implements EventHandler<Actio
 			{
 				if(testtrain_exists==false)
 				{
-					System.out.println("TrainModelMainGUI: TEST TRAIN ADDED!");
+					System.out.println("TrainModelMainGUI: TEST TRAIN!");
 					testtrain_exists = true;
 					
 					testBlockA.LineColor = "green";
 					testBlockA.BlockID = "testBlockA";
-					testBlockA.Grade = 0.0;
+					testBlockA.Grade = 0.0;//-173.2050808;//57.73502692;//100;//173.2050808;//
 					testBlockA.Elevation = 0.0;
-					testBlockA.SpeedLimit = 50.0;
+					testBlockA.SpeedLimit = 20.0;
 					testBlockA.nextBlockID = testBlockB;
-					testBlockA.prevBlockID = testBlockB;
+					testBlockA.prevBlockID = testBlockC;
 					testBlockA.IsBidirectional = false;
 					testBlockA.Length = 100.0;
 					testBlockA.AuditedSpeed = 10;
-					testBlockA.AuditedAuthority = testBlockB;
+					testBlockA.AuditedAuthority = testBlockC;
 					testBlockA.IsUnderground = false;
 					testBlockA.type = BlockType.REGBLOCK;
 					testBlockA.stationName = "Test Station";
@@ -203,10 +200,10 @@ public class TrainModelMainGUI extends Application implements EventHandler<Actio
 				
 					testBlockB.LineColor = "red";
 					testBlockB.BlockID = "testBlockB";
-					testBlockB.Grade = 0;
+					testBlockB.Grade = -173.2050808;//100;//57.73502692;//
 					testBlockB.Elevation = 0;
-					testBlockB.SpeedLimit = 50.0;
-					testBlockB.nextBlockID = testBlockA;
+					testBlockB.SpeedLimit = 19.0;
+					testBlockB.nextBlockID = testBlockC;
 					testBlockB.prevBlockID = testBlockA;
 					testBlockB.IsBidirectional = true;
 					testBlockB.Length = 155.0;
@@ -221,6 +218,27 @@ public class TrainModelMainGUI extends Application implements EventHandler<Actio
 					testBlockB.power = ErrorState.GOOD;
 					testBlockB.signal = ErrorState.GOOD;
 					testBlockB.numFailures = 0;
+				
+					testBlockC.LineColor = "red";
+					testBlockC.BlockID = "testBlockC";
+					testBlockC.Grade = -57.73502692;//100;//173;//
+					testBlockC.Elevation = 0;
+					testBlockC.SpeedLimit = 19.0;
+					testBlockC.nextBlockID = testBlockA;
+					testBlockC.prevBlockID = testBlockB;
+					testBlockC.IsBidirectional = true;
+					testBlockC.Length = 155.0;
+					testBlockC.AuditedSpeed = 15;
+					testBlockC.AuditedAuthority = testBlockB;
+					testBlockC.IsUnderground = true;
+					testBlockC.type = BlockType.REGBLOCK;
+					testBlockC.stationName = "Uninitialized";
+					testBlockC.switchState = SwitchState.MAIN;
+					testBlockC.crossingState = CrossingState.UP;
+					testBlockC.circuit = ErrorState.GOOD; // start as functioning
+					testBlockC.power = ErrorState.GOOD;
+					testBlockC.signal = ErrorState.GOOD;
+					testBlockC.numFailures = 0;
 					
 					tnmMain.createTrain("TEST TRAIN", "testBlockB", testBlockA, 10, null,null);
 					//add the train
@@ -235,16 +253,16 @@ public class TrainModelMainGUI extends Application implements EventHandler<Actio
       @Override
       public void handle(ActionEvent event){
         Stage newWindow = new Stage();
-		if(trainMenu.getValue()!=null){
-			for(int i = 0; i < tnmArray.length; i++){
-				if(tnmArray!=null && tnmArray[i]!=null){
-					if(trainMenu.getValue().equals(tnmArray[i].getName())){
-						//System.out.println("TrainModelMainGUI: OBJECT = " + tnmArray[i]);
-						tnmArray[i].showGUI(newWindow);
-					}
+		if(trainMenu.getValue()!=null)
+        for(int i = 0; i < tnmArray.length; i++){
+			
+			if(tnmArray!=null && tnmArray[i]!=null){
+				if(trainMenu.getValue().equals(tnmArray[i].getName())){
+					//System.out.println("TrainModelMainGUI: OBJECT = " + tnmArray[i]);
+					tnmArray[i].showGUI(newWindow);
 				}
 			}
-		}
+        }
       }
     }
 

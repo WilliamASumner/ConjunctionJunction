@@ -32,6 +32,8 @@ public class TrainModelGUI extends Application {
 	Label currentDistLabel = new Label("Current block");
 	Label currentAccelerationLabel = new Label("Current acceler");
 	Label currentMassLabel = new Label("Mass:\n");
+	Label currentGravLabel = new Label("Mass:\n");
+	Label currentFricLabel = new Label("Mass:\n");
 	Label currentDragLabel = new Label("Mass:\n");
 	Label currentPowerLabel = new Label("Current Power is" + mydubSpeed + " kW\n");
 	Label pass_Label = new Label("Passengers:\t0/222 \n");
@@ -82,8 +84,8 @@ public class TrainModelGUI extends Application {
     Button addRpass_button = new Button("+? Passengers");
     Button remRpass_button = new Button("-? Passengers");
     Button remApass_button = new Button("-* Passengers");
-    Button add10kw_button = new Button("+10 kW");
-    Button rem10kw_button = new Button("-10 kW");
+    Button add10kw_button = new Button("+1 kW");
+    Button rem10kw_button = new Button("-1 kW");
 
     public TrainModelGUI(TrainModel TNM)// String inName, String inBlock, double inSpeed)
     {
@@ -97,26 +99,38 @@ public class TrainModelGUI extends Application {
 	{
 		
 		eBrake.setStyle("-fx-text-fill: black");
+        eBrake.setMinWidth(400);
+        eBrake.setMaxWidth(400);
         eBrake.setMinWidth(200);
         eBrake.setMaxWidth(200);
 		
 		sBrake.setStyle("-fx-text-fill: black");
+        sBrake.setMinWidth(400);
+        sBrake.setMaxWidth(400);
         sBrake.setMinWidth(200);
         sBrake.setMaxWidth(200);
 		
 		EbrakeFailButton.setStyle("-fx-text-fill: black");
+        EbrakeFailButton.setMinWidth(400);
+        EbrakeFailButton.setMaxWidth(400);
         EbrakeFailButton.setMinWidth(200);
         EbrakeFailButton.setMaxWidth(200);
 		
 		SbrakeFailButton.setStyle("-fx-text-fill: black");
+        SbrakeFailButton.setMinWidth(400);
+        SbrakeFailButton.setMaxWidth(400);
         SbrakeFailButton.setMinWidth(200);
         SbrakeFailButton.setMaxWidth(200);
 		
 		EngineFailButton.setStyle("-fx-text-fill: black");
+        EngineFailButton.setMinWidth(400);
+        EngineFailButton.setMaxWidth(400);
         EngineFailButton.setMinWidth(200);
         EngineFailButton.setMaxWidth(200);
 		
 		SignalFailButton.setStyle("-fx-text-fill: black");
+        SignalFailButton.setMinWidth(400);
+        SignalFailButton.setMaxWidth(400);
         SignalFailButton.setMinWidth(200);
         SignalFailButton.setMaxWidth(200);
 		
@@ -131,6 +145,8 @@ public class TrainModelGUI extends Application {
 		speed.getChildren().add(currentSpeedLabel); //add speedlabel to brake flowpane
 		speed.getChildren().add(currentPowerLabel); //add speedlabel to brake flowpane
 		speed.getChildren().add(currentAccelerationLabel); //add speedlabel to brake flowpane
+		speed.getChildren().add(currentFricLabel); //add speedlabel to brake flowpane
+		speed.getChildren().add(currentGravLabel); //add speedlabel to brake flowpane
 		speed.getChildren().add(currentDragLabel); //add speedlabel to brake flowpane
 		speed.getChildren().add(currentDistLabel); //add speedlabel to brake flowpane
 		speed.getChildren().add(pass_Label); //add speedlabel to brake flowpane
@@ -216,6 +232,7 @@ public class TrainModelGUI extends Application {
 		
 		
         eBrake.setOnAction(new eBrakeHandler());
+        sBrake.setOnAction(new sBrakeHandler());
         EbrakeFailButton.setOnAction(new eBrakeFailHandler());
         SbrakeFailButton.setOnAction(new sBrakeFailHandler());
         EngineFailButton.setOnAction(new engineFailHandler());
@@ -277,6 +294,17 @@ public class TrainModelGUI extends Application {
 		{
             boolean currentState;
                 currentState = tnm.toggleEBrake();
+                
+        }
+    }
+	
+	class sBrakeHandler implements EventHandler<ActionEvent>
+	{
+        @Override
+        public void handle(ActionEvent event)
+		{
+            boolean currentState;
+                if(testmode)currentState = tnm.toggleSBrake();
                 
         }
     }
@@ -423,7 +451,7 @@ public class TrainModelGUI extends Application {
         @Override
         public void handle(ActionEvent event)
 		{
-            tnm.myPower+=10;
+            tnm.myPower+=1;
         }
     }
     
@@ -432,7 +460,7 @@ public class TrainModelGUI extends Application {
         @Override
         public void handle(ActionEvent event)
 		{
-            if(tnm.myPower>10)tnm.myPower-=10;
+            if(tnm.myPower>=1)tnm.myPower-=1;
         }
     }
     
