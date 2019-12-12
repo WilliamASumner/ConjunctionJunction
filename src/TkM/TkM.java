@@ -102,6 +102,14 @@ public class TkM {
         }
     }
 
+    public int getThroughput(TrainModel tm) {
+      int total = 0;
+      total -= tm.randPassengerExit();
+      total += tm.randPassengerEnter();
+
+      return total;
+    }
+
 
 
     public void showGUI(Stage stage){
@@ -162,6 +170,11 @@ public class TkM {
           fails += "\n"+failArr.get(i);
         }
 
+        int tickets = 0;
+        if (trains.size()>0) {
+         tickets = this.getThroughput(trains.get(0));
+        }
+
         String beacon;
         if (b.getType() == BlockType.STATIONBLOCK) {
           beacon = b.getStationName() +"";
@@ -183,7 +196,12 @@ public class TkM {
         t1.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
         Text t1l = new Text(b.getLineColor() + " " + b.getBlockID() + ":\n");
         t1l.setFont(Font.font("Verdana", 20));
-        t1l.setFill(Color.GREEN);
+        if (b.getLineColor().equals("Green")) {
+          t1l.setFill(Color.GREEN);
+        }
+        else if (b.getLineColor().equals("Red")) {
+          t1l.setFill(Color.RED);
+        }
         Text t2 = new Text("Grade: ");
         t2.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
         Text t2l = new Text(b.getGrade() + "\n");
@@ -198,11 +216,11 @@ public class TkM {
         t4l.setFont(Font.font("Verdana",  20));
         Text t5 = new Text("Speed Limit: ");
         t5.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
-        Text t5l = new Text(b.getSpeedLimit() + "\n");
+        Text t5l = new Text(b.getSpeedLimit() + "");
         t5l.setFont(Font.font("Verdana",  20));
         Text t6 = new Text("\nOccupation: ");
         t6.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
-        Text t6l = new Text(occ);
+        Text t6l = new Text(occ + "\n");
         t6l.setFont(Font.font("Verdana",  20));
         Text t14 = new Text("\nCrossing: ");
         t14.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
@@ -218,17 +236,27 @@ public class TkM {
         t8l.setFont(Font.font("Verdana",  20));
         Text t9 = new Text("\nPrev Block:");
         t9.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
-        Text t9l = new Text(yardB);
+        Text t9l = new Text(yardB + "\n");
         t9l.setFont(Font.font("Verdana",  20));
         Text t10 = new Text("\nBlock Type:");
         t10.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
         Text t10l = new Text(b.getType() + "");
         t10l.setFont(Font.font("Verdana",  20));
 
+        Text t16 = new Text("\nTickets:");
+        t16.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
+        Text t16l = new Text(tickets+"");
+        t16l.setFont(Font.font("Verdana",  20));
+
         Text t13 = new Text("\nBeacon Data:");
         t13.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
         Text t13l = new Text(beacon);
         t13l.setFont(Font.font("Verdana",  20));
+
+        Text t15 = new Text("\nUnderground:");
+        t15.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
+        Text t15l = new Text(b.getIsUnderground()+"");
+        t15l.setFont(Font.font("Verdana",  20));
 
         Text t11 = new Text("\nHeater:");
         t11.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
@@ -238,7 +266,7 @@ public class TkM {
         t12.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
         Text t12l = new Text(fails);
         t12l.setFont(Font.font("Verdana",  20));
-        TextFlow tf = new TextFlow(t1,t1l,t2,t2l,t3,t3l,t4,t4l,t5,t5l,t6,t6l,t14,t14l,t7,t7l,t8,t8l,t9,t9l,t10,t10l,t13,t13l,t11,t11l,t12,t12l);
+        TextFlow tf = new TextFlow(t1,t1l,t2,t2l,t3,t3l,t4,t4l,t5,t5l,t6,t6l,t14,t14l,t7,t7l,t8,t8l,t9,t9l,t10,t10l,t16,t16l,t13,t13l,t15,t15l,t11,t11l,t12,t12l);
         return tf;
     }
 
