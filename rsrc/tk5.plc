@@ -17,6 +17,13 @@ if (I46.occupancy != occupied and I48.occupancy != occupied and I47.occupancy !=
     I47.crossingstate = up;
 endif;
 
+if (N66.occupancy == occupied or J51.occupancy == occupied) then
+    J52.switchstate = fork;
+endif;
+
+if (J53.occupancy == occupied) then
+    J52.switchstate = main;
+endif;
 
 // Unsafe condition checking - will override in case of impending collision
 // no trains should be on any rails near the switch
@@ -29,6 +36,6 @@ if (J52.occupancy == occupied and J53.occupancy == occupied) then
     J52.authority = J52;
 endif;
 
-if (J52.occupancy == occupied and N64.occupancy == occupied) then
+if (J52.occupancy == occupied and N66.occupancy == occupied) then
     J52.authority = J52;
 endif;
