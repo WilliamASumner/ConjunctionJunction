@@ -178,7 +178,7 @@ public class TrainController{
     }
 
     //Set e brake failure, called from TrainModel
-    public void setEBrakeFailure(boolean state){
+    public void setEBrakeFailure(boolean state){ 
         eBrakeFailure = state;
         myGUI.setEBrakeFailureText(state);
     }
@@ -309,7 +309,7 @@ public class TrainController{
        // System.out.println("TrainController: TRAIN: " + this + " - Power CMD " + powerOut);
 
        if(currBlock != null){
-        if(eBrakeOn || sBrakeOn || currBlock.getNextBlockVal().getBlockID() == authority){
+        if(eBrakeOn || sBrakeOn || currBlock.getNextBlockVal().getBlockID() == authority || engineFailure){
             powerOut = 0; 
         }
        }
