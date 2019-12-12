@@ -175,9 +175,11 @@ public class TrackController
     }
 
     public void errorState() {
+        System.out.println(name + " ENTERED ERROR STATE, CLOSING DOWN BLOCKS");
         plcInitialized = false; // stop running PLC
         for(Block b: lineBlocks) {
-            b.setIsOccupied(true);
+            b.setIsOccupied(true); // set all blocks to occupied
+            b.setAuditedAuthority(b); // authority to itself
         }
     }
 
@@ -196,18 +198,6 @@ public class TrackController
             thingsToDo.execute();
             return;
         }
-    }
-
-    public void addToLog(String s) {
-        log.append(s);
-    }
-
-    public String showLog() {
-        return log.toString();
-    }
-
-    public void clearLog() {
-        log.setLength(0); // reset to 0
     }
 
     public Block getBlock(String blockID) {
@@ -238,6 +228,17 @@ public class TrackController
         b.setIsOccupied(true); // just set a circuit failure
         return true;
     }
+
+    public boolean flipSwitchState(String blockID) {
+        Block b = getBlock(blockID);
+        if (b.getSwitchState() == SwitchState.MAIN) {
+            b.setSwitchState(SwitchState.FORK);
+        }else {
+            b.setSwitchState(SwitchState.MAIN);
+        }
+        return true; // success
+    }
+
 
     public boolean setSwitchState(String blockID, SwitchState s) {
         Block b = getBlock(blockID);
@@ -270,9 +271,8 @@ public class TrackController
 
     public void update() {
         if (mode.equals("Automatic")) {
-            runPLC();
+            runPLC(); //run plc
         }
-        //run plc
     }
 
     public void registerGui() {

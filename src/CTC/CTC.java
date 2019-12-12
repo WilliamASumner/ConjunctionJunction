@@ -180,7 +180,7 @@ public class CTC{
 					tempId = "#r" + tempT.getCurBlkID();// get rectangle that matches with train's cur block
 				gui.tempRec = (Rectangle)gui.root.lookup(tempId);	
 				// Paint the rect a different color
-				gui.paintTrainRect(tempT.getName(), gui.tempRec);
+				gui.paintTrainRect(tempT.getName(), gui.tempRec); // BUG HERE
 				// Save cur block to change back later
 				tempT.setPrevBlkID(tempT.getCurBlkID());				
 				
@@ -191,7 +191,8 @@ public class CTC{
 				// check if dispatched trains cur authority == cur block
 				else if(tempT.getCurBlkID().equals(tempT.getAuthority())){
 					//
-					// DWELL AT STATION
+					// DWELL AT STATION, COUNT FOR 4 mins across all trains
+					//TODO: FIXME, ADD DWELL TIME AT STATIONS
 //					if(){
 //	
 //					}
@@ -202,10 +203,10 @@ public class CTC{
 					// Set new authority
 					tempT.setAuthority(tempT.getNextscheduleStop());
 					// Send authority to track controller
-					//trckCntrl.sendSuggestedAuthority(tempT.getCurBlkID(), tempT.getAuthority());
+					trckCntrl.sendSuggestedAuthority(tempT.getCurBlkID(), tempT.getLine(), tempT.getAuthority());
 				}
 				// Send authority and cur block constantly
-				//trckCntrl.sendSuggestedAuthority(tempT.getCurBlkID(), tempT.getAuthority());
+				trckCntrl.sendSuggestedAuthority(tempT.getCurBlkID(), tempT.getLine(), tempT.getAuthority());
 			}
         }			
     }
@@ -233,15 +234,21 @@ public class CTC{
         return tkm;
     }
     
-    public void repairBlock(String block){
-        System.out.println("REPAIRING->"+block);
+    public void repairBlock(String block, String line){
+		//TODO
+		trckCntrl.repairBlock(block,line);
+        //System.out.println("REPAIRING->"+block);
     }
     
-    public void closeBlock(String block){
-        System.out.println("CLOSING->"+block);
+    public void closeBlock(String block, String line){
+		//TODO
+		trckCntrl.closeBlock(block, line);		
+        //System.out.println("CLOSING->"+block);
     }
     
-    public void switchBlock(String block){
+    public void switchBlock(String block, String line){
+		//TODO
+		trckCntrl.flipSwitchState(block, line);				
         System.out.println("SWITCHING->"+block);
     }
     
@@ -284,6 +291,7 @@ public class CTC{
      */       
     public void dispatchQueuedTrain(CTCTrain tempT){
         dT.add(tempT);
+		System.out.println(tempT.getAuthority());
         trckCntrl.requestNewTrain(tempT.getName(), tempT.getSpeed(), tempT.getAuthority(), tempT.getCurrentBlock());
     }
 	
@@ -302,8 +310,9 @@ public class CTC{
     }	
 	
 /*    
+TODO:FIXME, BLOCK ID STRING AND LINE STRING
     public int sendSpeedAuthority(int trainsCurBlockID, int newAuthorityBlkID){
-
+		trckCntrl.send
     }
 */  
     /**
@@ -312,6 +321,7 @@ public class CTC{
      * current block is adjacent to the new block. 
      */ 
     public void updateOccupancy(String newBlkNum){
+//TODO: FIXME, ADD LINE COLOR		
         // NEED TO DETERMINE WHICH TRAIN THE GIVEN BLOCK CORRESPONDS TO
         for(int i = 0; i < dT.size(); i++){
             CTCTrain tempTrain = dT.get(i);
@@ -321,7 +331,7 @@ public class CTC{
     }
 /*  
     public String getBlockSpeed(String blockID){
-        String speedLimit = trckCntrl.getSpeedLimit(blockID);
+        String speedLimit = trckCntrl.getSpeedLimit(blockID); // TODO replace with block get speedlimit
         return speedLimit;
     }*/
 }
