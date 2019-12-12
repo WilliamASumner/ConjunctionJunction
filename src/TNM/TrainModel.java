@@ -18,6 +18,9 @@ public class TrainModel {
     TrainModelGUI myGUI;
     Block currBlock;
     TkM trackModel = null;
+	
+	double mphPERmps = 2.23694;
+	double feetPERm = 3.28084;
     
 
     Block AuditedAuthority;
@@ -35,7 +38,7 @@ public class TrainModel {
 	double maxpower; // max acceleration at 2/3 mass
 
 
-    static double trainMass = 1;//40.9; //tons
+    static double trainMass = 40.9; //tons
     static int currPassengers = 0; 
 	int maxPassengers = 222;
     static double passMass = 180; // pounds
@@ -137,8 +140,8 @@ public class TrainModel {
 			System.out.println("TrainModel: Ebrake is now false: "+Ebrake);
 
         }
-        //singleTNC.setEbrakeFailure(EbrakeFail);		
-		if(singleTNC!=null)singleTNC.getGUI().setEbrake(Ebrake);//James 
+        if(singleTNC!=null)singleTNC.setEBrakeFailure(EbrakeFail);		
+		if(singleTNC!=null)singleTNC.getGUI().setEbrake(Ebrake);
 		myGUI.setEbrake(Ebrake);
         return EbrakeFail;
     }
@@ -157,7 +160,7 @@ public class TrainModel {
 			System.out.println("TrainModel: SbrakeFail is now true: "+SbrakeFail);
 			System.out.println("TrainModel: Sbrake is now false: "+Sbrake);
         }
-		//singleTNC.setSbrakeFailure(SbrakeFail);		
+		if(singleTNC!=null)singleTNC.setSBrakeFailure(SbrakeFail);		
 		if(singleTNC!=null)singleTNC.getGUI().setSbrake(Sbrake);//James 
         return SbrakeFail;
     }
@@ -174,7 +177,7 @@ public class TrainModel {
 			System.out.println("TrainModel: signalFail is now true: "+signalFail);
         }
         if(singleTNC!=null)singleTNC.setSignalFailure(signalFail);
-		//myGUI.beaconData_Label.setText("Beacon Data:\t" + getBeaconData() + "\n");
+		myGUI.beaconData_Label.setText("Beacon Data:\t" + getBeaconData() + "\n");
         return signalFail;
     }
     public boolean toggleEngineFail()
@@ -227,7 +230,11 @@ public class TrainModel {
         currBlockLength = currBlock.getLength();
         if(trackModel!=null)trackModel.updateOccupancy(currBlock);
 		
-		myGUI.blockLengthLabel.setText("Block length:\t" + currBlockLength + " m\n");
+		if(metricmode)
+			myGUI.blockLengthLabel.setText("Block length:\t" + currBlockLength + " m\n");
+		else
+			myGUI.blockLengthLabel.setText("Block length:\t" + String.format("%.1f", feetPERm*currBlockLength) + " ft\n");
+		
 		myGUI.grade_Label.setText("Grade:\t\t" + grade + " \n");
 		myGUI.currentBlockLabel.setText("Block:\t\t" + currBlock.getBlockID() + " \n");
 		//myGUI.currentBlockLabel.setStyle("-fx-text-fill: red");
@@ -238,6 +245,15 @@ public class TrainModel {
         return;
     }
 	
+	public void displayBlockLen()
+	{
+		
+		if(metricmode)
+			myGUI.blockLengthLabel.setText("Block length:\t" + currBlockLength + " m\n");
+		else
+			myGUI.blockLengthLabel.setText("Block length:\t" + String.format("%.1f", feetPERm*currBlockLength) + " ft\n");
+	}
+	
 	private void setGrade(double newgrade)
 	{
 		grade = newgrade;
@@ -247,16 +263,15 @@ public class TrainModel {
 		HEIT = grade*LEN/100;
 		COS = LEN/ Math.sqrt(LEN*LEN+HEIT*HEIT);
 		SIN = HEIT/ Math.sqrt(LEN*LEN+HEIT*HEIT);
-		/*
-		System.out.println("TrainModel: grade: "+grade);
-		System.out.println("TrainModel: radians: "+radians);
-		System.out.println("TrainModel: Math.cos(radians): "+Math.cos(radians));
-		System.out.println("TrainModel: Math.sin(radians): "+Math.sin(radians));
-		System.out.println("TrainModel: COS: "+COS);
-		System.out.println("TrainModel: SIN: "+SIN);
-		System.out.println("TrainModel: HEIT: "+HEIT);
-		System.out.println("TrainModel: LEN: "+LEN+"\n");
-		*/
+		
+		// System.out.println("TrainModel: grade: "+grade);
+		// System.out.println("TrainModel: radians: "+radians);
+		// System.out.println("TrainModel: Math.cos(radians): "+Math.cos(radians));
+		// System.out.println("TrainModel: Math.sin(radians): "+Math.sin(radians));
+		// System.out.println("TrainModel: COS: "+COS);
+		// System.out.println("TrainModel: SIN: "+SIN);
+		// System.out.println("TrainModel: HEIT: "+HEIT);
+		// System.out.println("TrainModel: LEN: "+LEN+"\n");
 		
     }
     
@@ -295,9 +310,18 @@ public class TrainModel {
         //double frictionAcc = 0.5 * velocity;// Not sure if correct
         double frictionAcc = rollingFrictionCoefficient*gravity*COS;// Not sure if correct
 		double gravAcc = gravity*SIN;//force of gravity
-		myGUI.currentFricLabel.setText("Friction Acc:\t" + String.format("%.6f", -1*(frictionAcc))+ " m/s2 \n");
-		myGUI.currentGravLabel.setText("Gravity Acc:\t" + String.format("%.6f", -1*(gravAcc))+ " m/s2 \n");
-		myGUI.currentDragLabel.setText("F+G Acc:\t" + String.format("%.6f", -1*(frictionAcc+gravAcc))+ " m/s2 \n");
+		if(metricmode)
+		{
+			myGUI.currentFricLabel.setText("Friction Acc:\t" + String.format("%.6f", -1*(frictionAcc))+ " m/s2 \n");
+			myGUI.currentGravLabel.setText("Gravity Acc:\t" + String.format("%.6f", -1*(gravAcc))+ " m/s2 \n");
+			myGUI.currentDragLabel.setText("F+G Acc:\t\t" + String.format("%.6f", -1*(frictionAcc+gravAcc))+ " m/s2 \n");
+		}
+		else
+		{
+			myGUI.currentFricLabel.setText("Friction Acc:\t" + String.format("%.6f", -1*mphPERmps*(frictionAcc))+ " mph/s \n");
+			myGUI.currentGravLabel.setText("Gravity Acc:\t" + String.format("%.6f", -1*mphPERmps*(gravAcc))+ " mph/s \n");
+			myGUI.currentDragLabel.setText("F+G Acc:\t\t" + String.format("%.6f", -1*mphPERmps*(frictionAcc+gravAcc))+ " mph/s \n");
+		}
 		//System.out.println("TrainModel: "+frictionAcc+" = "+rollingFrictionCoefficient+"*"+gravity+"*"+Math.cos(radians)+"+ "+gravity+"*"+Math.sin(radians));
         
         retval = retval - (frictionAcc+gravAcc);
@@ -336,16 +360,28 @@ public class TrainModel {
 			
         }
 		
-		myGUI.currentPowerLabel.setText("Power:\t" + String.format("%.6f", powerCommand) + " kW\n");
-		myGUI.currentDistLabel.setText("Position:\t" + String.format("%.6f", distanceTraveled) + " m\n");
+		myGUI.currentPowerLabel.setText("Power:\t\t" + String.format("%.6f", powerCommand) + " kW\n");
 		myGUI.progress_Label.setText("Progress:\t\t" + String.format("%.1f", distanceTraveled*100/currBlockLength) + " %\n");
-		myGUI.currentSpeedLabel.setText("Speed:\t" + String.format("%.6f", velocity) + " m/s \n");
-		myGUI.currentAccelerationLabel.setText("Acceleration:\t" + String.format("%.6f", acceleration)+ " m/s2 \n");
-		myGUI.currentMassLabel.setText("Mass:\t" + estimatedmass + " kg \n");
 		myGUI.Temp_Label.setText("Temperature:\t" + String.format("%.1f", temperature)+ " F \n");
 		
+		if(metricmode)
+		{
+			myGUI.currentDistLabel.setText("Position:\t\t" + String.format("%.6f", distanceTraveled) + " m\n");
+			myGUI.currentSpeedLabel.setText("Speed:\t\t" + String.format("%.6f", velocity) + " m/s \n");
+			myGUI.currentAccelerationLabel.setText("Acceleration:\t" + String.format("%.6f", acceleration)+ " m/s2 \n");
+			myGUI.AudSpeed_Label.setText("AuditedSpeed:\t\t" + AuditedSpeed + " m/s\n");
+			myGUI.currentMassLabel.setText("Mass:\t" + estimatedmass + " kg \n");
+		}
+		else
+		{
+			myGUI.currentDistLabel.setText("Position:\t\t" + String.format("%.6f", feetPERm*distanceTraveled) + " ft\n");
+			myGUI.currentSpeedLabel.setText("Speed:\t\t" + String.format("%.6f", mphPERmps*velocity) + " mph \n");
+			myGUI.currentAccelerationLabel.setText("Acceleration:\t" + String.format("%.6f", mphPERmps*acceleration)+ " mph/s \n");
+			myGUI.AudSpeed_Label.setText("AuditedSpeed:\t\t" + String.format("%.2f", mphPERmps*AuditedSpeed) + " mph\n");
+			myGUI.currentMassLabel.setText("Mass:\t" + estimatedmass/kilosPerPound + " lbs \n");
+		}
+		
 		myGUI.beaconData_Label.setText("Beacon Data:\n" + getBeaconData() + "\n");
-		myGUI.AudSpeed_Label.setText("AuditedSpeed:\t\t" + AuditedSpeed + " m/s\n");
 		myGUI.AudAuth_Label.setText("AuditedAuthority:\t" + AuditedAuthority + " \n");
 		
 		

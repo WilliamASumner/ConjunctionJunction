@@ -12,11 +12,6 @@ import javafx.application.Application;
 
 import javafx.stage.Stage; 
 
-import javafx.geometry.*; 
-
-import javafx.scene.*; 
-import java.io.*; 
-import javafx.scene.image.*; 
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
@@ -32,19 +27,9 @@ import javafx.scene.text.Text;
 
 import javafx.application.Application; 
 import javafx.scene.Scene; 
-import javafx.scene.control.*; 
-import javafx.scene.layout.*; 
+import javafx.scene.control.ComboBox; 
 import javafx.stage.Stage; 
-import javafx.scene.layout.*; 
-import javafx.scene.paint.*; 
-import javafx.scene.text.*; 
-import javafx.geometry.*; 
-import javafx.scene.layout.*; 
-import javafx.scene.shape.*; 
-import javafx.scene.paint.*; 
-import javafx.scene.*; 
-import java.io.*; 
-import javafx.scene.image.*; 
+import javafx.geometry.Insets; 
 
 
 public class TrainModelMainGUI extends Application implements EventHandler<ActionEvent>{

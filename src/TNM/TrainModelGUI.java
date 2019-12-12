@@ -86,6 +86,7 @@ public class TrainModelGUI extends Application {
     Button remApass_button = new Button("-* Passengers");
     Button add10kw_button = new Button("+1 kW");
     Button rem10kw_button = new Button("-1 kW");
+    Button units_button = new Button("Toggle Units");
 
     public TrainModelGUI(TrainModel TNM)// String inName, String inBlock, double inSpeed)
     {
@@ -228,6 +229,8 @@ public class TrainModelGUI extends Application {
 		test.getChildren().add(remApass_button); //add eBrake to brake flowpane
 		test.getChildren().add(add10kw_button); //add eBrake to brake flowpane
 		test.getChildren().add(rem10kw_button); //add eBrake to brake flowpane
+		test.getChildren().add(units_button); //add eBrake to brake flowpane
+		
         if(testmode)flowpane.getChildren().add(test); //add test flowpane to main flowpane
 		
 		
@@ -244,6 +247,8 @@ public class TrainModelGUI extends Application {
         remApass_button.setOnAction(new remApass_Handler());
         add10kw_button.setOnAction(new add10kw_Handler());
         rem10kw_button.setOnAction(new rem10kw_Handler());
+        units_button.setOnAction(new units_Handler());
+		
 		
 		
 	}
@@ -463,6 +468,18 @@ public class TrainModelGUI extends Application {
             if(tnm.myPower>=1)tnm.myPower-=1;
         }
     }
+	
+	class units_Handler implements EventHandler<ActionEvent>
+	{
+        @Override
+        public void handle(ActionEvent event)
+		{
+            if(tnm.metricmode)tnm.metricmode=false;
+			else tnm.metricmode=true;
+			tnm.displayBlockLen();
+        }
+    }
+	
     
 	public void update()
 	{
