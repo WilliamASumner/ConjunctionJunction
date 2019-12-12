@@ -7,7 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
-import javafx.stage.Stage;
+import javafx.stage.Stage; 
 
 //import javafx.event.ActionEvent;
 
@@ -19,6 +19,7 @@ public class TrainController{
     private double driverSetSpeed = 0;
     String authority = "test block";
     double auditedSpeed = 70;
+    double CTCSpeed = 100;
     String beaconData;
     boolean serviceBrake_isActive;
     boolean[] Doors = new boolean[8];
@@ -38,10 +39,10 @@ public class TrainController{
     TrainControllerGUI myGUI;
     Power myPower;
     int set = 0;
-
+    
     //Train Controller Constructor
     public TrainController(String name, String a, double speed, TrainModel trainModel){
-        auditedSpeed = speed;
+        CTCSpeed = speed;
         authority = a;
         trainName = name;
         tm = trainModel;
@@ -50,8 +51,8 @@ public class TrainController{
         initPower();
     }
 
-    /*create the Power class object, called by
-    TrainControllerMainGUI the first time
+    /*create the Power class object, called by 
+    TrainControllerMainGUI the first time 
     that the Power gui is opened*/
     public Power initPower(){
         myPower = new Power();
@@ -64,12 +65,12 @@ public class TrainController{
         return myPower;
     }
 
-
+ 
 
     //Called when train controller is created
     void initGUI(){
         myGUI = new TrainControllerGUI(this);
-
+        
     }
 
 
@@ -77,7 +78,8 @@ public class TrainController{
         return myGUI;
     }
 
-
+   
+    
     //function called on each system tick
     public void update(){
         powerCommand = calculatePower();
@@ -98,21 +100,22 @@ public class TrainController{
             toggleServiceBrake();
             set = 0;
         }
-        //System.out.println("TrainController: Speed = " +currSpeed);
-        //myGUI.updatePowerCommand();
     }
 
     //Called when train controller selected from main menu
     void showGUI(Stage primaryStage){
-       // System.out.println("TrainController: Hello from Train Controller:" + this);
         myGUI.start(primaryStage);
     }
 
     public void setCurrBlock(){
         currBlock = tm.getCurrentBlock();
+        if(currBlock != null){
+            myGUI.setCurrBlock(currBlock.getBlockID());
+        } 
     }
 
     public Block getCurrBlock(){
+        
         return currBlock;
     }
 
@@ -124,8 +127,8 @@ public class TrainController{
         //if we are in automatic mode, then the set speed
         //is the audited speed limit of the track
         if(isAutomaticMode){
-            if(auditedSpeed > 0){
-                return auditedSpeed;
+            if(auditedSpeed > CTCSpeed){
+                return CTCSpeed;
             }
             else{
                 return 0;
@@ -139,7 +142,7 @@ public class TrainController{
             else{
                 return 0;
             }
-
+            
         }
     }
 
@@ -153,7 +156,7 @@ public class TrainController{
     //Updates train's authority from the train model
     public void getAuthority(){
         if(!trackCircuitFailure){
-            authority = tm.getAuthority();
+            authority = tm.getAuthority();  
         }
     }
 
@@ -214,7 +217,7 @@ public class TrainController{
         }
         else{
             lightsOn = true;
-        }
+        }  
         tm.toggleLights();
         currentState = lightsOn;
         return currentState;
@@ -228,7 +231,7 @@ public class TrainController{
             return true;
         }
         return false;
-
+        
     }
 
     //Set temperature of train cabin to newTemp value (fahrenheit)
@@ -297,7 +300,7 @@ public class TrainController{
             return currentState;
     }
 
-    //@returns double calculatePower - power command to Train Model in kiloWatts
+    //@returns double calculatePower - power command to Train Model in kiloWatts 
     //Calculates power command based on current and desired speed
     public double calculatePower(){
         double powerOut;   //power command output, in kiloWatts
@@ -307,13 +310,13 @@ public class TrainController{
 
        if(currBlock != null){
         if(eBrakeOn || sBrakeOn || currBlock.getNextBlockVal().getBlockID() == authority){
-            powerOut = 0;
+            powerOut = 0; 
         }
        }
-
+        myGUI.setPower(powerOut);
         return powerOut;
     }
 
 
-
+    
 }
