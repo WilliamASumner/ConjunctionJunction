@@ -91,12 +91,6 @@ public class TrackMap {
             newBlock.setElevation(Double.parseDouble(elements[8]));
             int index = Integer.parseInt(elements[2]);
             //System.out.println(index + ", " + newBlock.getBlockID());
-            if (newBlock.getBlockID().equals("N77")) { // TODO DELETE ME
-                System.out.println(newBlock);
-                //newBlock.prettyPrint();
-            } else if (newBlock.getBlockID().equals("M76")) {
-                //newBlock.prettyPrint();
-            }
             map.add(index, newBlock);
             // System.out.println(newBlock.getBlockID() + ", " + newBlock.getLineColor());
             // System.out.println("THIS" + map.get(index).getBlockID());
