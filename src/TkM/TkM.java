@@ -17,14 +17,6 @@ import javafx.scene.paint.Color;
 
 import java.io.FileNotFoundException;
 
-// A0's next block is A0 indefinitely
-// switch directionality
-// failures as string array display fail or not
-// throughput
-// signal color (create enum)
-// beacon: station name
-// temp -> track heaters
-
 
 public class TkM {
 
@@ -40,25 +32,11 @@ public class TkM {
     ArrayList<TrainModel> trains = new ArrayList<TrainModel>();
     private boolean heater;
 
-    /*public TkM(String lineColor, TrainControllerMain newtnC) {
-        tnC = newtnC;
-        this.buildTrackMaps("rsrc/redFile.csv", "rsrc/greenFile.csv");
-        if (lineColor.equals("Red")) {
-            line = this.red;
-        }
-        else {
-            line = this.green;
-        }
-        System.out.println(this.toString(red, red.map.get(5).getBlockID()));
-        tkmg = new TkMGUI(this);
-
-    }*/
 
     public TkM(TrainControllerMain newtnC) {
        tnC = newtnC;
         this.buildTrackMaps("rsrc/redFile.csv", "rsrc/greenFile.csv");
 
-        //System.out.println(this.toString(red, red.map.get(5).getBlockID()));
         tkmg = new TkMGUI(this);
 
     }
@@ -119,8 +97,6 @@ public class TkM {
 
     public void showTrainModelGUI(Stage stage) {
         TrainModel t = trains.get(0);
-        //if (t != null)
-            //t.showGUI();
     }
 
 
@@ -131,7 +107,6 @@ public class TkM {
 
     public TextFlow toString(TrackMap line, String blockID) {
 
-        //System.out.println("############" + blockID);
         int bid = Integer.parseInt(blockID.substring(1, blockID.length()));
 
         ArrayList<Block> tm = line.map;
@@ -190,7 +165,6 @@ public class TkM {
         else {
           cross = "Not A Crossing";
         }
-
 
         Text t1 = new Text("For Block ");
         t1.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
@@ -318,27 +292,6 @@ public class TkM {
       }
 
     }
-
-    // public static void main(String[] args) {
-    //
-    //   TkM t = new TkM("Red");
-    //  t.buildTrackMaps("redFile.csv", "redFile.csv");
-    //  ArrayList<Block> a = t.trackmaps.get(0).map;
-    //   System.out.println(t.red.map.size());
-    // //  TrackMap r = t.trackmaps.get(0);
-    //   ArrayList<Block> aaa = t.red.getBlocksBySection("A");
-    //   System.out.println(aaa.size());
-    //   System.out.println(t.red.map.get(5).getIsOccupied());
-    //
-    // Block b = t.red.map.get(10);
-    // Block next = b.getNextBlockVal();
-    // System.out.println(next.getBlockID());
-    //
-    //   //Block b = t.trackmaps.get(0).sendBlock(1);
-    //   //System.out.println(b.getBlockID() + ", " + b.getLineColor());
-    //
-    // }
-
 
 
 }
