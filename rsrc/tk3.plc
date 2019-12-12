@@ -14,7 +14,7 @@
 
 //Switch E15
 //setting main
-if (E14.occupancy == occupied or F16.occupancy == occupied) then
+if (E14.occupancy == occupied) then
     E15.switchstate = main;
 endif;
 
@@ -23,10 +23,22 @@ if (A1.occupancy == occupied) then
     E15.switchstate = fork;
 endif;
 
+// fork upwards
+if (F16.occupancy == occupied) then
+    E15.switchstate = fork;
+endif;
+
 // Error checking for oncoming trains
-if (A1.occupancy == occupied and F16.occupancy == occupied) then
-    H42.authority = H42;
+// main yields to fork
+if (E14.occupancy == occupied and F16.occupancy == occupied) then
+    E14.authority = E14;
     F16.authority = F16;
 endif;
 
-//Switch C9 will be controlled by CTC
+// standstill to avoid crash
+if (A1.occupancy == occupied and F16.occupancy == occupied) then
+    A1.authority = A1;
+    F16.authority = F16;
+endif;
+
+

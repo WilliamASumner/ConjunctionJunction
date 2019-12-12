@@ -18,9 +18,9 @@ if (T76.occupancy == occupied) then
 endif;
 
 // Error checking for oncoming trains
+// yield to main
 if (T76.occupancy == occupied and H26.occupancy == occupied) then
     T76.authority = T76;
-    H26.authority = H26;
 endif;
 
 //Switch H32

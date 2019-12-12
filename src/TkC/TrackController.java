@@ -170,7 +170,7 @@ public class TrackController
             return false;
         }
         plcInitialized = true;
-        plcStatus = "Good";
+        plcStatus = "Running";
         return true;
     }
 
