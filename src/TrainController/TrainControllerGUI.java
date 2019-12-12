@@ -58,6 +58,11 @@ public class TrainControllerGUI extends Application implements EventHandler<Acti
 
     FlowPane flowpane;
 
+    Label sBrakeFailure;
+    Label eBrakeFailure;
+    Label signalFailure;
+    Label powerFailure;
+   
     //Buttons on TrainControllerGUI
     Button setSpeedButton = new Button("Set Speed");
     Button eBrake = new Button("E BRAKE: Currently OFF");
@@ -115,7 +120,11 @@ public class TrainControllerGUI extends Application implements EventHandler<Acti
         Label modeSelectLabel = new Label("Select a Mode: "); 
         Label doorLabel = new Label("Door Status Control: "); 
 
-        Label failureList = new Label("Track Circuit Failure: NOT Detected\nEmergency Brake Failure: NOT Detected\nService Brake Failure: NOT Detected\nEngine Failure: NOT Detected");
+        sBrakeFailure = new Label("Service Brake Failure: NOT Detected");
+        eBrakeFailure = new Label("Emergency Brake Failure: NOT Detected");
+        signalFailure = new Label("Signal Brake Failure: NOT Detected");
+        powerFailure = new Label("Power Brake Failure: NOT Detected");
+       
         Label failureTitle = new Label("Track Failure Status: ");
         
         autoRadioButton.setSelected(true);
@@ -179,7 +188,10 @@ public class TrainControllerGUI extends Application implements EventHandler<Acti
          failure.setStyle("-fx-border-color: black");
          flowpane.getChildren().add(failure);
          failure.getChildren().add(failureTitle);
-         failure.getChildren().add(failureList);
+         failure.getChildren().add(sBrakeFailure);
+         failure.getChildren().add(eBrakeFailure);
+         failure.getChildren().add(signalFailure);
+         failure.getChildren().add(powerFailure);
  
          FlowPane brake = new FlowPane();
          brake.setStyle("-fx-border-color: black");
@@ -252,8 +264,7 @@ public class TrainControllerGUI extends Application implements EventHandler<Acti
                 }
 	}  
 	
-	public void setSbrake(boolean newSbrake)
-	{
+	public void setSbrake(boolean newSbrake){
 		 if(newSbrake){
                     sBrake.setText("S Brake: Currently ON");
                     System.out.println("TrainControllerGUI: Turning Service Brake ON...");
@@ -262,7 +273,44 @@ public class TrainControllerGUI extends Application implements EventHandler<Acti
                     sBrake.setText("S Brake: Currently OFF");
                     System.out.println("TrainControllerGUI: Turning Service Brake OFF...");
                 }
-	}
+    }
+    
+    public void setEBrakeFailureText(boolean state){
+        if(state){
+            eBrakeFailure.setText("Emergency Brake Failure: Detected");
+        }
+        else{
+            eBrakeFailure.setText("Emergency Brake Failure: NOT Detected");
+        }
+    }
+
+    public void setSBrakeFailureText(boolean state){
+        if(state){
+            signalFailure.setText("Emergency Brake Failure: Detected");
+        }
+        else{
+            sBrakeFailure.setText("Emergency Brake Failure: NOT Detected");
+        }
+    }
+
+    public void setSignalFailureText(boolean state){
+        if(state){
+            signalFailure.setText("Emergency Brake Failure: Detected");
+        }
+        else{
+            signalFailure.setText("Emergency Brake Failure: NOT Detected");
+        }
+    }
+
+
+    public void setPowerFailureText(boolean state){
+        if(state){
+            powerFailure.setText("Emergency Brake Failure: Detected");
+        }
+        else{
+            powerFailure.setText("Emergency Brake Failure: NOT Detected");
+        }
+    }
 
 
       public class setSpeedHandler implements EventHandler<ActionEvent>{
