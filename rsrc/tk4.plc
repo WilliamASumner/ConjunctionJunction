@@ -8,7 +8,7 @@
 
 // Switch H27
 //setting main
-if (H28.occupancy == occupied or H26.occupancy == occupied) then
+if (H29.occupancy == occupied or H25.occupancy == occupied) then
     H27.switchstate = main;
 endif;
 
@@ -25,7 +25,7 @@ endif;
 
 //Switch H32
 //setting main
-if (H34.occupancy == occupied or H31.occupancy == occupied) then
+if (H35.occupancy == occupied or H30.occupancy == occupied) then
     H32.switchstate = main;
 endif;
 
@@ -35,14 +35,14 @@ if (R72.occupancy == occupied) then
 endif;
 
 // Error checking for oncoming trains
+// yield to main
 if (H34.occupancy == occupied and R72.occupancy == occupied) then
     R72.authority = R72;
-    H32.authority = H32;
 endif;
 
 //Switch H38
 //setting main
-if (H37.occupancy == occupied or H39.occupancy == occupied) then
+if (H35.occupancy == occupied or H40.occupancy == occupied) then
     H38.switchstate = main;
 endif;
 
@@ -52,8 +52,8 @@ if (Q71.occupancy == occupied) then
 endif;
 
 // Error checking for oncoming trains
+// yield to main
 if (H37.occupancy == occupied and Q71.occupancy == occupied) then
-    H37.authority = H37;
     Q71.authority = Q71;
 endif;
 
@@ -69,8 +69,8 @@ if (O67.occupancy == occupied) then
 endif;
 
 // Error checking for oncoming trains
+//yield to main
 if (H42.occupancy == occupied and O67.occupancy == occupied) then
-    H42.authority = H42;
     O67.authority = O67;
 endif;
 
