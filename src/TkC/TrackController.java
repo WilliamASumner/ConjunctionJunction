@@ -174,6 +174,13 @@ public class TrackController
         return true;
     }
 
+    public void errorState() {
+        plcInitialized = false; // stop running PLC
+        for(Block b: lineBlocks) {
+            b.setIsOccupied(true);
+        }
+    }
+
     public void runPLC() {
         if (plcInitialized && !encounteredError) { // a valid PLC has been loaded
             ActionList thingsToDo = parserOneOutput.evaluate(this); // find which actions need to be done
@@ -182,6 +189,8 @@ public class TrackController
               //System.out.println("working voting");
               thingsToDo.execute();
             } else {
+                plcStatus = "Error Voting";
+                errorState();
                //System.out.println("ERROR VOTING");
             }
             thingsToDo.execute();
@@ -214,6 +223,20 @@ public class TrackController
             return b;
         }
         return tkcm.tm.getBlock(blockID,line);
+    }
+
+    public boolean repairBlock(String blockID) {
+        Block b = getBlock(blockID);
+        b.repairBlock();
+        b.setIsOccupied(false); // just set a circuit failure
+        return true;
+    }
+
+    public boolean closeBlock(String blockID) {
+        Block b = getBlock(blockID);
+        b.setFailure("circuit"); // just set a circuit failure
+        b.setIsOccupied(true); // just set a circuit failure
+        return true;
     }
 
     public boolean setSwitchState(String blockID, SwitchState s) {

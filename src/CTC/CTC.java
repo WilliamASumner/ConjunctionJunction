@@ -202,10 +202,10 @@ public class CTC{
 					// Set new authority
 					tempT.setAuthority(tempT.getNextscheduleStop());
 					// Send authority to track controller
-					trckCntrl.sendSuggestedAuthority(tempT.getCurBlkID(), tempT.getAuthority());
+					//trckCntrl.sendSuggestedAuthority(tempT.getCurBlkID(), tempT.getAuthority());
 				}
 				// Send authority and cur block constantly
-				trckCntrl.sendSuggestedAuthority(tempT.getCurBlkID(), tempT.getAuthority());
+				//trckCntrl.sendSuggestedAuthority(tempT.getCurBlkID(), tempT.getAuthority());
 			}
         }			
     }

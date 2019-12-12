@@ -118,7 +118,7 @@ public class TkM {
 
     public TextFlow toString(TrackMap line, String blockID) {
 
-        System.out.println("############" + blockID);
+        //System.out.println("############" + blockID);
         int bid = Integer.parseInt(blockID.substring(1, blockID.length()));
         ArrayList<Block> tm = line.map;
         Block b = tm.get(bid);
@@ -161,7 +161,7 @@ public class TkM {
         t7l.setFont(Font.font("Verdana",  20));
         Text t8 = new Text("\nNext Block:");
         t8.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
-        Text t8l = new Text(b.getNextBlock() + "\n\n\n");
+        Text t8l = new Text(b.getNextBlockVal() + "\n\n\n");
         t8l.setFont(Font.font("Verdana",  20));
         Text t9 = new Text("\nPrev Block:");
         t9.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
@@ -231,7 +231,7 @@ public class TkM {
     //   System.out.println(t.red.map.get(5).getIsOccupied());
     //
     // Block b = t.red.map.get(10);
-    // Block next = b.getNextBlock();
+    // Block next = b.getNextBlockVal();
     // System.out.println(next.getBlockID());
     //
     //   //Block b = t.trackmaps.get(0).sendBlock(1);

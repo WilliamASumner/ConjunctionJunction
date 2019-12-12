@@ -157,14 +157,22 @@ public class CTCTrain{
         }           
         
         public boolean isAdjacentBlock(String newBlkNum){
-            boolean isAdjacent = false;
+            /*boolean isAdjacent = false;
             // extract number portion from string
             int newNum = Integer.parseInt(newBlkNum.replaceAll("[^0-9]", ""));
             int curNum = Integer.parseInt(curBlkID.replaceAll("[^0-9]", ""));
             // if is the same, or adjacent
             if(Math.abs(newNum - curNum) == 0 || Math.abs(newNum - curNum) == 1)
                 isAdjacent = true;
-            return isAdjacent;
+            return isAdjacent; */
+            Block curBlk = tkm.getBlock(newBlkNum,line);
+            //System.out.println("THIS IS NEW BLOCK");
+            //tkm.getBlock(newBlkNum,line).prettyPrint();
+            //System.out.println("THIS IS CUR BLOCK");
+            //curBlk.prettyPrint();
+            if (tkm.getBlock(newBlkNum,line).getNextBlockVal() == curBlk || tkm.getBlock(newBlkNum,line).getPrevBlock() == curBlk)
+                System.out.println("MATCHES");
+            return (true);
         }
     
         public void progressTrainAtBlock(){

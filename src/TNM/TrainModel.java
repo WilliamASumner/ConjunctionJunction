@@ -282,6 +282,7 @@ public class TrainModel {
 
     public void update()
     {
+        //currBlock.prettyPrint();
         
 		AuditedAuthority = currBlock.getAuditedAuthority();
 		if(AuditedAuthority!=null)

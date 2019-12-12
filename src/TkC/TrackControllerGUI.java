@@ -457,7 +457,7 @@ public class TrackControllerGUI extends Application {
 
     //disable/enable elements depending on block
     public void checkUI() { 
-        if (currentBlock.getFailures() != null && currentBlock.getFailures().length != 0) // if errors
+        if (currentBlock.getFailures() != null && currentBlock.getFailures().size() != 0) // if errors
             statusVal.setText("BROKEN");
         else
             statusVal.setText("CLEAR");
