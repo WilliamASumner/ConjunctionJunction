@@ -19,15 +19,15 @@ public class TrackControllerMain
     public String CurrentController = TkNames[0];
 
     // GREEN LINE
-    String[] Tk0List = {"A","B","C","D","E","F","G","Z","Y"};
-    String[] Tk1List = {"X","H","I","W","J","V","U","K","T","L"};
-    String[] Tk2List = {"S","M","R","N","O","Q","P"};
+    String[] Tk0List = {"A","B","C","D","E","F","G","Y","Z"};
+    String[] Tk1List = {"H","I","J","K","L","T","U","V","W","X"};
+    String[] Tk2List = {"M","N","O","P","Q","R","S"};
 
 
     // RED LINE
     String[] Tk3List = {"A","B","C","D","E","F"};
-    String[] Tk4List = {"G","T","S","R","Q","H","P","O"};
-    String[] Tk5List = {"I","J","N","M","L","K"};
+    String[] Tk4List = {"G","H","O","P","Q","R","S","T"};
+    String[] Tk5List = {"I","J","K","L","M","N"};
 
     public TrackControllerMain() {
         controllers = new HashMap<String,TrackController>();
@@ -94,6 +94,10 @@ public class TrackControllerMain
         J58.setNextBlock(yard);
 
         Block J62 = tm.getBlock("J62","green"); // switch from yard
+        J62.setPrevBlock(yard);
+
+        Block C9 = tm.getBlock("C9","red");
+        C9.setNextBlockFork(yard);
     }
 
     public void setCTC(CTC ctcModule) {

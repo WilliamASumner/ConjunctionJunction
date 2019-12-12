@@ -414,6 +414,12 @@ public class TrackControllerGUI extends Application {
             @Override
             public void handle(WindowEvent t) {
                 tkcm.removeGUI(thisGUI); // remove from gui list
+                if (occupancyCheckBox.isSelected() && currentController.countGuis() == 1) {
+                    occupancyCheckBox.setSelected(false);
+                    currentBlock.setIsOccupied(false);
+                }
+                currentController.unregisterGui();
+
                 primaryStage.close();
             }
         });
@@ -691,11 +697,6 @@ public class TrackControllerGUI extends Application {
     class closeWindowHandler implements EventHandler<WindowEvent> {
         @Override
         public void handle(WindowEvent event) { // on window close, stop overriding occupancy
-            if (occupancyCheckBox.isSelected() && currentController.countGuis() == 1) {
-                occupancyCheckBox.setSelected(false);
-                currentBlock.setIsOccupied(false);
-            }
-            currentController.unregisterGui();
         }
     }
 
