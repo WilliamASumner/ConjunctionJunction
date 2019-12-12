@@ -53,7 +53,6 @@ public class Block
         power = ErrorState.GOOD;
         signal = ErrorState.GOOD;
         numFailures = 0;
-
     }
 
 
@@ -174,7 +173,7 @@ public class Block
         } */
     }
 
-    String[] getFailures() {
+    String[] getFailures() { // TODO CHANGE
         String[] failures = null;
         if (!isWorking()) {
             failures = new String[numFailures];
@@ -198,6 +197,14 @@ public class Block
 
     Block getNextBlock() {
         return nextBlockID;
+    }
+
+    Block getNextBlockIDFork() {
+        return nextBlockIDFork;
+    }
+
+    void setNextBlockIDFork(Block newNextFork) {
+        newNextFork = nextBlockIDFork;
     }
 
     Block getPrevBlock() {
@@ -248,7 +255,7 @@ public class Block
         return crossingState;
     }
 
-    
+
     public void setCrossingState(CrossingState c) {
          crossingState = c;
     }

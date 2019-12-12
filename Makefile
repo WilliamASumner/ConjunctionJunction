@@ -49,7 +49,7 @@ TARGET_JAR     := $(ONEJAR_ROOT)/main/$(PACKAGE)-module.jar
 FINAL_JAR      := $(PACKAGE_DIR)/$(PACKAGE).jar
 
 ### Phony
-.PHONY         := clean runtest check_status
+.PHONY         := clean runtest 
 
 ################# ZIP AND CP Commands      ################
 ifdef OS
@@ -62,10 +62,7 @@ endif
 
 ################# Build Directives  ################
 
-default: check_status src.txt $(TARGET_CLASS)
-
-check_status:
-	./check.sh
+default: src.txt $(TARGET_CLASS)
 
 run: src.txt $(TARGET_CLASS)
 	$(RUNCMD) $(JFLAGS) -cp "$(BIN_DIR)$(SEP)$(ANTLR_LIB)" $(PACKAGE).$(TARGET)

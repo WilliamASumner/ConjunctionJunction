@@ -158,7 +158,7 @@ public class MainUI extends Application {
         if (timeline != null)
             timeline.stop();
         timeline = new Timeline(
-            new KeyFrame(Duration.millis(1000.0/timeMultiplier), // default time is 1 second per update
+            new KeyFrame(Duration.millis(200.0/timeMultiplier), // default time is 1 second per update
             new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent t) {

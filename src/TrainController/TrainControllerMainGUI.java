@@ -58,36 +58,28 @@ public class TrainControllerMainGUI extends Application implements EventHandler<
     Button powerConfigButton;
     Button tncButton;
     Power power;
+    Scene scene;
+    int j;
 
-    ComboBox trainMenu;
+    ComboBox trainMenuController;  //train menu for Train Controller selection
+    ComboBox trainMenuPowerConfig; //train menu for Power Config selection
 
-    public TrainControllerMainGUI(Stage primaryStage){
-      /*
-      speed = TrainController.getAuditedSpeed();
-      authority = TrainController.getAuthority();
-      name = TrainController.getName();
-	  */
-
-    }
     public TrainControllerMainGUI(TrainControllerMain tncM) {
         tncMain = tncM;
-        /*
-        speed = TrainController.getAuditedSpeed();
-        authority = TrainController.getAuthority();
-        name = TrainController.getName();
-        */
         initGUI();
       }
 
       //Called from TrainControllerMain every time a train is created
       @SuppressWarnings("unchecked")
       public void updateList(){
-        trainMenu.getItems().removeAll(trainMenu.getItems());
+        trainMenuController.getItems().removeAll(trainMenuController.getItems());
+        trainMenuPowerConfig.getItems().removeAll(trainMenuPowerConfig.getItems());
         TrainController[] tncTempArray;
         tncArray = tncMain.getTrains();
         for(int i = 0; i < tncArray.length; i++){
             if (tncArray[i] != null){    
-              trainMenu.getItems().addAll(tncArray[i].getName());
+              trainMenuController.getItems().addAll(tncArray[i].getName());
+              trainMenuPowerConfig.getItems().addAll(tncArray[i].getName());
             }
                 
         }
@@ -98,15 +90,15 @@ public class TrainControllerMainGUI extends Application implements EventHandler<
            flowpane = new FlowPane();
            flowpane.setHgap(25); 
 
-           powerConfigButton = new Button("Power Configuration");
+           powerConfigButton = new Button("Train Controller Power Parameters");
            tncButton= new Button("Train Controller");
 
            //styling for our two buttons
            powerConfigButton.setStyle("-fx-text-fill: blue");
-           powerConfigButton.setMinWidth(400);
-           powerConfigButton.setMaxWidth(400);
-           powerConfigButton.setMinWidth(100);
-           powerConfigButton.setMaxWidth(100);
+           powerConfigButton.setMinWidth(800);
+           powerConfigButton.setMaxWidth(800);
+           powerConfigButton.setMinWidth(200);
+           powerConfigButton.setMaxWidth(200);
            tncButton.setStyle("-fx-text-fill: red");
            tncButton.setMinWidth(400);
            tncButton.setMaxWidth(400);
@@ -114,10 +106,8 @@ public class TrainControllerMainGUI extends Application implements EventHandler<
            tncButton.setMaxWidth(100);
            
 
-           trainMenu = new ComboBox();
-         //  MenuButton trainMenu = new MenuButton("Select a train: ");
-
-         //  menuButton.getItems().addAll();
+           trainMenuController = new ComboBox();
+           trainMenuPowerConfig = new ComboBox();
 
            //FlowPane for power config button
            FlowPane powerConfig = new FlowPane();
@@ -125,6 +115,7 @@ public class TrainControllerMainGUI extends Application implements EventHandler<
            powerConfig.setMinWidth(300);
            powerConfig.setStyle("-fx-border-color: black");
            powerConfig.getChildren().add(powerConfigButton);
+           powerConfig.getChildren().add(trainMenuPowerConfig);
            flowpane.getChildren().add(powerConfig);
           
            //FlowPane for power config button
@@ -132,7 +123,7 @@ public class TrainControllerMainGUI extends Application implements EventHandler<
            trainControl.setMinWidth(300);
            trainControl.setStyle("-fx-border-color: black");
            trainControl.getChildren().add(tncButton);
-           trainControl.getChildren().add(trainMenu);
+           trainControl.getChildren().add(trainMenuController);
            flowpane.getChildren().add(trainControl);
            
            //Setting the margin of the pane  
@@ -147,7 +138,10 @@ public class TrainControllerMainGUI extends Application implements EventHandler<
            primaryStage.setTitle("Train Controller Module");  
            powerConfigButton.setOnAction(new powerConfigHandler());
            tncButton.setOnAction(new tncHandler());
-           Scene scene = new Scene(flowpane, 300, 125);
+           if(scene == null){
+            scene = new Scene(flowpane, 300, 125);
+           }
+
            primaryStage.setScene(scene);
            primaryStage.show();
        }
@@ -156,46 +150,54 @@ public class TrainControllerMainGUI extends Application implements EventHandler<
        class powerConfigHandler implements EventHandler<ActionEvent>{
         @Override
         public void handle(ActionEvent event){
+          if(trainMenuPowerConfig.getValue() != null){
           Stage newWindow = new Stage();
-          tncMain.initPower().showGUI(newWindow);
+          //iterate through array of trains and find the selected one
+          for(int i = 0; i < tncArray.length; i++){
+            if(tncArray!=null && tncArray[i]!=null){
+              if(trainMenuPowerConfig.getValue().equals(tncArray[i].getName())){
+                /*  Note: if its the first time power Config button is pressed,
+                    then we call initPower() to create the power object,
+                    if it is second or later time pressing we call
+                    getPower() to get the power object to show
+                */
+              if(j == 1){
+                  tncArray[i].initPower().showGUI(newWindow);
+                  j = 0;
+              }
+              else{
+                tncArray[i].getPower().showGUI(newWindow);
+              }
+              }
+            }
+          }  
+        }
+
         }
       }
 
       class tncHandler implements EventHandler<ActionEvent>{
       @Override
       public void handle(ActionEvent event){
-        Stage newWindow = new Stage();
-        for(int i = 0; i < tncArray.length; i++){
-			if(tncArray!=null && tncArray[i]!=null){
-				
-          if(trainMenu.getValue().equals(tncArray[i].getName())){
-           // System.out.println("TrainControllerMainGUI: OBJECT = " + tncArray[i]);
-              tncArray[i].showGUI(newWindow);
+        if(trainMenuController.getValue() != null){
+          Stage newWindow = new Stage();
+          for(int i = 0; i < tncArray.length; i++){
+          if(tncArray!=null && tncArray[i]!=null){
+          
+            if(trainMenuController.getValue().equals(tncArray[i].getName())){
+                tncArray[i].showGUI(newWindow);
+            }
           }
-			}
+          }
         }
       }
     }
 
        public void handle(ActionEvent event){
-       Stage primaryStage = new Stage();
-
-        //if train controller button is pressed, find the specific
-        //train controller object and then open its GUI
-        if(event.getSource() == tncButton){
-          //System.out.println("TrainControllerMainGUI: YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
-          for(int i = 0; i < tncArray.length; i++){
-            if(trainMenu.getValue().equals(tncArray[i].getName())){
-                //tncMain.showGUI(primaryStage, tncArray[i]);
-               // System.out.println("TrainControllerMainGUI: XXXXXXXXXXXXXXXXXXXXXXXXX");
-                tncArray[i].showGUI(primaryStage);
-            }
-          }
-        }
-        else if(event.getSource() == powerConfigButton){
-          powerGUI.start(primaryStage);
-        }
+       
        }
+
+       
        public static void main(String[] args) {
            launch();
        }

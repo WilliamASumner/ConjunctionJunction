@@ -1,4 +1,5 @@
 #!/bin/bash
+
 if [ ! $# -eq 1 ]; then
     echo "Error: please run with a package name"
     exit 1

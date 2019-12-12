@@ -17,8 +17,9 @@ public class TrackMap {
   public ArrayList<Block> parseFile(String filename)  {
     Block yard = new Block();
     yard.setBlockID("A0");
+    yard.setNextBlock(yard);
     map.add(0, yard);
-    
+
     System.out.println(filename + ", " + filename.substring(filename.length()-3,filename.length()));
     if (!(filename.substring(filename.length()-3,filename.length()).equals("csv"))) {
 
@@ -63,6 +64,8 @@ public class TrackMap {
         newBlock.setLength(Double.parseDouble(elements[3]));
         newBlock.setGrade(Double.parseDouble(elements[4]));
         newBlock.setSpeedLimit(Double.parseDouble(elements[5]));
+        //audited speed hardcoded
+        newBlock.setAuditedSpeed(50.0);
         if (elements[6] != null) {
            if (elements[6].toUpperCase().contains("STATION")) {
              newBlock.setType(BlockType.STATIONBLOCK);
@@ -80,6 +83,8 @@ public class TrackMap {
            else if (elements[6].toUpperCase().contains("CROSSING")) {
              newBlock.setType(BlockType.CROSSBLOCK);
            }
+           newBlock.setSwitchState(SwitchState.MAIN);
+           newBlock.setCrossingState(CrossingState.UP);
 
         }
         newBlock.setElevation(Double.parseDouble(elements[8]));
@@ -98,6 +103,7 @@ public class TrackMap {
     System.out.println(map.get(1).getLineColor().equals("Red"));
     if (map.get(1).getLineColor().equals("Red")) {
       this.orderTrack("rsrc/redOrder.csv");
+      //this.addSwitches("rsrc/redSwitch.csv");
     }
     else if (map.get(1).getLineColor().equals("Green")) {
       this.orderTrack("rsrc/greenOrder.csv");
@@ -107,10 +113,43 @@ public class TrackMap {
 
   }
 
+  // public void addSwitches(String filename) {
+  //   if (!(filename.substring(filename.length()-3,filename.length()).equals("csv"))) {
+  //     return;
+  //   }
+  //
+  //   String csv = "";
+  //   try {
+  //     File file = new File(filename);
+  //     Scanner sc = new Scanner(file);
+  //     while (sc.hasNextLine()) {
+  //       csv+=sc.nextLine()+"\n";
+  //     }
+  //   }
+  //   catch (FileNotFoundException e){
+  //       System.out.println("FILE NOT FOUND");
+  //       System.out.println(e);
+  //       System.exit(1);
+  //   }
+  //   String[] csvrows = csv.split("\n");
+  //   for (int i = 1; i < csvrows.length-1; i++) {
+  //     if (csvrows[i].equals("")) {
+  //       break;
+  //     }
+  //
+  //     String[] switches = csvrows[i].split(",");
+  //     int bid = Integer.parseInt(switches[0].substring(1, switches[0].length()));
+  //     int forkbid = Integer.parseInt(switches[1].substring(1, switches[0].length()));
+  //     map.get(bid).setNextBlockIDFork(map.get(forkbid));
+  //     System.out.println(map.get(bid).getBlockID() + ", main: " + map.get(bid).getNextBlock().getBlockID() + ", fork: " + map.get(bid).getNextBlockIDFork().getBlockID());
+  //     }
+  //
+  // }
+
   public void orderTrack(String filename) {
-    if (!(filename.substring(filename.length()-3,filename.length()).equals("csv"))) {
-      return;
-    }
+      if (!(filename.substring(filename.length()-3,filename.length()).equals("csv"))) {
+          return;
+      }
 
     String csv = "";
     try {

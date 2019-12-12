@@ -24,7 +24,7 @@ public class TrainController{
     boolean[] Doors = new boolean[8];
     double powerCommand;
     double temperature = 70.0;
-    String currBlock;
+    Block currBlock;
     boolean eBrakeOn;
     boolean sBrakeOn;
     boolean isAutomaticMode = true;
@@ -36,27 +36,8 @@ public class TrainController{
     String trainName = "train1";
     TrainModel tm;
     TrainControllerGUI myGUI;
+    Power myPower;
     
-    // //Train Controller Constructor
-    // public TrainController(String name, String authority, double speed, TrainModel tm){
-    //     auditedSpeed = speed;
-    //     authority = authority;
-    //     trainName = name;
-    //     trainModel = tm;
-    //     initGUI();
-    // }
-    //
-    //Train Controller Constructor
-    public TrainController(){
-        auditedSpeed = 0.0;
-        authority = "";
-        trainName = "";
-        //trainModel = tm;
-        initGUI();
-    }
-
-    
- 
     //Train Controller Constructor
     public TrainController(String name, String a, double speed, TrainModel trainModel){
         auditedSpeed = speed;
@@ -65,17 +46,36 @@ public class TrainController{
         tm = trainModel;
 		//System.out.println("TrainController: Name: "+name+"Block: "+authority+"Speed: "+auditedSpeed);
         initGUI();
+        initPower();
     }
+
+    /*create the Power class object, called by 
+    TrainControllerMainGUI the first time 
+    that the Power gui is opened*/
+    public Power initPower(){
+        myPower = new Power();
+        return myPower;
+    }
+
+    /*returns this specific train controllers reference
+    to its Power object, called from TrainControllerMainGUI*/
+    public Power getPower(){
+        return myPower;
+    }
+
+
     //Called when train controller is created
     void initGUI(){
         myGUI = new TrainControllerGUI(this);
         
     }
 
+
     public TrainControllerGUI getGUI(){
         return myGUI;
     }
 
+    
     //function called on each system tick
     public void update(){
         powerCommand = calculatePower();
@@ -92,19 +92,16 @@ public class TrainController{
 
     //Called when train controller selected from main menu
     void showGUI(Stage primaryStage){
-        System.out.println("TrainController: Hello from Train Controller:" + this);
+       // System.out.println("TrainController: Hello from Train Controller:" + this);
         myGUI.start(primaryStage);
-        // Scene scene = new Scene(GUI);
-        // primaryStage.setScene(scene);
-        // primaryStage.show();
     }
 
     
 
     public double getCurrSpeed(){
         return tm.getVelocity();
-      //  return currSpeed;
     }
+
 
     public double getSetSpeed(){
         //if we are in automatic mode, then the set speed
@@ -114,7 +111,7 @@ public class TrainController{
                 return auditedSpeed;
             }
             else{
-                return 50.0;
+                return 0;
             }
         }
         //if we are in manual mode, return driver set speed
@@ -123,7 +120,7 @@ public class TrainController{
                 return driverSetSpeed;
             }
             else{
-                return 50.0;
+                return 0;
             }
             
         }
@@ -131,12 +128,16 @@ public class TrainController{
 
     //Updates train's audited speed limit from the train model
     public void getAuditedSpeed(){
-        auditedSpeed = tm.getAuditedSpeed();
+        if(!trackCircuitFailure){
+            auditedSpeed = tm.getAuditedSpeed();
+        }
     }
 
     //Updates train's authority from the train model
     public void getAuthority(){
-        authority = tm.getAuthority();
+        if(!trackCircuitFailure){
+            authority = tm.getAuthority();  
+        }
     }
 
     //Updates train's authority from the train model
@@ -144,24 +145,36 @@ public class TrainController{
         return trainName;
     }
 
+    //Set engine failure, called from TrainModel
     public void setEngineFailure(boolean state){
         engineFailure = state;
     }
 
+    //Set track signal failure, called from TrainModel
     public void setSignalFailure(boolean state){
         trackCircuitFailure = state;
     }
 
+    //Set e brake failure, called from TrainModel
     public void setEBrakeFailure(boolean state){
         eBrakeFailure = state;
     }
 
+    //Set s brake failure, called from TrainModel
     public void setSBrakeFailure(boolean state){
         serviceBrakeFailure = state;
     }
 
     //Driver sets train controller mode to automatic
     public void setAutomaticMode(){
+        /*
+        Note: when we switch from automatic to manual mode we begin using
+        the driverSetSpeed as the new set speed for the power calculations
+        so as to not have the speed of the train affected by switching
+        from auto to manual mode we set the driverSetSpeed to the current
+        speed of the train
+        */
+        driverSetSpeed = currSpeed;
         isAutomaticMode = true;
     }
 
@@ -210,13 +223,16 @@ public class TrainController{
     //Toggle the emergency brake, called from TrainControllerGUI
     public boolean toggleEBrake(){
         boolean currentState;
-        if(eBrakeOn){
-            eBrakeOn = false;
+        //if we do not currently have an e brake failure then toggle
+        if(!eBrakeFailure){
+            if(eBrakeOn){
+                eBrakeOn = false;
+            }
+            else{
+                eBrakeOn = true;
+            }
+            tm.toggleEBrake();
         }
-        else{
-            eBrakeOn = true;
-        }
-        tm.toggleEBrake();
         currentState = eBrakeOn;
         return currentState;
     }
@@ -224,13 +240,16 @@ public class TrainController{
     //Toggle the service brake, called from TrainControllerGUI
     public boolean toggleServiceBrake(){
         boolean currentState;
-        if(sBrakeOn){
-            sBrakeOn = false;
+        //if we do not currently have an s brake failure then toggle
+        if(!serviceBrakeFailure){
+            if(sBrakeOn){
+                sBrakeOn = false;
+            }
+            else{
+                sBrakeOn = true;
+            }
+            tm.toggleSBrake();
         }
-        else{
-            sBrakeOn = true;
-        }
-        tm.toggleSBrake();
         currentState = sBrakeOn;
         return currentState;
     }
@@ -256,14 +275,14 @@ public class TrainController{
             currentState = Doors[doorNum];
             return currentState;
     }
+
     //@returns double calculatePower - power command to Train Model in kiloWatts 
     //Calculates power command based on current and desired speed
     public double calculatePower(){
         double powerOut;   //power command output, in kiloWatts
         //Power.calcPowerCommand(this);
-        powerOut = Power.calcPowerCommand(this);
+        powerOut = myPower.calcPowerCommand(this);
        // System.out.println("TrainController: TRAIN: " + this + " - Power CMD " + powerOut);
-        //powerOut = 1.0; // TODO FIXME
         if(eBrakeOn || sBrakeOn){
             powerOut = 0; 
         }

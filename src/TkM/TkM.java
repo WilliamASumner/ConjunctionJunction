@@ -17,6 +17,14 @@ import javafx.scene.paint.Color;
 
 import java.io.FileNotFoundException;
 
+// A0's next block is A0 indefinitely
+// switch directionality
+// failures as string array display fail or not
+// throughput
+// signal color (create enum)
+// beacon: station name
+// temp -> track heaters
+
 
 public class TkM {
 
@@ -82,8 +90,9 @@ public class TkM {
 
     public void createTrain(String name, String authority, Block b, double speed, TrainControllerMain TnC) {
         TrainModel newTrain = TrainModelMain.createTrain(name, authority, b, speed, TnC,this);
-
+        if (!(trains.contains(newTrain))) {
         trains.add(newTrain);
+        }
     }
 
     public void update() {
@@ -196,11 +205,15 @@ public class TkM {
         tkc.updateOccupancy(b);
     }
 
+    public void removeTrain(int index) {
+      trains.remove(index);
+    }
+
     public void updateTkM() {
       for (int i = 0; i < trains.size(); i++) {
         Block b = trains.get(i).getCurrBlock();
         if (b.getBlockID().equals("A0")) {
-          trains.remove(i);
+          removeTrain(i);
         }
       }
 

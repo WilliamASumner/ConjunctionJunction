@@ -14,18 +14,24 @@ import org.antlr.v4.runtime.CommonTokenStream;
 
 public class TrackController
 {
-    String plcName;
-    String line;
-    ArrayList<Block> lineBlocks;
-    String name;
-    ArrayList<Block> controlledBlocks;
-    String mode = "";
-    StringBuilder log;
-    boolean encounteredError;
-    boolean plcInitialized;
+    private String plcName;
+    private String line;
+    private ArrayList<Block> lineBlocks;
+    private String name;
+    private ArrayList<Block> controlledBlocks;
+    private String mode = "";
+    private StringBuilder log;
+    private boolean encounteredError;
+    private boolean plcInitialized;
 
-    EvalList parserOneOutput;
-    EvalList parserTwoOutput;
+    private EvalList parserOneOutput;
+    private EvalList parserTwoOutput;
+
+    private String plcStatus;
+
+    private int guis;
+
+    private final String resourceDir = System.getProperty("user.dir") + "/rsrc"; // for loading default PLCs
 
     TkM tm = null;
     TrackControllerMain tkcm;
@@ -45,6 +51,8 @@ public class TrackController
         parserOneOutput = null;
         parserTwoOutput = null;
 
+        guis = 0;
+
         log = new StringBuilder();
 
         if(tkmodel != null) {
@@ -57,6 +65,16 @@ public class TrackController
             }
         } else {
             lineBlocks = controlledBlocks;
+        }
+
+        try {
+            FileInputStream f = new FileInputStream(resourceDir+"/"+name+".plc");
+            if (setPLC(f)) { // load a default PLC program
+                setPLCName(name+".plc");
+            }
+        } catch (IOException e) {
+            System.out.println(e);
+            System.out.println("Error: could not find default plc file for " +name);
         }
     }
 
@@ -100,6 +118,10 @@ public class TrackController
         return plcName;
     }
 
+    public String getPLCStatus() {
+        return plcStatus;
+    }
+
 
     public boolean setPLC(FileInputStream f) {
         // open plc and parse
@@ -139,14 +161,21 @@ public class TrackController
         if (runner.encounteredError() || runnerTwo.encounteredError()) { // parsing error
             encounteredError = true;
             plcInitialized = false;
+
+            if (runner.encounteredError()) {
+                plcStatus = runner.getErrMsg();
+            } else {
+                plcStatus = runnerTwo.getErrMsg();
+            }
             return false;
         }
         plcInitialized = true;
+        plcStatus = "Good";
         return true;
     }
 
     public void runPLC() {
-        if (plcInitialized) { // a valid PLC has been loaded
+        if (plcInitialized && !encounteredError) { // a valid PLC has been loaded
             ActionList thingsToDo = parserOneOutput.evaluate(this); // find which actions need to be done
             ActionList thingsToDoCopy = parserTwoOutput.evaluate(this);
             if (thingsToDo.equivalentTo(thingsToDoCopy)) {
@@ -223,6 +252,19 @@ public class TrackController
         //run plc
     }
 
+    public void registerGui() {
+        guis++;
+    }
+
+    public void unregisterGui() {
+        guis--;
+    }
+
+    public int countGuis() {
+        return guis;
+    }
+
+    @Override
     public String toString() {
         return name;
     }

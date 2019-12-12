@@ -18,10 +18,7 @@ public class TrainControllerMain{
     //
     //Train Controller Constructor
     public TrainControllerMain(){
-
-        //trainModel = tm;
         initGUI();
-        initPower();
     }
  
     //Update function called from mainui, calls the subsequent update
@@ -54,33 +51,19 @@ public class TrainControllerMain{
 
     //Called when train controller is created
     void initGUI(){
-        myGUI = new TrainControllerMainGUI(this);
-        
+        myGUI = new TrainControllerMainGUI(this);    
     }
 
   
-
-    public Power initPower(){
-        p = new Power();
-        return p;
-    }
+    
 
     //Called when train controller selected from main menu
     void showGUI(Stage primaryStage){
         myGUI.start(primaryStage);
-        // Scene scene = new Scene(GUI);
-        // primaryStage.setScene(scene);
-        // primaryStage.show();
+
     }
 
-    //Called when train controller selected from main menu
-    void showGUI(Stage primaryStage, TrainController tnc){
-        TrainControllerGUI myGUI = tnc.getGUI();
-        myGUI.start(primaryStage);
-        // Scene scene = new Scene(GUI);
-        // primaryStage.setScene(scene);
-        // primaryStage.show();
-    }
+   
   public TrainController[] getTrainArray(){
       return tncArray;
   }
