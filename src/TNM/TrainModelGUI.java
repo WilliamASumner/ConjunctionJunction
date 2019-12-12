@@ -15,7 +15,7 @@ import javafx.stage.Stage;
 
 public class TrainModelGUI extends Application {
 
-    boolean testmode = true;
+    boolean testmode = false;
 	
 	String myName = "wowee";
     String myAuthority = "A1";//Audited Authority Block

@@ -8,7 +8,7 @@ public class TrainModel {
 	
 	String name = "test name";
 	double myPower = 10;//for TEST TRAIN
-	boolean metricmode = false;
+	boolean metricmode = true;
 	
     String AuthorityBlockID = "test Block";
 	String beaconData = "Default Beacon Data";
@@ -140,8 +140,8 @@ public class TrainModel {
 			System.out.println("TrainModel: Ebrake is now false: "+Ebrake);
 
         }
-        //singleTNC.setEbrakeFailure(EbrakeFail);		
-		if(singleTNC!=null)singleTNC.getGUI().setEbrake(Ebrake);//James 
+        if(singleTNC!=null)singleTNC.setEBrakeFailure(EbrakeFail);		
+		if(singleTNC!=null)singleTNC.getGUI().setEbrake(Ebrake);
 		myGUI.setEbrake(Ebrake);
         return EbrakeFail;
     }
@@ -160,7 +160,7 @@ public class TrainModel {
 			System.out.println("TrainModel: SbrakeFail is now true: "+SbrakeFail);
 			System.out.println("TrainModel: Sbrake is now false: "+Sbrake);
         }
-		//singleTNC.setSbrakeFailure(SbrakeFail);		
+		if(singleTNC!=null)singleTNC.setSBrakeFailure(SbrakeFail);		
 		if(singleTNC!=null)singleTNC.getGUI().setSbrake(Sbrake);//James 
         return SbrakeFail;
     }
@@ -177,7 +177,7 @@ public class TrainModel {
 			System.out.println("TrainModel: signalFail is now true: "+signalFail);
         }
         if(singleTNC!=null)singleTNC.setSignalFailure(signalFail);
-		//myGUI.beaconData_Label.setText("Beacon Data:\t" + getBeaconData() + "\n");
+		myGUI.beaconData_Label.setText("Beacon Data:\t" + getBeaconData() + "\n");
         return signalFail;
     }
     public boolean toggleEngineFail()
