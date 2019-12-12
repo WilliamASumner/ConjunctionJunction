@@ -136,9 +136,138 @@ public class TrackControllerMain
         J62.setPrevBlockFork(yard);
         J62.setSwitchState(SwitchState.MAIN);
 
+        yard.setNextBlock(yard);
+        yard.setPrevBlock(yard);
 
+        setupRedLine(); // moved here to avoid naming conflicts
+
+    }
+
+    public void setupRedLine() {
+        // Red line
+
+        Block yard = tm.getBlock("A0","red"); // get the yard block
+
+        Block C8 = tm.getBlock("C8","red");
         Block C9 = tm.getBlock("C9","red");
+        Block D10 = tm.getBlock("D10","red");
+        D10.setPrevBlock(C9);
+        C8.setNextBlock(C9);
         C9.setNextBlockFork(yard);
+        C9.setNextBlockMain(D10);
+        C9.setPrevBlockFork(C8);
+        C9.setPrevBlockMain(C8);
+        C9.setSwitchState(SwitchState.MAIN);
+
+        Block E13 = tm.getBlock("E13","red");
+        Block E14 = tm.getBlock("E14","red");
+        Block E15 = tm.getBlock("E15","red"); // switch
+        Block F16 = tm.getBlock("F16","red");
+        Block F17 = tm.getBlock("F17","red");
+        Block A1  = tm.getBlock("A1","red");
+        Block A2  = tm.getBlock("A2","red");
+
+        F16.setNextBlock(E15);
+        F16.setPrevBlock(F17);
+
+        A1.setNextBlock(A2);
+        A1.setPrevBlock(E15);
+
+        E14.setNextBlock(E15);
+        E14.setPrevBlock(E13);
+        E15.setNextBlockMain(F16);
+        E15.setNextBlockFork(F16);
+        E15.setPrevBlockMain(E15);
+        E15.setPrevBlockFork(A1);
+        E15.setSwitchState(SwitchState.MAIN);
+        E15.setSwitchState(SwitchState.FORK);
+        E15.setSwitchState(SwitchState.MAIN);
+
+        Block H25 = tm.getBlock("H25","red");
+        Block H26 = tm.getBlock("H26","red");
+        Block H27 = tm.getBlock("H27","red"); // switch
+        Block H28 = tm.getBlock("H28","red");
+        Block T76 = tm.getBlock("T76","red");
+
+        H26.setNextBlock(H27);
+        H26.setPrevBlock(H25);
+        H27.setNextBlockMain(H28);
+        H27.setNextBlockFork(T76);
+        H27.setPrevBlockMain(H26);
+        H27.setPrevBlockFork(H26);
+        H27.setSwitchState(SwitchState.MAIN);
+        H27.setSwitchState(SwitchState.FORK);
+        H27.setSwitchState(SwitchState.MAIN);
+
+        Block H30 = tm.getBlock("H30","red");
+        Block H31 = tm.getBlock("H31","red");
+        Block H32 = tm.getBlock("H32","red");
+        Block H33 = tm.getBlock("H33","red");
+        Block R72 = tm.getBlock("R72","red");
+
+        H31.setNextBlock(H32);
+        H31.setPrevBlock(H30);
+        H32.setNextBlockMain(H33);
+        H32.setNextBlockFork(H33);
+        H32.setPrevBlockMain(H31);
+        H32.setPrevBlockFork(R72);
+        H32.setSwitchState(SwitchState.MAIN);
+        H32.setSwitchState(SwitchState.FORK);
+        H32.setSwitchState(SwitchState.MAIN);
+
+        Block H36 = tm.getBlock("H36","red");
+        Block H37 = tm.getBlock("H37","red");
+        Block H38 = tm.getBlock("H38","red");
+        Block H39 = tm.getBlock("H39","red");
+        Block Q71 = tm.getBlock("Q71","red");
+
+        H37.setNextBlock(H38);
+        H37.setPrevBlock(H36);
+        H39.setPrevBlock(H38);
+        H38.setNextBlockMain(H39);
+        H38.setNextBlockFork(Q71);
+        H38.setPrevBlockMain(H37);
+        H38.setPrevBlockFork(H37);
+        H38.setSwitchState(SwitchState.MAIN);
+        H38.setSwitchState(SwitchState.FORK);
+        H38.setSwitchState(SwitchState.MAIN);
+
+        Block H41 = tm.getBlock("H41","red");
+        Block H42 = tm.getBlock("H42","red");
+        Block H43 = tm.getBlock("H43","red");
+        Block H44 = tm.getBlock("H44","red");
+        Block O67 = tm.getBlock("O67","red");
+
+        H42.setNextBlock(H43);
+        H42.setPrevBlock(H41);
+        H43.setNextBlockMain(H44);
+        H43.setNextBlockFork(H44);
+        H43.setPrevBlockMain(H42);
+        H43.setPrevBlockFork(O67);
+        H43.setSwitchState(SwitchState.MAIN);
+        H43.setSwitchState(SwitchState.FORK);
+        H43.setSwitchState(SwitchState.MAIN);
+
+        Block J50 = tm.getBlock("J50","red");
+        Block J51 = tm.getBlock("J51","red");
+        Block J52 = tm.getBlock("J52","red");
+        Block J53 = tm.getBlock("J53","red");
+        Block N65 = tm.getBlock("N65","red");
+        Block N66 = tm.getBlock("N66","red");
+
+        N66.setNextBlock(N65);
+        N66.setPrevBlock(J52);
+
+        J51.setNextBlock(J52);
+        J51.setPrevBlock(J50);
+        J52.setNextBlockMain(J53);
+        J52.setNextBlockFork(N66);
+        J52.setPrevBlockMain(J51);
+        J52.setPrevBlockFork(J51);
+        J52.setSwitchState(SwitchState.MAIN);
+        J52.setSwitchState(SwitchState.FORK);
+        J52.setSwitchState(SwitchState.MAIN);
+
     }
 
     public void setCTC(CTC ctcModule) {
