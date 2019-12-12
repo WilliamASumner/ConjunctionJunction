@@ -114,7 +114,7 @@ public class TrainModel {
     double velocity = 0;
     double altvelocity = 0.01;
     double acceleration = 0;
-    double timePerUpdate = 1; //seconds
+    double timePerUpdate = 0.2; //seconds
 	//if you change timePerUpdate, uncomment the following line.
 	//myGUI.simtime_Label.setText("Simulated seconds/update: "+String.format("%.3f", timePerUpdate));
 
