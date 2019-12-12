@@ -94,7 +94,6 @@ public class TrackMap {
             int index = Integer.parseInt(elements[2]);
 
             map.add(index, newBlock);
-            System.out.println("FHWJHFJWKDLFHFIDJFH"+map.get(index).getBlockID());
             // System.out.println(newBlock.getBlockID() + ", " + newBlock.getLineColor());
             // System.out.println("THIS" + map.get(index).getBlockID());
             // System.out.println("LAST"+map.get(index-1).getBlockID());

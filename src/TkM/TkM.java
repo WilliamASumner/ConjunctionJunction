@@ -72,10 +72,6 @@ public class TkM {
         red.parseFile(redFile);
         green.parseFile(greenFile);
 
-        for (int i = 0; i < red.map.size(); i++) {
-          System.out.println("^&$*#@$@^*&^@&$^"+green.map.get(i).getBlockID());
-        }
-
         trackmaps.add(0, red);
         trackmaps.add(1, green);
         red = this.trackmaps.get(0);
@@ -132,7 +128,7 @@ public class TkM {
 
         ArrayList<Block> tm = line.map;
         Block b = tm.get(bid);
-          System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"+ b.getBlockID());
+
         String occ = "";
         if (!b.getIsOccupied()) {
             occ = "FREE";
@@ -157,11 +153,11 @@ public class TkM {
           heat = "OFF";
         }
 
-        b.setFailure("circuit");
-        b.setFailure("power");
-
         String fails = "";
         ArrayList<String> failArr = b.getFailures();
+        if (failArr.size() == 0) {
+          fails = "None";
+        }
         for (int i = 0; i < failArr.size(); i++) {
           fails += "\n"+failArr.get(i);
         }
@@ -172,6 +168,14 @@ public class TkM {
         }
         else {
           beacon = "Not A Station";
+        }
+
+        String cross;
+        if (b.getType() == BlockType.CROSSBLOCK) {
+          cross = b.getCrossingState() +"";
+        }
+        else {
+          cross = "Not A Crossing";
         }
 
 
@@ -200,6 +204,10 @@ public class TkM {
         t6.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
         Text t6l = new Text(occ);
         t6l.setFont(Font.font("Verdana",  20));
+        Text t14 = new Text("\nCrossing: ");
+        t14.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
+        Text t14l = new Text(cross);
+        t14l.setFont(Font.font("Verdana",  20));
         Text t7 = new Text("\nSwitch State:");
         t7.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
         Text t7l = new Text(b.getSwitchState() + "");
@@ -230,7 +238,7 @@ public class TkM {
         t12.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
         Text t12l = new Text(fails);
         t12l.setFont(Font.font("Verdana",  20));
-        TextFlow tf = new TextFlow(t1,t1l,t2,t2l,t3,t3l,t4,t4l,t5,t5l,t6,t6l,t7,t7l,t8,t8l,t9,t9l,t10,t10l,t13,t13l,t11,t11l,t12,t12l);
+        TextFlow tf = new TextFlow(t1,t1l,t2,t2l,t3,t3l,t4,t4l,t5,t5l,t6,t6l,t14,t14l,t7,t7l,t8,t8l,t9,t9l,t10,t10l,t13,t13l,t11,t11l,t12,t12l);
         return tf;
     }
 
