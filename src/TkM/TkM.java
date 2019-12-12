@@ -38,6 +38,7 @@ public class TkM {
     TrainControllerMain tnC;
     TrackControllerMain tkc = null;
     ArrayList<TrainModel> trains = new ArrayList<TrainModel>();
+    private boolean heater;
 
     /*public TkM(String lineColor, TrainControllerMain newtnC) {
         tnC = newtnC;
@@ -116,12 +117,18 @@ public class TkM {
 
 
 
+
+
+
+
     public TextFlow toString(TrackMap line, String blockID) {
 
         //System.out.println("############" + blockID);
         int bid = Integer.parseInt(blockID.substring(1, blockID.length()));
+
         ArrayList<Block> tm = line.map;
         Block b = tm.get(bid);
+
         String occ = "";
         if (!b.getIsOccupied()) {
             occ = "FREE";
@@ -129,6 +136,48 @@ public class TkM {
         else {
             occ = "OCCUPIED";
         }
+
+        String yardB;
+        if (b.getPrevBlock().getBlockID().equals("A0")) {
+          yardB = "YARD";
+        }
+        else {
+          yardB = b.getPrevBlock().getBlockID();
+        }
+
+        String heat;
+        if (heater == true) {
+          heat = "ON";
+        }
+        else {
+          heat = "OFF";
+        }
+
+        String fails = "";
+        ArrayList<String> failArr = b.getFailures();
+        if (failArr.size() == 0) {
+          fails = "None";
+        }
+        for (int i = 0; i < failArr.size(); i++) {
+          fails += "\n"+failArr.get(i);
+        }
+
+        String beacon;
+        if (b.getType() == BlockType.STATIONBLOCK) {
+          beacon = b.getStationName() +"";
+        }
+        else {
+          beacon = "Not A Station";
+        }
+
+        String cross;
+        if (b.getType() == BlockType.CROSSBLOCK) {
+          cross = b.getCrossingState() +"";
+        }
+        else {
+          cross = "Not A Crossing";
+        }
+
 
         Text t1 = new Text("For Block ");
         t1.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
@@ -149,34 +198,57 @@ public class TkM {
         t4l.setFont(Font.font("Verdana",  20));
         Text t5 = new Text("Speed Limit: ");
         t5.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
-        Text t5l = new Text(b.getSpeedLimit() + "\n\n");
+        Text t5l = new Text(b.getSpeedLimit() + "\n");
         t5l.setFont(Font.font("Verdana",  20));
-        Text t6 = new Text("Occupation: ");
+        Text t6 = new Text("\nOccupation: ");
         t6.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
         Text t6l = new Text(occ);
         t6l.setFont(Font.font("Verdana",  20));
-        Text t7 = new Text("\nAuthority:");
+        Text t14 = new Text("\nCrossing: ");
+        t14.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
+        Text t14l = new Text(cross);
+        t14l.setFont(Font.font("Verdana",  20));
+        Text t7 = new Text("\nSwitch State:");
         t7.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
-        Text t7l = new Text(b.getAuditedAuthority() + "\n\n\n");
+        Text t7l = new Text(b.getSwitchState() + "");
         t7l.setFont(Font.font("Verdana",  20));
         Text t8 = new Text("\nNext Block:");
         t8.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
-        Text t8l = new Text(b.getNextBlockVal() + "\n\n\n");
+        Text t8l = new Text(b.getNextBlockVal() + "");
         t8l.setFont(Font.font("Verdana",  20));
         Text t9 = new Text("\nPrev Block:");
         t9.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
-        Text t9l = new Text(b.getPrevBlock() + "\n\n\n");
+        Text t9l = new Text(yardB);
         t9l.setFont(Font.font("Verdana",  20));
         Text t10 = new Text("\nBlock Type:");
         t10.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
-        Text t10l = new Text(b.getType() + "\n\n\n");
+        Text t10l = new Text(b.getType() + "");
         t10l.setFont(Font.font("Verdana",  20));
 
+        Text t13 = new Text("\nBeacon Data:");
+        t13.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
+        Text t13l = new Text(beacon);
+        t13l.setFont(Font.font("Verdana",  20));
 
-
-
-        TextFlow tf = new TextFlow(t1,t1l,t2,t2l,t3,t3l,t4,t4l,t5,t5l,t6,t6l,t7,t7l,t8,t8l,t9,t9l,t10,t10l);
+        Text t11 = new Text("\nHeater:");
+        t11.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
+        Text t11l = new Text(heat);
+        t11l.setFont(Font.font("Verdana",  20));
+        Text t12 = new Text("\nFailures:");
+        t12.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
+        Text t12l = new Text(fails);
+        t12l.setFont(Font.font("Verdana",  20));
+        TextFlow tf = new TextFlow(t1,t1l,t2,t2l,t3,t3l,t4,t4l,t5,t5l,t6,t6l,t14,t14l,t7,t7l,t8,t8l,t9,t9l,t10,t10l,t13,t13l,t11,t11l,t12,t12l);
         return tf;
+    }
+
+    public void turnOnHeater(double d) {
+      if (d < 32.0) {
+        heater = true;
+      }
+      else {
+        heater = false;
+      }
     }
 
     public Block getBlock(String blockID, String lineColor) {
