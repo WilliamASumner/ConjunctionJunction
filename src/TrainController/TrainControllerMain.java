@@ -18,10 +18,7 @@ public class TrainControllerMain{
     //
     //Train Controller Constructor
     public TrainControllerMain(){
-
-        //trainModel = tm;
         initGUI();
-        initPower();
     }
  
     //Update function called from mainui, calls the subsequent update
@@ -58,20 +55,7 @@ public class TrainControllerMain{
     }
 
   
-    /*create the Power class object, called by 
-    TrainControllerMainGUI the first time 
-    that the Power gui is opened*/
-    public Power initPower(){
-        p = new Power();
-        return p;
-    }
-
-    /*get the Power class object, called by 
-    TrainControllerMainGUI to reference the power
-    object to open the power GUI*/
-    public Power getPower(){
-        return p;
-    }
+    
 
     //Called when train controller selected from main menu
     void showGUI(Stage primaryStage){

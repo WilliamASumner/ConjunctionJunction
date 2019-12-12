@@ -66,14 +66,14 @@ public class TrainControllerGUI extends Application implements EventHandler<Acti
 
 
     //Buttons for door control
-    Button rDoor1 = new Button("Right Door 1");
-    Button rDoor2 = new Button("Right Door 2");
-    Button rDoor3 = new Button("Right Door 3");
-    Button rDoor4 = new Button("Right Door 4");
-    Button lDoor1 = new Button("Left Door 1");
-    Button lDoor2 = new Button("Left Door 2");
-    Button lDoor3 = new Button("Left Door 3");
-    Button lDoor4 = new Button("Left Door 4");
+    Button rDoor1 = new Button("Right Door 1 Currently Closed");
+    Button rDoor2 = new Button("Right Door 2 Currently Closed");
+    Button rDoor3 = new Button("Right Door 3 Currently Closed");
+    Button rDoor4 = new Button("Right Door 4 Currently Closed");
+    Button lDoor1 = new Button("Left Door 1 Currently Closed");
+    Button lDoor2 = new Button("Left Door 2 Currently Closed");
+    Button lDoor3 = new Button("Left Door 3 Currently Closed");
+    Button lDoor4 = new Button("Left Door 4 Currently Closed");
 
     Label driverSetSpeed;
     Label currentTemp;
@@ -86,29 +86,12 @@ public class TrainControllerGUI extends Application implements EventHandler<Acti
 
     Button setTempButton;
 
-    public TrainControllerGUI() {
-		/*
-      speed = TrainController.getAuditedSpeed();
-      authority = TrainController.getAuthority();
-      name = TrainController.getName();
-	  */
-	  //speed = TrainController.auditedSpeed;
-	  //authority = TrainController.authority;
-	  //name = TrainController.trainName;
-    }
     public TrainControllerGUI(TrainController tc) {
-      /*
-      speed = TrainController.getAuditedSpeed();
-      authority = TrainController.getAuthority();
-      name = TrainController.getName();
-      */
       tnc = tc;
-	  
     }
 
     public void updatePowerCommand(){
         powerCommand = tnc.calculatePower();
-       // powerLabel.setText("Current Power: " + Double.toString(powerCommand) + "kWatts");
     }
 
     public void initGUI(){
@@ -181,9 +164,8 @@ public class TrainControllerGUI extends Application implements EventHandler<Acti
          flowpane1.getChildren().add(speed);
          flowpane1.getChildren().add(temp);
          flowpane.getChildren().add(flowpane1);
-        // flowpane1.getChildren().add(output);
         
- 
+
  
          //Panel for mode select
          FlowPane modeSelect = new FlowPane();
@@ -222,6 +204,7 @@ public class TrainControllerGUI extends Application implements EventHandler<Acti
          doorStatus.getChildren().add(lDoor3);
          doorStatus.getChildren().add(lDoor4);
          flowpane.getChildren().add(doorStatus);
+         
  
          setSpeedButton.setOnAction(new setSpeedHandler());
          eBrake.setOnAction(new eBrakeHandler());
@@ -252,7 +235,7 @@ public class TrainControllerGUI extends Application implements EventHandler<Acti
         
         //Label output = new Label("Train Name: " + name + "\nAudited Authority: " + authority + "\nAudited Speed Limit: " + speed); 
         
-        Scene scene = new Scene(flowpane, 500, 300);
+        Scene scene = new Scene(flowpane, 800, 300);
         primaryStage.setScene(scene);
         primaryStage.show();
        }
