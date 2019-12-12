@@ -52,22 +52,55 @@ public class TrackControllerMain
         Block M75  = tm.getBlock("M75","green");
         Block M76  = tm.getBlock("M76","green"); // switch
         Block N77  = tm.getBlock("N77","green");
+        Block N78  = tm.getBlock("N78","green");
+        Block N79  = tm.getBlock("N79","green");
         Block R101 = tm.getBlock("R101","green");
 
-        M75.setNextBlock(M76); // one way into the switch
-        M76.setNextBlock(N77); // if main
+        N77.setNextBlock(M76);
+        N77.setPrevBlock(N78);
+        N78.setNextBlock(N77);
+        N78.setPrevBlock(N79);
+
+        M75.setNextBlockMain(M76); // one way into the switch
+        M76.setNextBlockMain(M75); // if main
+        M76.setPrevBlockMain(N77); // if main
         M76.setNextBlockFork(R101); // if fork
-        N77.setNextBlock(R101);
+        M76.setPrevBlockFork(M75); // if fork
+        M76.setSwitchState(SwitchState.FORK); // init next/prev
+
+        Block N84   = tm.getBlock("N84","green");
+        Block N85   = tm.getBlock("N85","green");
+        Block O86   = tm.getBlock("O86","green"); // switch
+        Block O87   = tm.getBlock("O87","green");
+        Block Q100  = tm.getBlock("Q100","green");
+
+        N85.setNextBlock(O86);
+        N85.setPrevBlock(N84); // make sure this block is set correctly
+        Q100.setNextBlock(O86);
+
+        O86.setNextBlockMain(O87); // set switch
+        O86.setPrevBlockMain(N85);
+        O86.setNextBlockFork(Q100);
+        O86.setPrevBlockFork(N85);
+        O86.setSwitchState(SwitchState.MAIN);
+
 
         Block C11 =  tm.getBlock("C11","green");
         Block C12 = tm.getBlock("C12","green"); // switch
         Block D13 = tm.getBlock("D13","green");
+        Block D14 = tm.getBlock("D14","green");
         Block A1  = tm.getBlock("A1","green");
 
         D13.setNextBlock(C12);
-        C12.setNextBlock(C11);
-        C12.setNextBlockFork(D13);
+        D13.setPrevBlock(D14); // override even more buggy track map code...
         A1.setNextBlock(C12);
+
+        C12.setNextBlockMain(C11); // doesn't matter orientation
+        C12.setPrevBlockMain(D13);
+        C12.setNextBlockFork(D13);
+        C12.setPrevBlockFork(A1);
+
+        C12.setSwitchState(SwitchState.MAIN); // just to setup
 
 
         Block F28  = tm.getBlock("F28","green");
@@ -76,19 +109,12 @@ public class TrackControllerMain
         Block Z150 = tm.getBlock("Z150","green");
 
         //F28.setNextBlock(G29);
-        G29.setNextBlock(G30);
+        G29.setNextBlockMain(G30);
+        G29.setPrevBlockMain(F28);
         G29.setNextBlockFork(F28);
+        G29.setPrevBlockFork(Z150);
         Z150.setNextBlock(G29);
-
-        Block N85   = tm.getBlock("N85","green");
-        Block O86   = tm.getBlock("O86","green"); // switch
-        Block O87   = tm.getBlock("O87","green");
-        Block Q100  = tm.getBlock("Q100","green");
-
-        //N85.setNextBlock(O86);
-        O86.setNextBlock(O87);
-        O86.setNextBlockFork(Q100);
-        Q100.setNextBlock(Q100);
+        G29.setSwitchState(SwitchState.FORK);
 
         Block J58 = tm.getBlock("J58","green"); // switch to yard
         J58.setNextBlock(yard);
