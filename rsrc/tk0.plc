@@ -33,12 +33,12 @@ endif;
 // Next: E20
 
 // If train coming
-if (E18.occupancy == occupied or E20.occupancy == occupied) then
+if (E18.occupancy == occupied or E20.occupancy == occupied or E19.occupancy == occupied) then
     E19.crossingstate = down;
 endif;
 
 // If no train coming
-if (E18.occupancy != occupied and E20.occupancy != occupied) then
+if (E18.occupancy != occupied and E20.occupancy != occupied and E19.occupancy != occupied) then
     E19.crossingstate = up;
 endif;
 

@@ -8,7 +8,7 @@ public class TrainModel {
 	
 	String name = "test name";
 	double myPower = 10;//for TEST TRAIN
-	boolean metricmode = true;
+	boolean metricmode = false;
 	
     String AuthorityBlockID = "test Block";
 	String beaconData = "Default Beacon Data";

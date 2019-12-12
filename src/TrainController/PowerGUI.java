@@ -110,7 +110,6 @@ public class PowerGUI extends Application implements EventHandler<ActionEvent> {
        public class KiButtonHandler implements EventHandler<ActionEvent>{
         @Override
         public void handle(ActionEvent event){
-            //System.out.println("HEY KI");
             p.setKi(Double.valueOf(KiValue.getText()));
             currentKi.setText("Current Ki Value: " + Double.toString(p.getKi()));
         }
@@ -120,7 +119,6 @@ public class PowerGUI extends Application implements EventHandler<ActionEvent> {
       public class KpButtonHandler implements EventHandler<ActionEvent>{
         @Override
         public void handle(ActionEvent event){
-            //System.out.println("HEY KP");
             p.setKp(Double.valueOf(KpValue.getText()));
             currentKp.setText("Current Kp Value: " + Double.toString(p.getKp()));
         }

@@ -44,6 +44,7 @@ import javafx.scene.shape.*;
 import javafx.scene.paint.*; 
 import javafx.scene.*; 
 import java.io.*; 
+import java.util.*;
 import javafx.scene.image.*; 
 
 
@@ -72,10 +73,29 @@ public class TrainControllerMainGUI extends Application implements EventHandler<
       //Called from TrainControllerMain every time a train is created
       @SuppressWarnings("unchecked")
       public void updateList(){
+
+        tncArray = tncMain.getTrains();
+        TrainController[] tncArrayTemp = new TrainController[20];
+        //If our current block is A0, then we are back at the yard so we dereference train
+        for(int i = 0; i < tncArray.length; i++){
+          if (tncArray[i] != null && tncArray[i].getCurrBlock() != null && tncArray[i].getCurrBlock().getBlockID() != null ){
+            if(tncArray[i].getCurrBlock().getBlockID() != "A0"){
+              tncArrayTemp[i] = tncArray[i];
+            }    
+            
+         }
+        }  
+
+        for(int i = 0; i < tncArray.length; i++){
+        System.out.println("orig = " + tncArray[i]);
+        System.out.println("temp = " + tncArrayTemp[i]);
+        }
+        //tncArray = tncArrayTemp;
+
         trainMenuController.getItems().removeAll(trainMenuController.getItems());
         trainMenuPowerConfig.getItems().removeAll(trainMenuPowerConfig.getItems());
-        TrainController[] tncTempArray;
-        tncArray = tncMain.getTrains();
+
+        
         for(int i = 0; i < tncArray.length; i++){
             if (tncArray[i] != null){    
               trainMenuController.getItems().addAll(tncArray[i].getName());
@@ -83,6 +103,8 @@ public class TrainControllerMainGUI extends Application implements EventHandler<
             }
                 
         }
+
+
       }
 
       private void initGUI() {
@@ -150,11 +172,13 @@ public class TrainControllerMainGUI extends Application implements EventHandler<
        class powerConfigHandler implements EventHandler<ActionEvent>{
         @Override
         public void handle(ActionEvent event){
+          //if selection is not empty
           if(trainMenuPowerConfig.getValue() != null){
           Stage newWindow = new Stage();
           //iterate through array of trains and find the selected one
           for(int i = 0; i < tncArray.length; i++){
             if(tncArray!=null && tncArray[i]!=null){
+              
               if(trainMenuPowerConfig.getValue().equals(tncArray[i].getName())){
                 /*  Note: if its the first time power Config button is pressed,
                     then we call initPower() to create the power object,
@@ -183,7 +207,6 @@ public class TrainControllerMainGUI extends Application implements EventHandler<
           Stage newWindow = new Stage();
           for(int i = 0; i < tncArray.length; i++){
           if(tncArray!=null && tncArray[i]!=null){
-          
             if(trainMenuController.getValue().equals(tncArray[i].getName())){
                 tncArray[i].showGUI(newWindow);
             }
