@@ -16,10 +16,13 @@ public class Block
     BlockType type;
     Block nextBlockID;
     Block prevBlockID;
+
     Block nextBlockIDMain;
     Block prevBlockIDMain;
     Block nextBlockIDFork;
     Block prevBlockIDFork;
+
+    boolean switching; // block is currently switching
 
     boolean IsBidirectional;
     boolean isOccupied;
@@ -48,6 +51,7 @@ public class Block
         prevBlockIDMain = null;
         nextBlockIDFork = null;
         prevBlockIDFork = null;
+        switching = false;
         IsBidirectional = false;
         Length = 0.0;
         AuditedSpeed = 0.0;
@@ -302,8 +306,19 @@ public class Block
         return switchState;
     }
 
+    public void setSwitching(){
+        switching = true;
+    }
+    public void stopSwitching(){
+        switching = false
+    }
+
+    public void getSwitching() {
+        return switching;
+    }
+
     public void setSwitchState(SwitchState s) {
-        if (switchState != s && !isOccupied) {
+        if (switchState != s && !isOccupied) { // if allowed to switch and is given new position
             switchState = s;
             switch (s) {
                 case MAIN:
