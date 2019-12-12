@@ -221,24 +221,24 @@ public class Block
     }
 
     void adjust(Block incoming) { // flip blocks as train comes
-        System.out.println("VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV");
+        /*System.out.println("VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV");
         System.out.println("Current Block: " + incoming);
         incoming.prettyPrint();
         System.out.println("---------------------------------------------");
         System.out.println("adjusting " + this);
         prettyPrint();
-        System.out.println("nextBlockID:::::: " + getNextBlockVal());
+        System.out.println("nextBlockID:::::: " + getNextBlockVal()); */
         if (incoming == getNextBlockVal() ) { // this is a safe == because we are checking unique blocks
             swapNext();
 
-            System.out.println("SWAPPED");
+            /*System.out.println("SWAPPED");
             System.out.println("#############################################");
             System.out.println("NEWVAL");
             prettyPrint();
             System.out.println("#############################################");
-            System.out.println("NEW nextBlockID:::::: " + getNextBlockVal());
+            System.out.println("NEW nextBlockID:::::: " + getNextBlockVal());*/
         }
-        System.out.println("---------------------------------------------");
+        //System.out.println("---------------------------------------------");
     }
 
     Block getNextBlockVal() {
