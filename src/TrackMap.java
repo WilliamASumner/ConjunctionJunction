@@ -44,6 +44,8 @@ public class TrackMap {
 
         String[] csvrows = csv.split("\n");
 
+        System.out.println("csvrows LENGTH:" + csvrows.length);
+
 
         // 11 rows
 
@@ -90,14 +92,9 @@ public class TrackMap {
             }
             newBlock.setElevation(Double.parseDouble(elements[8]));
             int index = Integer.parseInt(elements[2]);
-            //System.out.println(index + ", " + newBlock.getBlockID());
-            if (newBlock.getBlockID().equals("N77")) { // TODO DELETE ME
-                System.out.println(newBlock);
-                //newBlock.prettyPrint();
-            } else if (newBlock.getBlockID().equals("M76")) {
-                //newBlock.prettyPrint();
-            }
+
             map.add(index, newBlock);
+            System.out.println("FHWJHFJWKDLFHFIDJFH"+map.get(index).getBlockID());
             // System.out.println(newBlock.getBlockID() + ", " + newBlock.getLineColor());
             // System.out.println("THIS" + map.get(index).getBlockID());
             // System.out.println("LAST"+map.get(index-1).getBlockID());
@@ -187,7 +184,7 @@ public class TrackMap {
 
                 int n = Integer.parseInt(next[1]);
                 int c = Integer.parseInt(curr[1]);
-                map.get(c).setPrevBlock(null);
+                map.get(c).setPrevBlock(yard);
                 map.get(c).setNextBlock(map.get(n));
             }
             else {
