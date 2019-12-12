@@ -306,7 +306,7 @@ public class TrainController{
        // System.out.println("TrainController: TRAIN: " + this + " - Power CMD " + powerOut);
 
        if(currBlock != null){
-        if(eBrakeOn || sBrakeOn || currBlock.getBlockID() == authority){
+        if(eBrakeOn || sBrakeOn || currBlock.getNextBlockVal().getBlockID() == authority){
             powerOut = 0; 
         }
        }
