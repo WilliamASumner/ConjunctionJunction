@@ -123,9 +123,13 @@ public class TrackControllerMain
         J58.setPrevBlockFork(I57);
         J58.setSwitchState(SwitchState.MAIN);
 
+        Block J60 = tm.getBlock("J60","green"); // switch from yard
         Block J61 = tm.getBlock("J61","green"); // switch from yard
         Block J62 = tm.getBlock("J62","green"); // switch from yard
         Block K63 = tm.getBlock("K63","green"); // switch from yard
+        J60.setNextBlock(J61); // more track model errors...
+        J61.setNextBlock(J62);
+        J61.setPrevBlock(J60);
         J62.setNextBlockMain(K63);
         J62.setNextBlockFork(K63);
         J62.setPrevBlockMain(J61);
