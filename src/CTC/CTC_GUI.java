@@ -63,7 +63,7 @@ public class CTC_GUI extends Application {
 	
     Label throughput, digitalClock;
     private TextField departureTime, suggAuthority, suggSpeed, trainName, speed;
-    private ComboBox<String> comboAuthority, comboChooseTrack, comboChooseTrackMaintain, comboChooseBlock;
+    private ComboBox<String> comboAuthority, comboChooseTrack, comboChooseTrackMaintain, comboChooseBlock, comboChooseSugAuth;
     private CheckBox cb1, cb2;
     private String cssLayout = "-fx-border-color: #7a7a7a;\n" +
                    "-fx-border-insets: 0;\n" +
@@ -92,12 +92,16 @@ public class CTC_GUI extends Application {
     
     public TableView table;
     
+	public int millisec = 0;
 	public int seconds = Calendar.getInstance().get(Calendar.SECOND), minutes = Calendar.getInstance().get(Calendar.MINUTE), hours = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
 	public String tkmThroughput = "0";
 	public ImageView trackLayoutView;
     
     ObservableList<String> queuedItems;
     ListView<String> queuedTrainsView; 
+	
+    ObservableList<String> stops;
+    ListView<String> selectedDispatchedTrainView; 	
     
     private ArrayList<String> sched = new ArrayList<String>(5);
 	
@@ -355,13 +359,12 @@ public class CTC_GUI extends Application {
             new ChangeListener<String>() {
                 public void changed(ObservableValue<? extends String> ov, 
                     String old_val, String new_val) {
-                    //  selectedTrain.setEditable(true);
-                        System.out.println("old_val= "+ old_val + ", new_val= "+new_val);               
+                        //System.out.println("old_val= "+ old_val + ", new_val= "+new_val);               
                         // Remove previously selected trains schedules
                         if(old_val != null){
                             tempQueuedTrain = newCTC.findQueuedTrain(old_val);
                             for (int i = 0; i < tempQueuedTrain.schedule.size(); i++) {
-                                System.out.println("IN SELECT A QUEUED TRAIN:(REMOVING)-> "+tempQueuedTrain.schedule.get(i));
+                                //System.out.println("IN SELECT A QUEUED TRAIN:(REMOVING)-> "+tempQueuedTrain.schedule.get(i));
                                 dataSelectedQueuedTrain.remove(tempQueuedTrain.schedule.get(i));
                                 dataSelectedQueuedTrain.remove(null);
                             }       
@@ -429,79 +432,88 @@ public class CTC_GUI extends Application {
         
         // When no trains are dispatched, set a label indicator
         table.setPlaceholder(new Label("No Currently Dispatched Trains"));
-/*      
-        ListView<String> dispatchedTrains = new ListView<String>();
-        ObservableList<String> items =FXCollections.observableArrayList (
-                                "Single", "Double", "Suite", "Family App");
-        dispatchedTrains.setItems(items);
-        dispatchedTrains.setPrefWidth(320);
-        //dispatchedTrains.setPrefHeight(120);
-*/
-
         // Add listener to highlight center GUI pane with selected dispatched train's route 
         //@SuppressWarnings("unchecked")
         table.getSelectionModel().selectedItemProperty().addListener(
             new ChangeListener<Object>() {
                 public void changed(ObservableValue<? extends Object> ov, 
                     Object old_val, Object new_val) {
-					//	tempDispatchedTrain = new_val;
-/*						
-						CTCViewer = new Rectangle(250,300);
-						root = new AnchorPane();
 
-						int columns = 40, rows = 40, horizontal = 10, vertical = 10;
-						Rectangle rect = null;
-						for (int i = 0; i < columns; ++i) {
-							for (int j = 0; j < rows; ++j) {
-								String temp = "" + i + "," + j;
-								if(greenLine.containsKey(temp)){
-									CTCTrain tempT = newCTC.findDispatchedTrain(new_val.toString());
-									// if train's schedule contains this block--highlight route
-									if(tempT.schedule.contains(temp)){
-										rect = new Rectangle(horizontal * j, vertical * i, horizontal, vertical);
-										rect.setStroke(Color.YELLOW);
-										root.getChildren().add(rect);					
-
-									}
-									else{
-										rect = new Rectangle(horizontal * j, vertical * i, horizontal, vertical);
-										rect.setStroke(Color.GREEN);
-										root.getChildren().add(rect);	
-									}
-								}	
-								else{
-									rect = new Rectangle(horizontal * j, vertical * i, horizontal, vertical);
-									rect.setStroke(Color.BLACK);
-									root.getChildren().add(rect);
-								
-								}
-							}
+						// Get selected train, make sure it isnt null
+						if(new_val != null)
+							tempDispatchedTrain = (CTCTrain)new_val;
+						// Get rectangle that represents its cur location based on line color
+						if(tempDispatchedTrain.getLine().equals("green"))
+							tempRec = (Rectangle)root.lookup("#" + "g" + tempDispatchedTrain.getCurBlkID());
+						else
+							tempRec = (Rectangle)root.lookup("#" + "r" + tempDispatchedTrain.getCurBlkID());
+						// Blink train
+						tempRec.setFill(Color.CYAN);
+						
+						// populate "Selected Train" viewer
+//						stops.add(tempTrain.toString());
+//						selectedDispatchedTrainView.setItems(stops);						
+						
+						
+                        // Remove previously selected trains schedules
+                        if(new_val != null){
+                            for (int i = 0; i < tempDispatchedTrain.schedule.size(); i++) {
+                                stops.remove(tempDispatchedTrain.schedule.get(i));
+                                stops.remove(null);
+                            }       
+                            selectedTrain.setItems(dataSelectedQueuedTrain);
+                        }
+						else{
+							for (int i = 0; i < tempDispatchedTrain.schedule.size(); i++) {
+								stops.add(tempDispatchedTrain.schedule.get(i));
+								stops.remove(null);
+							}               
+							selectedDispatchedTrainView.setItems(stops); 
 						}
 
-*/						
-                        System.out.println("SELECTED: " + new_val + " IN DISPATCHED TRAINS VIEWER.");
-                    }   
-        });     
-        
-        
 
-        // create a TextField for inputting suggested authority
-        suggAuthority = new TextField();
-        suggAuthority.setPromptText("Suggested Authority");
-        
-        // create a TextField for inputting suggested speed
-        suggSpeed = new TextField();
-        suggSpeed.setPromptText("Suggested Speed");     
-    
-        // Create send data to train button
-        Button sendData = new Button("Send Suggestions");
-        // Register the event handler
- //       queueT.setOnAction(new QueueButtonHandler()); 
-    
+						if(tempDispatchedTrain.getLine().equals("green")){
+							// Remove previously added items 
+							comboChooseSugAuth.getItems().clear();
+							// Add blocks that the green line contains
+							//for (int i = 1; i <= 150; i++)
+							for(Map.Entry<String, String> block: greenLine.entrySet())
+								comboChooseSugAuth.getItems().add(block.getValue());
+							// Add listener such that when block is chosen, populate checkbox to reflect
+							// whether or not the chosen block is switch...
+							comboChooseSugAuth.getSelectionModel().selectedItemProperty().addListener(
+								new ChangeListener<String>() {
+									public void changed(ObservableValue<? extends String> ov, 
+										String old_val, String new_val) {
+											// block to be sent to Track Controller
+											chosenBlock = new_val + "greenline";
+											System.out.println(chosenBlock);         
+										}
+								});
+						}
+						else{
+							// Remove previously added items 
+							comboChooseSugAuth.getItems().clear();
+							// Add blocks that the red line contains
+							for (Map.Entry<String, String> block: redLine.entrySet())
+								comboChooseSugAuth.getItems().add(block.getValue());
+							// Add listener such that when block is chosen, populate checkbox to reflect
+							// whether or not the chosen block is switch...
+							comboChooseSugAuth.getSelectionModel().selectedItemProperty().addListener(
+								new ChangeListener<String>() {
+									public void changed(ObservableValue<? extends String> ov, 
+										String old_val, String new_val) {
+											// block to be sent to Track Controller
+											chosenBlock = new_val + "redline";                                              
+											System.out.println(chosenBlock);        
+										}
+								});
+						}  
+                    }		
+        });         
     
         // Add to a VBox
-        rightVbox = new VBox(0, getStackPane(new Text("Dispatched Trains"), 320.0), table, 
-                         new HBox(20, suggAuthority, suggSpeed), sendData);       
+        rightVbox = new VBox(0, getStackPane(new Text("Dispatched Trains"), 320.0), table);       
         rightVbox.setStyle(cssLayout);
         // Create top-right BorderPane
         borderPane.setRight(rightVbox);
@@ -509,8 +521,31 @@ public class CTC_GUI extends Application {
         
 
         //CREATE CENTER VIEW--------------------------------------------------------------
+		
+        selectedDispatchedTrainView = new ListView<String>();
+        stops =FXCollections.observableArrayList ();
+        selectedDispatchedTrainView.setItems(stops);
+        selectedDispatchedTrainView.setPrefWidth(130);
+        selectedDispatchedTrainView.setPrefHeight(400);	
+		
+		// When no dispatched train is selected, set a label indicator
+        selectedDispatchedTrainView.setPlaceholder(new Label("Select a train-->\nTo View Schedule"));
+		
+        comboChooseSugAuth = new ComboBox<>();
+        comboChooseSugAuth.setPromptText("Sug. Authority"); 		
+        
+        // create a TextField for inputting suggested speed
+        suggSpeed = new TextField();
+        suggSpeed.setPromptText("Sug. Speed");     
+    
+        // Create send data to train button
+        Button sendData = new Button("Send Suggestions");
+        // Register the event handler
+        sendData.setOnAction(new SuggestedSpdAuthButtonHandler()); 
+		
 		// build track veiwer
-		borderPane.setCenter(buildCTCDispatchViewer());
+		borderPane.setCenter(new HBox(0, buildCTCDispatchViewer(), new VBox(0, getStackPane(new Text("Selected Train"), 130.0), 
+												selectedDispatchedTrainView, comboChooseSugAuth, suggSpeed, sendData)));
         //---------------------------------------------------------------
 
         
@@ -560,21 +595,24 @@ public class CTC_GUI extends Application {
         digitalClock.setTextFill(Color.WHITE);
         digitalClock.setStyle("-fx-font-size: 3em;");
         digitalClock.setId("digitalClock");
-		
-		if(seconds == 59){
-			seconds = 0;
-			if(minutes == 59){
-				minutes = 0;
-				if(hours == 24)
-					hours = 0;
+		millisec += 200; // 200 milliseconds per update
+		if (millisec > 1000) {
+			if(seconds == 59){
+				seconds = 0;
+				if(minutes == 59){
+					minutes = 0;
+					if(hours == 24)
+						hours = 0;
+					else
+						hours++;
+				}
 				else
-					hours++;
+					minutes++;
 			}
 			else
-				minutes++;
+				seconds++;
+			millisec = 0;
 		}
-		else
-			seconds++;
 		
 		String hourString   = pad(2, '0', hours + "");
 		String minuteString = pad(2, '0', minutes + "");
@@ -828,7 +866,21 @@ public class CTC_GUI extends Application {
 		else if(typeOfBlock.equals("redswitch")){
 			rect.setFill(Color.BLACK);
 			rect.setStroke(Color.WHITE);
-			rect.setWidth(5);
+			
+			switch(newCTC.tkm.getBlock(id,"red").getSwitchState()){
+				case MAIN:
+					rect.setWidth(5);
+					rect.setHeight(10);					
+					break;
+				case FORK:
+					rect.setWidth(10);
+					rect.setHeight(5);				
+					break;
+				default:
+					System.out.println("IN DEFAULT");
+					rect.setWidth(10);
+					rect.setHeight(5);
+			}			
 			t = new Tooltip("Toggle Switch " + id);
 			t.setShowDelay(ONE);
 			Tooltip.install(rect, t);
@@ -1064,11 +1116,6 @@ public class CTC_GUI extends Application {
 						splitSchedInfo = nextLine.split(",");
 						// Get only those that contain train stops(predetermined to == 41)
 						if(splitSchedInfo.length == 41){
-
-//							if(sched.size() == 0);
-//							else
-//								sched.clear();	
-						//	System.out.println(countStops);
 							// Parse each line's info(each line is a station stop)
 							// (each line contains each trains arrival time at THIS station)
 							// Count each train from sched
@@ -1079,7 +1126,8 @@ public class CTC_GUI extends Application {
 								if(splitSchedInfo[j].contains("STATION")){
 									String[] splitStation = splitSchedInfo[j].split(";");
 									station = splitStation[1];
-									//System.out.print(station +",");
+									// format the string by removing leading space
+									station = station.substring(1, station.length());								
 								}
 								if(splitSchedInfo[j].contains(":")){
 									// Create all trains in schedule once
@@ -1091,23 +1139,14 @@ public class CTC_GUI extends Application {
 										//Set line
 										tempTrain.setLine("green");	
 										//Set Trains departure time
-										tempTrain.setDepartureTime(splitSchedInfo[j]);
+										tempTrain.setDepartureTime("0"+splitSchedInfo[j]);
 										//Add station, index, time to station
 										tempTrain.addToSchedule(station, countStops);
 										//Add to array 
 										importedTrains.add(trainCount++, tempTrain);
-									//	System.out.print(splitSchedInfo[j] +",");
-									//	System.out.println(trainCount++);
 									}
-									else{
-										//Add station, index										
-										importedTrains.get(trainCount++).addToSchedule(station, countStops);
-					//					System.out.print(splitSchedInfo[j] +",");
-					//					System.out.println(trainCount++);										
-									}
-//									sched.add(countStops++, station)									
-//									System.out.print(splitSchedInfo[j] +",");
-									
+									else								
+										importedTrains.get(trainCount++).addToSchedule(station, countStops);	//Add station, index								
 								}
 							}							
 							++countStops;
@@ -1119,12 +1158,16 @@ public class CTC_GUI extends Application {
 				}	
 
             }
-			importedTrains.forEach((n) -> n.finalizeTrain());
-			importedTrains.forEach((n) -> queuedItems.add(n.toString()));
-			// Add to queued trains
-			importedTrains.forEach((n) -> newCTC.queueNewTrain(n));				
-			queuedTrainsView.setItems(queuedItems);
-			
+			for(CTCTrain n: importedTrains){
+				// Finalize trains
+				n.finalizeTrain();
+				// add trains to "Select a queued train" viewer
+				queuedItems.add(n.toString());
+				// Add to queued trains data structure in CTC.java
+				newCTC.queueNewTrain(n);	
+				// Make trains visible in GUI
+				queuedTrainsView.setItems(queuedItems);
+			}
 		}
 	}
 
@@ -1194,7 +1237,6 @@ public class CTC_GUI extends Application {
 				//Set line
 				tempTrain.setLine(currentLine);			
 				// Set CTCTrain's schedule
-				System.out.println("SCHED=" + sched);
 				tempTrain.setSchedule(sched);
 				sched.clear();
 				// Set name
@@ -1216,8 +1258,6 @@ public class CTC_GUI extends Application {
 				departureTime.setText(""); 
 				trainName.setText(""); 
 				speed.setText(""); 
-
-				System.out.println("IN QUEUE BUTTON HANDLER: " + tempTrain.schedule);
 
 				// Reset view after each queued train
 				stopsListView.getItems().clear();
@@ -1289,6 +1329,27 @@ public class CTC_GUI extends Application {
             }
         }
     }
+	
+    /**
+     * Event handler class for suggAuthority and suggSpeed button.
+     */
+	class SuggestedSpdAuthButtonHandler implements EventHandler<ActionEvent>{
+        @Override
+        public void handle(ActionEvent event){ 
+			Alert alert = new Alert(AlertType.INFORMATION);
+			// Check to make sure there are trains to delete...
+			if(chosenBlock == null){
+				alert.setTitle("Error");
+				alert.setHeaderText(null);
+				alert.setContentText("Select a block!");
+				alert.showAndWait();				
+			}
+			else{	
+			
+            }
+        }
+    }
+
 	
 	public void setLines(){
 		greenLine.put("1,13", "A1");greenLine.put("2,13", "A2");greenLine.put("3,14", "A3");

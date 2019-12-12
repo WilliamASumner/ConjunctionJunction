@@ -166,10 +166,6 @@ public class CTCTrain{
                 isAdjacent = true;
             return isAdjacent;
         }
-    
-        public void progressTrainAtBlock(){
-            
-        }
 
 		public String getNextscheduleStop(){
 			// Calculates current station train is traveling to
@@ -205,11 +201,11 @@ public class CTCTrain{
 			schedule.add("yard");
 			
 			totalNumOfStationsLeftToArriveTo = schedule.size();
-			System.out.println(totalNumOfStationsLeftToArriveTo);
 			
-			this.setSpeed("11.0");
+			curSpeed = 11.0;
             // Set first authority
-            this.setAuthority(schedule.get(0));
+            curAuthority = schedule.get(0);
+
             // NEED TO CHECK WHICH LINE TRAIN IS ON
             // TO GET SPECIFIC YARD BLOCK
             if (line.equals("green")){
