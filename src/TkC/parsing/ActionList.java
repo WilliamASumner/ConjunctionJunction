@@ -62,7 +62,7 @@ public class ActionList {
     public void execute() {
         for (Action a : actions) {
             a.perform();
-            tkc.addToLog(a.toString());
+            //tkc.addToLog(a.toString());
         }
     }
 

@@ -310,10 +310,10 @@ public class Block
         switching = true;
     }
     public void stopSwitching(){
-        switching = false
+        switching = false;
     }
 
-    public void getSwitching() {
+    public boolean getSwitching() {
         return switching;
     }
 
