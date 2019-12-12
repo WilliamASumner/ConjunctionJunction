@@ -114,11 +114,24 @@ public class TrackControllerMain
         Z150.setNextBlock(G29);
         G29.setSwitchState(SwitchState.FORK);
 
+        Block I57 = tm.getBlock("I57","green"); // switch to yard
         Block J58 = tm.getBlock("J58","green"); // switch to yard
-        J58.setNextBlock(yard);
+        Block J59 = tm.getBlock("J59","green"); // switch to yard
+        J58.setNextBlockMain(yard);
+        J58.setNextBlockFork(yard);
+        J58.setPrevBlockMain(I57);
+        J58.setPrevBlockFork(I57);
+        J58.setSwitchState(SwitchState.MAIN);
 
+        Block J61 = tm.getBlock("J61","green"); // switch from yard
         Block J62 = tm.getBlock("J62","green"); // switch from yard
-        J62.setPrevBlock(yard);
+        Block K63 = tm.getBlock("K63","green"); // switch from yard
+        J62.setNextBlockMain(K63);
+        J62.setNextBlockFork(K63);
+        J62.setPrevBlockMain(J61);
+        J62.setPrevBlockFork(yard);
+        J62.setSwitchState(SwitchState.MAIN);
+
 
         Block C9 = tm.getBlock("C9","red");
         C9.setNextBlockFork(yard);
