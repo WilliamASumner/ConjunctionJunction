@@ -88,12 +88,8 @@ public class Power{
     //Third Power Calculation for TMR System
     private double calculatePower3(TrainController tnc){
         double powerOutput;
-        double KiOut;
-        double KpOut;
         double error = tnc.getSetSpeed() - tnc.getCurrSpeed();
-        KiOut = Ki * error;
-        KpOut = Kp * error;
-        powerOutput = KiOut + KpOut;
+        powerOutput = (Ki*error) + (Kp*error);
         return powerOutput;
     }
 
