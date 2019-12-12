@@ -16,6 +16,7 @@ import javafx.stage.Stage;
 public class TrainModelGUI extends Application {
 
     boolean testmode = true;
+	boolean testIntToggle = false;
 	
 	String myName = "wowee";
     String myAuthority = "A1";//Audited Authority Block
@@ -87,6 +88,7 @@ public class TrainModelGUI extends Application {
     Button add10kw_button = new Button("+1 kW");
     Button rem10kw_button = new Button("-1 kW");
     Button units_button = new Button("Toggle Units");
+    Button togInternal_button = new Button("Toggle Doors/Lights/Temp");
 
     public TrainModelGUI(TrainModel TNM)// String inName, String inBlock, double inSpeed)
     {
@@ -229,6 +231,7 @@ public class TrainModelGUI extends Application {
 		test.getChildren().add(remApass_button); //add eBrake to brake flowpane
 		test.getChildren().add(add10kw_button); //add eBrake to brake flowpane
 		test.getChildren().add(rem10kw_button); //add eBrake to brake flowpane
+		test.getChildren().add(togInternal_button); //add eBrake to brake flowpane
 		test.getChildren().add(units_button); //add eBrake to brake flowpane
 		
         if(testmode)flowpane.getChildren().add(test); //add test flowpane to main flowpane
@@ -247,6 +250,7 @@ public class TrainModelGUI extends Application {
         remApass_button.setOnAction(new remApass_Handler());
         add10kw_button.setOnAction(new add10kw_Handler());
         rem10kw_button.setOnAction(new rem10kw_Handler());
+        togInternal_button.setOnAction(new togInternal_Handler());
         units_button.setOnAction(new units_Handler());
 		
 		
@@ -468,6 +472,46 @@ public class TrainModelGUI extends Application {
             if(tnm.myPower>=1)tnm.myPower-=1;
         }
     }
+	
+	class togInternal_Handler implements EventHandler<ActionEvent>
+	{
+        @Override
+        public void handle(ActionEvent event)
+		{
+            if(testIntToggle)
+			{
+				
+				Rdoor1_Label.setText("Rdoor1: Open \n");
+				Rdoor2_Label.setText("Rdoor2: Open \n");
+				Rdoor3_Label.setText("Rdoor3: Open \n");
+				Rdoor4_Label.setText("Rdoor4: Open \n");
+				Ldoor1_Label.setText("Ldoor1: Open \n");
+				Ldoor2_Label.setText("Ldoor2: Open \n");
+				Ldoor3_Label.setText("Ldoor3: Open \n");
+				Ldoor4_Label.setText("Ldoor4: Open \n");
+				tnm.toggleLights();
+				tnm.setTemperature(50);
+				testIntToggle = false;
+			}
+            else
+			{
+				
+				Rdoor1_Label.setText("Rdoor1: Closed \n");
+				Rdoor2_Label.setText("Rdoor2: Closed \n");
+				Rdoor3_Label.setText("Rdoor3: Closed \n");
+				Rdoor4_Label.setText("Rdoor4: Closed \n");
+				Ldoor1_Label.setText("Ldoor1: Closed \n");
+				Ldoor2_Label.setText("Ldoor2: Closed \n");
+				Ldoor3_Label.setText("Ldoor3: Closed \n");
+				Ldoor4_Label.setText("Ldoor4: Closed \n");
+				tnm.toggleLights();
+				tnm.setTemperature(75);
+				
+				testIntToggle = true;
+			}
+        }
+    }
+	
 	
 	class units_Handler implements EventHandler<ActionEvent>
 	{
