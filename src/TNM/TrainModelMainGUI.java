@@ -37,6 +37,7 @@ public class TrainModelMainGUI extends Application implements EventHandler<Actio
     TrainModelMain tnmMain;
     //PowerGUI powerGUI;
     TrainModel tnm;
+	TrainModel TEST_TrainModel;
     TrainModelGUI[] tnmGUIArray = new TrainModelGUI[20];
     TrainModel[] tnmArray;
     FlowPane  flowpane;
@@ -225,8 +226,9 @@ public class TrainModelMainGUI extends Application implements EventHandler<Actio
 					testBlockC.signal = ErrorState.GOOD;
 					testBlockC.numFailures = 0;
 					
-					tnmMain.createTrain("TEST TRAIN", "testBlockB", testBlockA, 10, null,null);
+					TEST_TrainModel = tnmMain.createTrain("TEST TRAIN", "testBlockB", testBlockA, 10, null,null);
 					//add the train
+					TEST_TrainModel.myGUI.testmode = true;
 					addTestTrain_btn.setStyle("-fx-text-fill: red");
 					addTestTrain_btn.setText("Test Train Added");
 				}
