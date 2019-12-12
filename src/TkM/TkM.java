@@ -73,7 +73,7 @@ public class TkM {
         green.parseFile(greenFile);
 
         for (int i = 0; i < red.map.size(); i++) {
-          System.out.println("^&$*#@$@^*&^@&$^"+green.map.get(i).getBlockID());
+          //System.out.println("^&$*#@$@^*&^@&$^"+green.map.get(i).getBlockID());
         }
 
         trackmaps.add(0, red);
