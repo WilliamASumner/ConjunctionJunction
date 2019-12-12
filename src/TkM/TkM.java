@@ -80,10 +80,16 @@ public class TkM {
         }
     }
 
-    public int getThroughput(TrainModel tm) {
+    public int getThroughput() {
       int total = 0;
-      total -= tm.randPassengerExit();
-      total += tm.randPassengerEnter();
+      if (trains.size()>0) {
+       TrainModel tm = trains.get(0);
+       total -= tm.randPassengerExit();
+       if (total < 0) {
+         total = 0;
+       }
+       total += tm.randPassengerEnter();
+    }
 
       return total;
     }
@@ -146,13 +152,14 @@ public class TkM {
         }
 
         int tickets = 0;
-        if (trains.size()>0) {
-         tickets = this.getThroughput(trains.get(0));
-        }
+
 
         String beacon;
         if (b.getType() == BlockType.STATIONBLOCK) {
           beacon = b.getStationName() +"";
+          if (trains.size()>0) {
+           tickets = this.getThroughput();
+          }
         }
         else {
           beacon = "Not A Station";
