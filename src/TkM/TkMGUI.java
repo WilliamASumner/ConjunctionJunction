@@ -2,7 +2,7 @@ package cjunction; // conjunction junction package
 
 import javafx.application.Application;
 import javafx.scene.Scene;
-//import javafx.fxml.FXMLLoader;
+import javafx.stage.FileChooser;
 import javafx.scene.control.Label;
 import javafx.scene.text.Text;
 import javafx.scene.layout.StackPane;
@@ -111,6 +111,20 @@ public class TkMGUI extends Application {
         for (String option: lines) {
             lineOptions.addAll(option);
         }
+
+        String[] linesImport = {"green","red"};
+        ObservableList<String> lineOptionsImport = FXCollections.observableArrayList();
+        for (String option: linesImport) {
+            lineOptionsImport.addAll(option);
+        }
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open CSV File...");
+
+        Button importTrack = new Button("Import Track");
+        GridPane.setConstraints(importTrack, 150, 0);
+        grid.getChildren().add(importTrack);
+
         ComboBox<String> lineBox = new ComboBox<String>(lineOptions);
         GridPane.setConstraints(lineBox, 95, 0);
         lineBox.getSelectionModel().select("green");
@@ -122,6 +136,19 @@ public class TkMGUI extends Application {
             }
         });
         grid.getChildren().add(lineBox);
+
+        ComboBox<String> lineBoxImport = new ComboBox<String>(lineOptionsImport);
+        GridPane.setConstraints(lineBoxImport, 150, 1);
+        lineBoxImport.getSelectionModel().select("green");
+        lineBoxImport.setOnAction(new EventHandler<ActionEvent>() {
+
+            @Override
+            public void handle(ActionEvent event) {
+                line = lineBoxImport.getSelectionModel().getSelectedItem();
+            }
+        });
+        grid.getChildren().add(lineBoxImport);
+
 
 
         //Setting an action for the Submit button
@@ -140,6 +167,27 @@ public class TkMGUI extends Application {
                 }
              }
          });
+
+         importTrack.setOnAction(new EventHandler<ActionEvent>() {
+
+         @Override
+             public void handle(ActionEvent e) {
+                fileChooser.showOpenDialog(mystage);
+                String filename = fileChooser.getTitle();
+                if (line.equals("red")) {
+                  ArrayList<Block> newTrack = t.red.parseFile(filename);
+
+                }
+                else if (line.equals("green")) {
+                  t.green.parseFile(filename);
+
+                }
+
+                update(b);
+
+             }
+         });
+
 
 
         //Setting an action for the Clear button

@@ -7,7 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
-import javafx.stage.Stage; 
+import javafx.stage.Stage;
 
 //import javafx.event.ActionEvent;
 
@@ -38,7 +38,7 @@ public class TrainController{
     TrainControllerGUI myGUI;
     Power myPower;
     int set = 0;
-    
+
     //Train Controller Constructor
     public TrainController(String name, String a, double speed, TrainModel trainModel){
         auditedSpeed = speed;
@@ -50,8 +50,8 @@ public class TrainController{
         initPower();
     }
 
-    /*create the Power class object, called by 
-    TrainControllerMainGUI the first time 
+    /*create the Power class object, called by
+    TrainControllerMainGUI the first time
     that the Power gui is opened*/
     public Power initPower(){
         myPower = new Power();
@@ -64,12 +64,12 @@ public class TrainController{
         return myPower;
     }
 
- 
+
 
     //Called when train controller is created
     void initGUI(){
         myGUI = new TrainControllerGUI(this);
-        
+
     }
 
 
@@ -77,7 +77,7 @@ public class TrainController{
         return myGUI;
     }
 
-    
+
     //function called on each system tick
     public void update(){
         powerCommand = calculatePower();
@@ -139,7 +139,7 @@ public class TrainController{
             else{
                 return 0;
             }
-            
+
         }
     }
 
@@ -153,7 +153,7 @@ public class TrainController{
     //Updates train's authority from the train model
     public void getAuthority(){
         if(!trackCircuitFailure){
-            authority = tm.getAuthority();  
+            authority = tm.getAuthority();
         }
     }
 
@@ -214,7 +214,7 @@ public class TrainController{
         }
         else{
             lightsOn = true;
-        }  
+        }
         tm.toggleLights();
         currentState = lightsOn;
         return currentState;
@@ -228,7 +228,7 @@ public class TrainController{
             return true;
         }
         return false;
-        
+
     }
 
     //Set temperature of train cabin to newTemp value (fahrenheit)
@@ -297,7 +297,7 @@ public class TrainController{
             return currentState;
     }
 
-    //@returns double calculatePower - power command to Train Model in kiloWatts 
+    //@returns double calculatePower - power command to Train Model in kiloWatts
     //Calculates power command based on current and desired speed
     public double calculatePower(){
         double powerOut;   //power command output, in kiloWatts
@@ -306,14 +306,14 @@ public class TrainController{
        // System.out.println("TrainController: TRAIN: " + this + " - Power CMD " + powerOut);
 
        if(currBlock != null){
-        if(eBrakeOn || sBrakeOn || currBlock.getBlockID() == authority){
-            powerOut = 0; 
+        if(eBrakeOn || sBrakeOn || currBlock.getNextBlockVal().getBlockID() == authority){
+            powerOut = 0;
         }
        }
-        
+
         return powerOut;
     }
 
 
-    
+
 }
