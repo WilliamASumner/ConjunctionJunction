@@ -171,7 +171,9 @@ public class MainUI extends Application {
             })
         );
         timeline.setCycleCount(Timeline.INDEFINITE);
-        timeline.play();
+        if (!isStopped) {
+            timeline.play();
+        }
     }
 
     /**

@@ -1,5 +1,7 @@
 package cjunction; // conjunction junction package
 
+import java.util.ArrayList;
+
 public class Block
 {
     String LineColor;
@@ -13,8 +15,14 @@ public class Block
 
     BlockType type;
     Block nextBlockID;
-    Block nextBlockIDFork;
     Block prevBlockID;
+
+    Block nextBlockIDMain;
+    Block prevBlockIDMain;
+    Block nextBlockIDFork;
+    Block prevBlockIDFork;
+
+    boolean switching; // block is currently switching
 
     boolean IsBidirectional;
     boolean isOccupied;
@@ -39,6 +47,11 @@ public class Block
         SpeedLimit = 50.0;
         nextBlockID = null;
         prevBlockID = null;
+        nextBlockIDMain = null;
+        prevBlockIDMain = null;
+        nextBlockIDFork = null;
+        prevBlockIDFork = null;
+        switching = false;
         IsBidirectional = false;
         Length = 0.0;
         AuditedSpeed = 0.0;
@@ -173,38 +186,84 @@ public class Block
         } */
     }
 
-    String[] getFailures() { // TODO CHANGE
-        String[] failures = null;
+    void repairBlock() {
+        circuit = ErrorState.GOOD;
+        power   = ErrorState.GOOD;
+        signal  = ErrorState.GOOD;
+    }
+
+    ArrayList<String> getFailures() { // TODO CHANGE
+        ArrayList<String> failures = new ArrayList<String>();
         if (!isWorking()) {
-            failures = new String[numFailures];
             int i = 0;
             if (circuit == ErrorState.FAIL) {
-                failures[i] = "circuit";
+                circuit = ErrorState.FAIL;
+                failures.add("circuit");
                 i++;
             }
             if (power == ErrorState.FAIL) {
                 power = ErrorState.FAIL;
-                failures[i] = "power";
+                failures.add("power");
                 i++;
             }
             if (signal == ErrorState.FAIL) {
                 signal = ErrorState.FAIL;
-                failures[i] = "signal";
+                failures.add("signal");
             }
         }
         return failures;
     }
 
-    Block getNextBlock() {
+    void swapNext() {
+        Block temp  = nextBlockID;
+        nextBlockID = prevBlockID;
+        prevBlockID = temp;
+    }
+
+    void adjust(Block incoming) { // flip blocks as train comes
+        System.out.println("VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV");
+        System.out.println("Current Block: " + incoming);
+        incoming.prettyPrint();
+        System.out.println("---------------------------------------------");
+        System.out.println("adjusting " + this);
+        prettyPrint();
+        System.out.println("nextBlockID:::::: " + getNextBlockVal());
+        if (incoming == getNextBlockVal() ) { // this is a safe == because we are checking unique blocks
+            swapNext();
+
+            System.out.println("SWAPPED");
+            System.out.println("#############################################");
+            System.out.println("NEWVAL");
+            prettyPrint();
+            System.out.println("#############################################");
+            System.out.println("NEW nextBlockID:::::: " + getNextBlockVal());
+        }
+        System.out.println("---------------------------------------------");
+    }
+
+    Block getNextBlockVal() {
         return nextBlockID;
     }
 
-    Block getNextBlockIDFork() {
-        return nextBlockIDFork;
+    Block getNextBlock() {
+        getNextBlockVal().adjust(this);
+        return getNextBlockVal();
     }
 
-    void setNextBlockIDFork(Block newNextFork) {
-        newNextFork = nextBlockIDFork;
+    void setNextBlockMain(Block newNextMain) {
+        nextBlockIDMain = newNextMain;
+    }
+
+    void setPrevBlockMain(Block newPrevMain) {
+        prevBlockIDMain = newPrevMain;
+    }
+
+    void setNextBlockFork(Block newNextFork) {
+        nextBlockIDFork = newNextFork;
+    }
+
+    void setPrevBlockFork(Block newPrevFork) {
+        prevBlockIDFork = newPrevFork;
     }
 
     Block getPrevBlock() {
@@ -247,8 +306,33 @@ public class Block
         return switchState;
     }
 
+    public void setSwitching(){
+        switching = true;
+    }
+    public void stopSwitching(){
+        switching = false;
+    }
+
+    public boolean getSwitching() {
+        return switching;
+    }
+
     public void setSwitchState(SwitchState s) {
-        switchState = s;
+        if (switchState != s && !isOccupied) { // if allowed to switch and is given new position
+            switchState = s;
+            switch (s) {
+                case MAIN:
+                    nextBlockID = nextBlockIDMain;
+                    prevBlockID = prevBlockIDMain;
+                    break;
+                case FORK:
+                    nextBlockID = nextBlockIDFork;
+                    prevBlockID = prevBlockIDFork;
+                    break;
+                default:
+                    throw new IllegalArgumentException();
+            }
+        }
     }
 
     public CrossingState getCrossingState() {
@@ -258,6 +342,82 @@ public class Block
 
     public void setCrossingState(CrossingState c) {
          crossingState = c;
+    }
+
+    public void prettyPrint() {
+        System.out.println("---------- Block " + BlockID + " -------");
+        System.out.print("Type: ");
+        System.out.println(type);
+        System.out.println(LineColor);
+
+        System.out.print("Speed Limit: ");
+        System.out.println(String.valueOf(SpeedLimit));
+
+        System.out.print("Grade: ");
+        System.out.println(String.valueOf(Grade));
+        System.out.print("Elevation: ");
+        System.out.println(String.valueOf(Elevation));
+        System.out.print("Length: ");
+        System.out.println(String.valueOf(Length));
+        System.out.print("Is underground: ");
+        System.out.println(String.valueOf(IsUnderground));
+
+        System.out.println();
+        System.out.print("Next block ID: ");
+        System.out.println(nextBlockID);
+        System.out.print("Prev block ID: ");
+        System.out.println(prevBlockID);
+
+
+        if(type == BlockType.SWITCHBLOCK) {
+            System.out.print("Next block ID (if main): ");
+            System.out.println(nextBlockIDMain);
+            System.out.print("Prev block ID (if main): ");
+            System.out.println(prevBlockIDMain);
+
+            System.out.print("Next block ID (if fork): ");
+            System.out.println(nextBlockIDFork);
+            System.out.print("Prev block ID (if fork): ");
+            System.out.println(prevBlockIDFork);
+            System.out.print("Switch State: ");
+            System.out.println(switchState);
+        }
+        System.out.print("Occupied: ");
+        System.out.println(isOccupied);
+
+        System.out.println();
+
+        System.out.print("Is bidirectional: ");
+        System.out.println(IsBidirectional);
+        System.out.print("Occupied: ");
+        System.out.println(isOccupied);
+        System.out.print("AuditedSpeed: ");
+        System.out.println(String.valueOf(AuditedSpeed));
+        System.out.print("Audited Authority: ");
+        System.out.println(AuditedAuthority);
+
+        System.out.println();
+
+        if (type == BlockType.STATIONBLOCK) {
+            System.out.print("Station name: ");
+            System.out.println(stationName);
+        }
+
+        System.out.println();
+
+        if (type == BlockType.CROSSBLOCK) {
+            System.out.print("Crossing State: ");
+            System.out.println(crossingState);
+        }
+
+        System.out.println();
+
+        System.out.print("Circuit status: ");
+        System.out.println(circuit);
+        System.out.print("Power status: ");
+        System.out.println(power);
+        System.out.print("Signal status: ");
+        System.out.println(signal);
     }
 
 }

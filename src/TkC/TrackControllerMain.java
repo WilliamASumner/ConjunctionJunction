@@ -19,24 +19,111 @@ public class TrackControllerMain
     public String CurrentController = TkNames[0];
 
     // GREEN LINE
-    String[] Tk0List = {"A","B","C","D","E","F","G","Z","Y"};
-    String[] Tk1List = {"X","H","I","W","J","V","U","K","T","L"};
-    String[] Tk2List = {"S","M","R","N","O","Q","P"};
+    String[] Tk0List = {"A","B","C","D","E","F","G","Y","Z"};
+    String[] Tk1List = {"H","I","J","K","L","T","U","V","W","X"};
+    String[] Tk2List = {"M","N","O","P","Q","R","S"};
 
 
     // RED LINE
     String[] Tk3List = {"A","B","C","D","E","F"};
-    String[] Tk4List = {"G","T","S","R","Q","H","P","O"};
-    String[] Tk5List = {"I","J","N","M","L","K"};
+    String[] Tk4List = {"G","H","O","P","Q","R","S","T"};
+    String[] Tk5List = {"I","J","K","L","M","N"};
 
     public TrackControllerMain() {
         controllers = new HashMap<String,TrackController>();
+
         guis = new ArrayList<TrackControllerGUI>();
     }
 
     // Connection to other modules
     public void setTrackModel(TkM trackModel) {
         tm = trackModel;
+        // track model did not implement expected switch functionality at all
+        // this code is to make this project work
+        // Green line blocks
+        // Switches at N77, C12, G30
+        // J58, J62 are to the yard
+        //
+        Block yard = tm.getBlock("A0","green");
+
+        System.out.println("HERE setting blocks");
+
+        // 
+        Block M75  = tm.getBlock("M75","green");
+        Block M76  = tm.getBlock("M76","green"); // switch
+        Block N77  = tm.getBlock("N77","green");
+        Block N78  = tm.getBlock("N78","green");
+        Block N79  = tm.getBlock("N79","green");
+        Block R101 = tm.getBlock("R101","green");
+
+        N77.setNextBlock(M76);
+        N77.setPrevBlock(N78);
+        N78.setNextBlock(N77);
+        N78.setPrevBlock(N79);
+
+        M75.setNextBlockMain(M76); // one way into the switch
+        M76.setNextBlockMain(M75); // if main
+        M76.setPrevBlockMain(N77); // if main
+        M76.setNextBlockFork(R101); // if fork
+        M76.setPrevBlockFork(M75); // if fork
+        M76.setSwitchState(SwitchState.FORK); // init next/prev
+
+        Block N84   = tm.getBlock("N84","green");
+        Block N85   = tm.getBlock("N85","green");
+        Block O86   = tm.getBlock("O86","green"); // switch
+        Block O87   = tm.getBlock("O87","green");
+        Block Q100  = tm.getBlock("Q100","green");
+
+        N85.setNextBlock(O86);
+        N85.setPrevBlock(N84); // make sure this block is set correctly
+        Q100.setNextBlock(O86);
+
+        O86.setNextBlockMain(O87); // set switch
+        O86.setPrevBlockMain(N85);
+        O86.setNextBlockFork(Q100);
+        O86.setPrevBlockFork(N85);
+        O86.setSwitchState(SwitchState.MAIN);
+
+
+        Block C11 =  tm.getBlock("C11","green");
+        Block C12 = tm.getBlock("C12","green"); // switch
+        Block D13 = tm.getBlock("D13","green");
+        Block D14 = tm.getBlock("D14","green");
+        Block A1  = tm.getBlock("A1","green");
+
+        D13.setNextBlock(C12);
+        D13.setPrevBlock(D14); // override even more buggy track map code...
+        A1.setNextBlock(C12);
+
+        C12.setNextBlockMain(C11); // doesn't matter orientation
+        C12.setPrevBlockMain(D13);
+        C12.setNextBlockFork(D13);
+        C12.setPrevBlockFork(A1);
+
+        C12.setSwitchState(SwitchState.MAIN); // just to setup
+
+
+        Block F28  = tm.getBlock("F28","green");
+        Block G29  = tm.getBlock("G29","green"); // switch
+        Block G30  = tm.getBlock("G30","green");
+        Block Z150 = tm.getBlock("Z150","green");
+
+        //F28.setNextBlock(G29);
+        G29.setNextBlockMain(G30);
+        G29.setPrevBlockMain(F28);
+        G29.setNextBlockFork(F28);
+        G29.setPrevBlockFork(Z150);
+        Z150.setNextBlock(G29);
+        G29.setSwitchState(SwitchState.FORK);
+
+        Block J58 = tm.getBlock("J58","green"); // switch to yard
+        J58.setNextBlock(yard);
+
+        Block J62 = tm.getBlock("J62","green"); // switch from yard
+        J62.setPrevBlock(yard);
+
+        Block C9 = tm.getBlock("C9","red");
+        C9.setNextBlockFork(yard);
     }
 
     public void setCTC(CTC ctcModule) {
@@ -138,8 +225,8 @@ public class TrackControllerMain
         controllers.put(TkNames[5],tk5);
     }
 
-    public boolean sendSuggestedSpeed(String blockID,double speed) {
-        TrackController t = findController(blockID);
+    public boolean sendSuggestedSpeed(String blockID, String line, double speed) {
+        TrackController t = findController(blockID,line);
         if (t != null) {
             t.sendSuggestedSpeed(blockID,speed);
             return true;
@@ -147,8 +234,8 @@ public class TrackControllerMain
         return false;
     }
 
-    public boolean sendSuggestedAuthority(String blockID, String authorityID) {
-        TrackController t = findController(blockID);
+    public boolean sendSuggestedAuthority(String blockID, String line, String authorityID) {
+        TrackController t = findController(blockID,line);
         if (t != null) {
             t.sendSuggestedAuthority(blockID,authorityID);
             return true;
@@ -156,8 +243,8 @@ public class TrackControllerMain
         return false;
     }
 
-    public boolean setSwitchState(String blockID, SwitchState s) {
-        TrackController t = findController(blockID);
+    public boolean setSwitchState(String blockID, String line, SwitchState s) {
+        TrackController t = findController(blockID,line);
         if (t != null) {
             t.setSwitchState(blockID,s);
             return true;
@@ -165,19 +252,26 @@ public class TrackControllerMain
         return false;
     }
 
-    public boolean setCrossingState(String blockID, CrossingState c) {
-        TrackController t = findController(blockID);
+    public boolean repairBlock(String blockID, String line) {
+        TrackController t = findController(blockID,line);
         if (t != null) {
-            t.setCrossingState(blockID,c);
-            return true;
+            t.repairBlock(blockID);
         }
-        return false;
+        return true;
     }
 
-    private TrackController findController(String blockID) {
+    public boolean closeBlock(String blockID, String line) {
+        TrackController t = findController(blockID,line);
+        if (t != null) {
+            t.closeBlock(blockID);
+        }
+        return true;
+    }
+
+    private TrackController findController(String blockID, String line) {
         TrackController controller = null;
         for(TrackController tkc : controllers.values()) {
-            if (tkc.controlsBlock(blockID)) {
+            if (tkc.controlsBlock(blockID) && tkc.getLine().equals(line)) {
                 controller = tkc;
                 break;
             }
@@ -185,18 +279,9 @@ public class TrackControllerMain
         return controller;
     }
 
-    public boolean sendSuggestedSpeedAndAuthority(Block b, double speed, Block authorityBlock) {
+    public boolean sendSuggestedSpeedAndAuthority(String blockID, String line, double speed, Block authorityBlock) {
+        Block b = tm.getBlock(blockID,line);
         b.setAuditedSpeed(speed);
-        b.setAuditedAuthority(authorityBlock);
-        return true;
-    }
-
-    public boolean sendSuggestedSpeed(Block b, double speed) {
-        b.setAuditedSpeed(speed);
-        return true;
-    }
-
-    public boolean sendSuggestedAuthority(Block b, Block authorityBlock) {
         b.setAuditedAuthority(authorityBlock);
         return true;
     }

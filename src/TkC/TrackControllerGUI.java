@@ -414,6 +414,12 @@ public class TrackControllerGUI extends Application {
             @Override
             public void handle(WindowEvent t) {
                 tkcm.removeGUI(thisGUI); // remove from gui list
+                if (occupancyCheckBox.isSelected() && currentController.countGuis() == 1) {
+                    occupancyCheckBox.setSelected(false);
+                    currentBlock.setIsOccupied(false);
+                }
+                currentController.unregisterGui();
+
                 primaryStage.close();
             }
         });
@@ -457,7 +463,7 @@ public class TrackControllerGUI extends Application {
 
     //disable/enable elements depending on block
     public void checkUI() { 
-        if (currentBlock.getFailures() != null && currentBlock.getFailures().length != 0) // if errors
+        if (currentBlock.getFailures() != null && currentBlock.getFailures().size() != 0) // if errors
             statusVal.setText("BROKEN");
         else
             statusVal.setText("CLEAR");
@@ -499,25 +505,33 @@ public class TrackControllerGUI extends Application {
         // UI greying out
         //System.out.println("Current block type is" + currentBlock.getType());
         if (currentBlock.getType() == BlockType.SWITCHBLOCK) {
-            if (currentBlock.getSwitchState() == SwitchState.MAIN) {
-                switchImageView.setImage(switchImageMain);
-                light1.setFill(Color.GREEN);
-                light2.setFill(Color.GREEN);
-                light3.setFill(Color.RED);
+                if (currentBlock.getSwitchState() == SwitchState.MAIN) {
+                    switchImageView.setImage(switchImageMain);
+                    light1.setFill(Color.GREEN);
+                    light2.setFill(Color.GREEN);
+                    light3.setFill(Color.RED);
+                }
+                else {
+                    switchImageView.setImage(switchImageFork);
+                    light1.setFill(Color.GREEN);
+                    light2.setFill(Color.RED);
+                    light3.setFill(Color.GREEN);
+                }
+            if (currentBlock.getSwitching()) { // override to showing switching
+                    light1.setFill(Color.YELLOW);
+                    light2.setFill(Color.YELLOW);
+                    light3.setFill(Color.YELLOW);
             }
-            else {
-                switchImageView.setImage(switchImageFork);
-                light1.setFill(Color.GREEN);
-                light2.setFill(Color.RED);
-                light3.setFill(Color.GREEN);
-            }
-            crossImageView.setImage(crossImageGrey);
+
+            crossImageView.setImage(crossImageGrey); // grey out crossing
         } else if (currentBlock.getType() == BlockType.CROSSBLOCK) {
-            if (currentBlock.getCrossingState() == CrossingState.UP)
+            if (currentBlock.getCrossingState() == CrossingState.UP) {
                 crossImageView.setImage(crossImageUp);
-            else
+            } else {
                 crossImageView.setImage(crossImageDown);
+            }
             switchImageView.setImage(switchImageGrey);
+
             light1.setFill(Color.GREY);
             light2.setFill(Color.GREY);
             light3.setFill(Color.GREY);
@@ -691,11 +705,6 @@ public class TrackControllerGUI extends Application {
     class closeWindowHandler implements EventHandler<WindowEvent> {
         @Override
         public void handle(WindowEvent event) { // on window close, stop overriding occupancy
-            if (occupancyCheckBox.isSelected() && currentController.countGuis() == 1) {
-                occupancyCheckBox.setSelected(false);
-                currentBlock.setIsOccupied(false);
-            }
-            currentController.unregisterGui();
         }
     }
 

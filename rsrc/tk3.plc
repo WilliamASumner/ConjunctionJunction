@@ -11,54 +11,22 @@
 // Next (main): F16/E14
 // Next (fork): A1/E14
 
-// If a train coming into loop
-if (D13.occupancy == occupied and // checking first block
-    A1.occupancy  == unoccupied ) then // checking following block
-    C12.switchstate = main;
+
+//Switch E15
+//setting main
+if (E14.occupancy == occupied or F16.occupancy == occupied) then
+    E15.switchstate = main;
 endif;
 
-// If no coming train from D13, or A1 oncoming train, then just switch back
-if (D13.occupancy != occupied or A1.occupancy == occupied) then
-    C12.switchstate = fork;
+// setting fork
+if (A1.occupancy == occupied) then
+    E15.switchstate = fork;
 endif;
 
-// Unsafe condition checking - will override in case of impending collision
-// no trains should be on any rails near the switch
-// this assumes all trains will be 1 block apart at least to prevent a deadlock
-if (J52.occupancy == occupied and J51.occupancy == occupied) then
-    J52.authority = J52;
+// Error checking for oncoming trains
+if (A1.occupancy == occupied and F16.occupancy == occupied) then
+    H42.authority = H42;
+    F16.authority = F16;
 endif;
 
-if (J52.occupancy == occupied and J53.occupancy == occupied) then
-    J52.authority = J52;
-endif;
-
-if (J52.occupancy == occupied and N64.occupancy == occupied) then
-    J52.authority = J52;
-endif;
-
-//Switch G29
-//Previous(main): F28
-//Previous(fork): Z150
-//Next (main):G30
-//Next (fork):F28
-
-// If a train coming into loop
-if (F28.occupancy == occupied and // checking first block
-    Z150.occupancy  == unoccupied ) then // checking following block
-    G29.switchstate = main;
-endif;
-
-// If no coming train, then just switch back
-if (F28.occupancy != occupied or Z150.occupancy == occupied) then
-    G29.switchstate = fork;
-endif;
-
-// Error checking - will override in case of impending collision
-// If train coming into fork and another train in the way.
-if (F28.occupancy == occupied and Z150.occupancy == occupied) then
-    G29.switchstate = main;
-    Z150.authority = Z150;
-endif;
-
-
+//Switch C9 will be controlled by CTC

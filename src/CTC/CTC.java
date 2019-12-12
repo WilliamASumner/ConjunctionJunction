@@ -180,7 +180,7 @@ public class CTC{
 					tempId = "#r" + tempT.getCurBlkID();// get rectangle that matches with train's cur block
 				gui.tempRec = (Rectangle)gui.root.lookup(tempId);	
 				// Paint the rect a different color
-				gui.paintTrainRect(tempT.getName(), gui.tempRec);
+				gui.paintTrainRect(tempT.getName(), gui.tempRec); // BUG HERE
 				// Save cur block to change back later
 				tempT.setPrevBlkID(tempT.getCurBlkID());				
 				
@@ -203,10 +203,10 @@ public class CTC{
 					// Set new authority
 					tempT.setAuthority(tempT.getNextscheduleStop());
 					// Send authority to track controller
-					trckCntrl.sendSuggestedAuthority(tempT.getCurBlkID(), tempT.getAuthority());
+					//trckCntrl.sendSuggestedAuthority(tempT.getCurBlkID(), tempT.getAuthority());
 				}
 				// Send authority and cur block constantly
-				trckCntrl.sendSuggestedAuthority(tempT.getCurBlkID(), tempT.getAuthority());
+				//trckCntrl.sendSuggestedAuthority(tempT.getCurBlkID(), tempT.getAuthority());
 			}
         }			
     }

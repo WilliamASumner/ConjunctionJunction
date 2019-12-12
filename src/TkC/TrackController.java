@@ -174,6 +174,15 @@ public class TrackController
         return true;
     }
 
+    public void errorState() {
+        System.out.println(name + " ENTERED ERROR STATE, CLOSING DOWN BLOCKS");
+        plcInitialized = false; // stop running PLC
+        for(Block b: lineBlocks) {
+            b.setIsOccupied(true); // set all blocks to occupied
+            b.setAuditedAuthority(b); // authority to itself
+        }
+    }
+
     public void runPLC() {
         if (plcInitialized && !encounteredError) { // a valid PLC has been loaded
             ActionList thingsToDo = parserOneOutput.evaluate(this); // find which actions need to be done
@@ -182,23 +191,13 @@ public class TrackController
               //System.out.println("working voting");
               thingsToDo.execute();
             } else {
+                plcStatus = "Error Voting";
+                errorState();
                //System.out.println("ERROR VOTING");
             }
             thingsToDo.execute();
             return;
         }
-    }
-
-    public void addToLog(String s) {
-        log.append(s);
-    }
-
-    public String showLog() {
-        return log.toString();
-    }
-
-    public void clearLog() {
-        log.setLength(0); // reset to 0
     }
 
     public Block getBlock(String blockID) {
@@ -214,6 +213,20 @@ public class TrackController
             return b;
         }
         return tkcm.tm.getBlock(blockID,line);
+    }
+
+    public boolean repairBlock(String blockID) {
+        Block b = getBlock(blockID);
+        b.repairBlock();
+        b.setIsOccupied(false); // just set a circuit failure
+        return true;
+    }
+
+    public boolean closeBlock(String blockID) {
+        Block b = getBlock(blockID);
+        b.setFailure("circuit"); // just set a circuit failure
+        b.setIsOccupied(true); // just set a circuit failure
+        return true;
     }
 
     public boolean setSwitchState(String blockID, SwitchState s) {
@@ -247,9 +260,8 @@ public class TrackController
 
     public void update() {
         if (mode.equals("Automatic")) {
-            runPLC();
+            runPLC(); //run plc
         }
-        //run plc
     }
 
     public void registerGui() {
