@@ -180,7 +180,7 @@ public class CTC{
 					tempId = "#r" + tempT.getCurBlkID();// get rectangle that matches with train's cur block
 				gui.tempRec = (Rectangle)gui.root.lookup(tempId);	
 				// Paint the rect a different color
-				gui.paintTrainRect(tempT.getName(), gui.tempRec);
+				gui.paintTrainRect(tempT.getName(), gui.tempRec); // BUG HERE
 				// Save cur block to change back later
 				tempT.setPrevBlkID(tempT.getCurBlkID());				
 				
