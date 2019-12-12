@@ -1,4 +1,10 @@
+bin/
 *.class
 .*.un~
 .*.swp
 src.txt
+root/
+cjunction/
+cjunction.zip
+cjunction-unix/
+cjunction-unix.zip

@@ -1,3 +1,5 @@
+package cjunction; // conjunction junction package
+
 import javafx.application.Application;
 import javafx.scene.Scene;
 //import javafx.fxml.FXMLLoader;
@@ -13,238 +15,302 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.paint.Color;
 
+import java.io.FileNotFoundException;
+
+// A0's next block is A0 indefinitely
+// switch directionality
+// failures as string array display fail or not
+// throughput
+// signal color (create enum)
+// beacon: station name
+// temp -> track heaters
 
 
 public class TkM {
 
-      public double grade;
-      public double elevation;
-      public double speed;
-      // public ArrayList<String> failures;
-      public double length;
-      public String lineColor;
-      public int blockID;
-      public char section;
-      public boolean isOccupied;
-      private TkMGUI tkmg = null;
-      public String authority;
-      Stage s = null;
-      //VBox GUI;
+    private TkMGUI tkmg = null;
+    public String authority;
+    Stage s = null;
+    public ArrayList<TrackMap> trackmaps = new ArrayList<TrackMap>();
+    TrackMap line = new TrackMap();
+    TrackMap red = new TrackMap();
+    TrackMap green = new TrackMap();
+    TrainControllerMain tnC;
+    TrackControllerMain tkc = null;
+    ArrayList<TrainModel> trains = new ArrayList<TrainModel>();
+    private boolean heater;
 
-      public TkM() {
-          System.out.println(this.toString());
-        tkmg = new TkMGUI(this);
-        //this.initGUI();
-        // grade = b.getGrade();
-        // elevation = b.getElevation();
-        // speed = b.getSpeed();
-        // // failures.add("failure");
-        // // failures.add("failure2");
-        // // failures.add("failure3");
-        // length = b.getLength();
-        // lineColor = b.getLineColor();
-        // blockID = b.getBlockID();
-        // section = b.getSection();
-
-
-      }
-
-      // public TkM() {
-      //   initGUI();
-      //
-      //
-      //               // gr = grade;
-      //               // elev = elevation;
-      //               // sp = speed;
-      //               // // fails = failures;
-      //               // len = length;
-      //               // lineCol = lineColor;
-      //               // blkc = section;
-      //               // blkID = blockID;
-      // }
-
-      // public void initGUI() {
-      //   FXMLLoader loader = new FXMLLoader();
-      //   loader.setLocation(new URL("D:\Documents\Classes\Senior\softwareeng\javafiles\ConjunctionJunction\src\TkM"));
-      //   GUI = loader.<VBox>load();
-      // }
-
-      public void showGUI(Stage stage){
-        tkmg.start(stage);
-        s = stage;
-      }
-
-
-      public void setGrade(double newGrade) {
-        grade = newGrade;
-      }
-
-      public double getGrade() {
-        return grade;
-      }
-
-
-      public void setElevation(double newElevation) {
-        elevation = newElevation;
-
-      }
-
-      public double getElevation() {
-        return elevation;
-      }
-
-
-      public void setSpeed(double newSpeed) {
-        speed = newSpeed;
-        if (tkmg != null)
-            tkmg.update(s);
-      }
-
-      public double getSpeed() {
-        return speed;
-      }
-
-
-      // public void addFailures(String fail) {
-      //   failures.add(fail);
-      // }
-      //
-      // public void removeFailures(String fail) {
-      //   failures.remove(fail);
-      // }
-      //
-      // public ArrayList<String> getFailures() {
-      //   return failures;
-      // }
-
-      public void setLength(double newLength) {
-        length = newLength;
-      }
-
-      public double getLength() {
-        return length;
-      }
-
-      public void setLineColor(String newColor) {
-        lineColor = newColor;
-      }
-
-      public String getLineColor() {
-        return lineColor;
-      }
-
-      public void setBlockID(int newID) {
-        blockID = newID;
-      }
-
-      public int getBlockID() {
-        return blockID;
-      }
-
-      public char getSection() {
-        return section;
-      }
-
-      public void setSection(char newSection) {
-        section = newSection;
-      }
-
-      public void setIsOccupied(boolean occ) {
-        isOccupied = occ;
-        if (tkmg != null)
-            tkmg.update(s);
-      }
-
-      public boolean getIsOccupied() {
-        return isOccupied;
-      }
-
-      public void setAuthority(String newAuth) {
-        authority = newAuth;
-      }
-
-      public String getAuthority() {
-        return authority;
-      }
-
-
-      public TextFlow toString(TkM tm) {
-        // String failArr = "";
-        // ArrayList<String> trackFails = tm.getFailures();
-        //
-        // for(int i = 0; i < failures.size(); i++) {
-        //   failArr += "\t" + trackFails.get(i) + "\n";
-        // }
-        tm = this;
-        String occ = "";
-        if (!tm.getIsOccupied()) {
-          occ = "FREE";
+    /*public TkM(String lineColor, TrainControllerMain newtnC) {
+        tnC = newtnC;
+        this.buildTrackMaps("rsrc/redFile.csv", "rsrc/greenFile.csv");
+        if (lineColor.equals("Red")) {
+            line = this.red;
         }
         else {
-          occ = "OCCUPIED";
+            line = this.green;
         }
+        System.out.println(this.toString(red, red.map.get(5).getBlockID()));
+        tkmg = new TkMGUI(this);
+
+    }*/
+
+    public TkM(TrainControllerMain newtnC) {
+       tnC = newtnC;
+        this.buildTrackMaps("rsrc/redFile.csv", "rsrc/greenFile.csv");
+
+        //System.out.println(this.toString(red, red.map.get(5).getBlockID()));
+        tkmg = new TkMGUI(this);
+
+    }
+
+    public void addTrackController(TrackControllerMain newtkc) {
+        tkc = newtkc;
+    }
+
+    public ArrayList<TrackMap> buildTrackMaps(String redFile, String greenFile) {
+
+        red.parseFile(redFile);
+        green.parseFile(greenFile);
+
+        trackmaps.add(0, red);
+        trackmaps.add(1, green);
+        red = this.trackmaps.get(0);
+        green = this.trackmaps.get(1);
+
+        return trackmaps;
+    }
+
+    public ArrayList<Block> getRed() {
+        return trackmaps.get(0).map;
+    }
+
+    public ArrayList<Block> getGreen() {
+        return trackmaps.get(1).map;
+    }
+
+
+    public void createTrain(String name, String authority, Block b, double speed, TrainControllerMain TnC) {
+        TrainModel newTrain = TrainModelMain.createTrain(name, authority, b, speed, TnC,this);
+        if (!(trains.contains(newTrain))) {
+        trains.add(newTrain);
+        }
+    }
+
+    public void update() {
+        for(TrainModel t: trains) {
+            t.update();
+        }
+    }
+
+
+
+    public void showGUI(Stage stage){
+        tkmg.start(stage);
+        s = stage;
+    }
+
+    public void showTrainModelGUI(Stage stage) {
+        TrainModel t = trains.get(0);
+        //if (t != null)
+            //t.showGUI();
+    }
+
+
+
+
+
+
+
+    public TextFlow toString(TrackMap line, String blockID) {
+
+        //System.out.println("############" + blockID);
+        int bid = Integer.parseInt(blockID.substring(1, blockID.length()));
+
+        ArrayList<Block> tm = line.map;
+        Block b = tm.get(bid);
+
+        String occ = "";
+        if (!b.getIsOccupied()) {
+            occ = "FREE";
+        }
+        else {
+            occ = "OCCUPIED";
+        }
+
+        String yardB;
+        if (b.getPrevBlock().getBlockID().equals("A0")) {
+          yardB = "YARD";
+        }
+        else {
+          yardB = b.getPrevBlock().getBlockID();
+        }
+
+        String heat;
+        if (heater == true) {
+          heat = "ON";
+        }
+        else {
+          heat = "OFF";
+        }
+
+        String fails = "";
+        ArrayList<String> failArr = b.getFailures();
+        if (failArr.size() == 0) {
+          fails = "None";
+        }
+        for (int i = 0; i < failArr.size(); i++) {
+          fails += "\n"+failArr.get(i);
+        }
+
+        String beacon;
+        if (b.getType() == BlockType.STATIONBLOCK) {
+          beacon = b.getStationName() +"";
+        }
+        else {
+          beacon = "Not A Station";
+        }
+
+        String cross;
+        if (b.getType() == BlockType.CROSSBLOCK) {
+          cross = b.getCrossingState() +"";
+        }
+        else {
+          cross = "Not A Crossing";
+        }
+
 
         Text t1 = new Text("For Block ");
         t1.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
-        Text t1l = new Text(tm.getLineColor() + " " + tm.getSection() + tm.getBlockID() + ":\n");
+        Text t1l = new Text(b.getLineColor() + " " + b.getBlockID() + ":\n");
         t1l.setFont(Font.font("Verdana", 20));
         t1l.setFill(Color.GREEN);
         Text t2 = new Text("Grade: ");
         t2.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
-        Text t2l = new Text(tm.getGrade() + "\n");
+        Text t2l = new Text(b.getGrade() + "\n");
         t2l.setFont(Font.font("Verdana",  20));
         Text t3 = new Text("Elevation: ");
         t3.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
-        Text t3l = new Text(tm.getElevation() + "\n");
+        Text t3l = new Text(b.getElevation() + "\n");
         t3l.setFont(Font.font("Verdana",  20));
         Text t4 = new Text("Block length: ");
         t4.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
-        Text t4l = new Text(tm.getLength() + "\n");
+        Text t4l = new Text(b.getLength() + "\n");
         t4l.setFont(Font.font("Verdana",  20));
         Text t5 = new Text("Speed Limit: ");
         t5.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
-        Text t5l = new Text(tm.getSpeed() + "\n\n");
+        Text t5l = new Text(b.getSpeedLimit() + "\n");
         t5l.setFont(Font.font("Verdana",  20));
-        Text t6 = new Text("Occupation: ");
+        Text t6 = new Text("\nOccupation: ");
         t6.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
         Text t6l = new Text(occ);
         t6l.setFont(Font.font("Verdana",  20));
-        Text t7 = new Text("\nAuthority:");
+        Text t14 = new Text("\nCrossing: ");
+        t14.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
+        Text t14l = new Text(cross);
+        t14l.setFont(Font.font("Verdana",  20));
+        Text t7 = new Text("\nSwitch State:");
         t7.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
-        Text t7l = new Text(tm.getAuthority() + "\n\n\n");
+        Text t7l = new Text(b.getSwitchState() + "");
         t7l.setFont(Font.font("Verdana",  20));
+        Text t8 = new Text("\nNext Block:");
+        t8.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
+        Text t8l = new Text(b.getNextBlockVal() + "");
+        t8l.setFont(Font.font("Verdana",  20));
+        Text t9 = new Text("\nPrev Block:");
+        t9.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
+        Text t9l = new Text(yardB);
+        t9l.setFont(Font.font("Verdana",  20));
+        Text t10 = new Text("\nBlock Type:");
+        t10.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
+        Text t10l = new Text(b.getType() + "");
+        t10l.setFont(Font.font("Verdana",  20));
 
+        Text t13 = new Text("\nBeacon Data:");
+        t13.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
+        Text t13l = new Text(beacon);
+        t13l.setFont(Font.font("Verdana",  20));
 
-               // +
-               //"Failures: " + "\n" + failArr + "\n";
+        Text t11 = new Text("\nHeater:");
+        t11.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
+        Text t11l = new Text(heat);
+        t11l.setFont(Font.font("Verdana",  20));
+        Text t12 = new Text("\nFailures:");
+        t12.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
+        Text t12l = new Text(fails);
+        t12l.setFont(Font.font("Verdana",  20));
+        TextFlow tf = new TextFlow(t1,t1l,t2,t2l,t3,t3l,t4,t4l,t5,t5l,t6,t6l,t14,t14l,t7,t7l,t8,t8l,t9,t9l,t10,t10l,t13,t13l,t11,t11l,t12,t12l);
+        return tf;
+    }
 
-               TextFlow tf = new TextFlow(t1,t1l,t2,t2l,t3,t3l,t4,t4l,t5,t5l,t6,t6l,t7,t7l);
-               return tf;
+    public void turnOnHeater(double d) {
+      if (d < 32.0) {
+        heater = true;
+      }
+      else {
+        heater = false;
+      }
+    }
+
+    public Block getBlock(String blockID, String lineColor) {
+        lineColor = lineColor.toLowerCase();
+        int bid = Integer.parseInt(blockID.substring(1, blockID.length()));
+        if (lineColor.equals("red")) {
+            if (bid >= red.map.size()) {
+                return null;
+            } else {
+                return red.map.get(bid);
+            }
+        }
+        else if (lineColor.equals("green")) {
+            if (bid >= green.map.size()) {
+                return null;
+            } else {
+                return green.map.get(bid);
+            }
+        }
+        else {
+            return null;
+        }
+    }
+
+    public void updateOccupancy(Block b) {
+        tkc.updateOccupancy(b);
+    }
+
+    public void removeTrain(int index) {
+      trains.remove(index);
+    }
+
+    public void updateTkM() {
+      for (int i = 0; i < trains.size(); i++) {
+        Block b = trains.get(i).getCurrBlock();
+        if (b.getBlockID().equals("A0")) {
+          removeTrain(i);
+        }
       }
 
-	 // @Override
-	 //    public void start(Stage stage) {
-   //
-   //        TkM t = new TkM();
-   //        this.setGrade(0);
-   //        this.setSpeed(70);
-   //        this.setLength(100);
-   //        this.setBlockID(63);
-   //        this.setSection('K');
-   //        this.setElevation(0);
-   //        this.setLineColor("Green");
-   //        this.setIsOccupied(false);
-  	//         Label l = new Label(this.toString(t));
-  	//         Scene scene = new Scene(GUI);
-   //          stage.setTitle("Track Model UX");
-  	//         stage.setScene(scene);
-  	//         stage.show();
-   //
-	 //    }
+    }
 
-	    // public static void main(String[] args) {
-      //
-	    //     launch();
-	    // }
+    // public static void main(String[] args) {
+    //
+    //   TkM t = new TkM("Red");
+    //  t.buildTrackMaps("redFile.csv", "redFile.csv");
+    //  ArrayList<Block> a = t.trackmaps.get(0).map;
+    //   System.out.println(t.red.map.size());
+    // //  TrackMap r = t.trackmaps.get(0);
+    //   ArrayList<Block> aaa = t.red.getBlocksBySection("A");
+    //   System.out.println(aaa.size());
+    //   System.out.println(t.red.map.get(5).getIsOccupied());
+    //
+    // Block b = t.red.map.get(10);
+    // Block next = b.getNextBlockVal();
+    // System.out.println(next.getBlockID());
+    //
+    //   //Block b = t.trackmaps.get(0).sendBlock(1);
+    //   //System.out.println(b.getBlockID() + ", " + b.getLineColor());
+    //
+    // }
+
+
 
 }

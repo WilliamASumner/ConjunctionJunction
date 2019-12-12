@@ -1,4 +1,7 @@
+package cjunction; // conjunction junction package
+
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.layout.HBox;
@@ -11,12 +14,14 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.event.EventHandler;
 import javafx.event.ActionEvent;
-//import javafx.event.WindowEvent;
+import javafx.stage.WindowEvent;
 
-import javafx.animation.AnimationTimer;
+import javafx.animation.KeyFrame;
+import javafx.util.Duration;
+import javafx.animation.Timeline;
+import java.io.FileNotFoundException;
 
 public class MainUI extends Application {
-    // fields
     
     static AnchorPane root;
     
@@ -27,88 +32,148 @@ public class MainUI extends Application {
     private TextField speed;
 
     private TrackControllerMain tkcm = null;
-    private TrackController tkc = null;
 
-    private TrainController tnc = null;
+    private TrainControllerMain tnc = null;
+    private TrainModelMain tnm = null;
+    private Button CTC = null;
+    private Button trackModel = null;
+    private Button trainModel = null;
+    private Button trainController = null;
+    private Button trackController = null;
+
+    private Button stopButton = null;
+    private Button speedUpButton = null;
+    private Button speedDownButton = null;
+
+    private Timeline timeline;
+    private int timeMultiplier = 1;
+    private Label multiplierDisplay;
+
+    private boolean isStopped = false;
 
     private TkM tkm = null;
-    //private TrackModel tkm = null;
     private CTC_GUI ctcg = null;
     private CTC     ctc = null;
-    //private CTC ctcg = null;
-    private TrainModel tnm = null;
-    //
+
    public static void main(String[] args) {
-        // launch CTC 
-        //CTC newCTC = new CTC();
-        // launch the app
         launch();
     }
-    
+
+
     @Override
-    public void start(Stage stage) {
-        tkm = new TkM(); // initialize track controller
+    public void start(Stage stage)  {
+        // Module instantiations
+        tnc = new TrainControllerMain();
+        tnm = new TrainModelMain();
+        tkcm = new TrackControllerMain();
+        tkm = new TkM(tnc); // initialize track model
+        ctc = new CTC();
 
-        tkcm = new TrackControllerMain(); // should this be elsewhere?
-        tkc = tkcm.createTrackController("plc",null,tkm);
+        // Track Controller Connections
+        tkcm.setTrackModel(tkm);
+        tkcm.createControllers();
+        tkcm.setCTC(ctc);
 
+        //CTC Connections
+        ctc.addTrackModel(tkm);
+        ctc.addTrackController(tkcm);
+
+        //Track Model Connections
+        tkm.addTrackController(tkcm);
+
+        Label programTitle = new Label("Conjunction Junction");
+        Label programTitle2= new Label("Train Simulation Software");
+        programTitle.setAlignment(Pos.CENTER);
 
         // Create button
-        Button CTC = new Button("CTC");
+        CTC = new Button("CTC");
         // Register the event handler
         CTC.setOnAction(new CTCButtonHandler());
+        //CTC.setDisable(true);
 
         // Create button
-        Button trackController = new Button("Track Controller");
+        trackController = new Button("Track Controller");
         // Register the event handler
         trackController.setOnAction(new TrackControllerButtonHandler());
+        //trackController.setDisable(true);
         // Create button
-        Button trackModel = new Button("Track Model");
+        trackModel = new Button("Track Model");
         // Register the event handler
         trackModel.setOnAction(new TrackModelButtonHandler());
 
         // Create button
-        Button trainModel = new Button("Train Model");
+        trainModel = new Button("Train Model");
         // Register the event handler
         trainModel.setOnAction(new TrainModelButtonHandler());
+        //trainModel.setDisable(true);
 
         // Create button
-        Button trainController = new Button("Train Controller");
+        trainController = new Button("Train Controller");
+        //trainController.setDisable(true);
         // Register the event handler
         trainController.setOnAction(
                 new TrainControllerButtonHandler()
         );
 
+        stopButton = new Button("Stop");
+        stopButton.setOnAction(new stopHandler());
+
+        speedDownButton = new Button("Slow down");
+        speedDownButton.setOnAction(new slowDownHandler());
+
+        speedUpButton = new Button("Speedup");
+        speedUpButton.setOnAction(new speedUpHandler());
+
+        HBox timeControls = new HBox(speedDownButton,stopButton,speedUpButton);
+        timeControls.setAlignment(Pos.CENTER);
+
+        multiplierDisplay = new Label("1x");
+
+
         // Put the HBox, dispatchT, and myLabel in a VBox
-        VBox vbox = new VBox(10, CTC, trackController, trackModel, trainModel, trainController);
+        VBox vbox = new VBox(10,programTitle,programTitle2, CTC, trackController, trackModel, trainModel, trainController,timeControls,multiplierDisplay);
         // set the VBox's alignment to center
         vbox.setAlignment(Pos.CENTER);
 
+        stage.setOnCloseRequest(new closeWindowHandler());
+
         // Create a scene with the VBox as its root node
-        Scene scene = new Scene(vbox,300,200);
+        Scene scene = new Scene(vbox,300,500);
         stage.setTitle("Train Sim Home Page");
         stage.setScene(scene);
 
+        timeMultiplier = 1;
+        updateTimeline();
+
         //final long startNanoTime = System.nanoTime();
 
-        /*new AnimationTimer() { // anonymous animation timer
-            public void handle(long currentNanoTime) {
-                double deltaT = (currentNanoTime - startNanoTime)/1000000000.0;
-
-                // update all modules in succession
-                //ctc.update()
-                //tkc.update()
-                //tkm.update()
-                //tnm.update()
-                //tnc.update()
-                //System.out.println("here");
-            }
-        }.start(); */
-
-
-        //stage.setOnCloseRequest(new closeWindowHandler());
         stage.show();
 
+    }
+
+    /**
+     * Update timer
+     */
+    private void updateTimeline() {
+        if (timeline != null)
+            timeline.stop();
+        timeline = new Timeline(
+            new KeyFrame(Duration.millis(200.0/timeMultiplier), // default time is 1 second per update
+            new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent t) {
+                    ctc.update();
+                    tkcm.update();
+                    tkm.update();
+                    tnm.update();
+                    tnc.update();
+                }
+            })
+        );
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        if (!isStopped) {
+            timeline.play();
+        }
     }
 
     /**
@@ -118,11 +183,10 @@ public class MainUI extends Application {
         @Override
         public void handle(ActionEvent event) {
             Stage newWindow = new Stage();
-            if (ctc == null)
-                ctc = new CTC(tkcm);
-            if (ctcg == null)
-                ctcg = new CTC_GUI(ctc,newWindow);
-            ctcg.start(newWindow);
+            newWindow.setTitle("CTC Module");
+            newWindow.setWidth(1100);
+            newWindow.setHeight(630);
+            ctc.showGUI(newWindow);
         }
     }
     
@@ -133,8 +197,7 @@ public class MainUI extends Application {
         @Override
         public void handle(ActionEvent event) {
             Stage newWindow = new Stage();
-            System.out.println(tkc.toString());
-            tkc.showGUI(newWindow);
+            tkcm.showGUI(newWindow);
         }
     }
 
@@ -143,10 +206,8 @@ public class MainUI extends Application {
      */
     class TrackModelButtonHandler implements EventHandler<ActionEvent>{
         @Override
-        public void handle(ActionEvent event){
+        public void handle(ActionEvent event) {
             Stage newWindow = new Stage();
-            if (tkm == null)
-                tkm = new TkM();
             tkm.showGUI(newWindow);
 
         }
@@ -158,14 +219,8 @@ public class MainUI extends Application {
     class TrainModelButtonHandler implements EventHandler<ActionEvent>{
         @Override
         public void handle(ActionEvent event){
-             Stage newWindow = new Stage();
-            if (ctcg != null)
-                tnm = ctcg.getTrainModel();
-            if (tnm == null)
-                tnm = new TrainModel();
-            if (tnm != null)
-                tnm.showGUI(newWindow);
-
+            Stage newWindow = new Stage(); // new window
+            tnm.showGUI(newWindow);
         }
     }
 
@@ -176,20 +231,107 @@ public class MainUI extends Application {
         @Override
         public void handle(ActionEvent event){
             Stage newWindow = new Stage();
-            if (tnc == null && tnm == null)
-                tnc = new TrainController();
-            else if (tnc == null)
-                tnc = tnm.TNC;
-            if (tnc != null)
-                tnc.showGUI(newWindow);
+            tnc.showGUI(newWindow);
         }
     }
 
-    /*
+    class stopHandler implements EventHandler<ActionEvent>{
+        @Override
+        public void handle(ActionEvent event){
+            if (isStopped) {
+                stopButton.setText("Stop");
+                timeline.play();
+            } else {
+                stopButton.setText("Start");
+                timeline.stop();
+            }
+            isStopped = !isStopped;
+        }
+    }
+
+    class slowDownHandler implements EventHandler<ActionEvent>{
+        @Override
+        public void handle(ActionEvent event){
+            switch (timeMultiplier) {
+                case 4:
+                    timeMultiplier = 2;
+                    break;
+                case 10:
+                    timeMultiplier = 4;
+                    break;
+                case 20:
+                    timeMultiplier = 10;
+                    break;
+                case 25:
+                    timeMultiplier = 20;
+                    break;
+                case 50:
+                    timeMultiplier = 25;
+                    break;
+                case 100:
+                    timeMultiplier = 50;
+                    break;
+                default: // 1 -> 1, 2 -> 1
+                    timeMultiplier = 1;
+            }
+            multiplierDisplay.setText(timeMultiplier+"x");
+            updateTimeline();
+        }
+    }
+
+    class speedUpHandler implements EventHandler<ActionEvent>{
+        @Override
+        public void handle(ActionEvent event){
+            switch (timeMultiplier) {
+                case 1:
+                    timeMultiplier = 2;
+                    break;
+                case 2:
+                    timeMultiplier = 4;
+                    break;
+                case 4:
+                    timeMultiplier = 10;
+                    break;
+                case 10:
+                    timeMultiplier = 20;
+                    break;
+                case 20:
+                    timeMultiplier = 25;
+                    break;
+                case 25:
+                    timeMultiplier = 50;
+                    break;
+                case 50:
+                    timeMultiplier = 100;
+                    break;
+                case 100:
+                    timeMultiplier = 100;
+                    break;
+                default:
+                    timeMultiplier = 1;
+            }
+            multiplierDisplay.setText(timeMultiplier+"x");
+            updateTimeline();
+        }
+    }
+
     class closeWindowHandler implements EventHandler<WindowEvent> {
         @Override
         public void handle(WindowEvent event) {
-            stop();
+            System.out.println("Closing...");
+            try {
+                tkcm.stop(); // stop modules
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+
+            try { // close everything
+                Platform.exit();
+                System.exit(0);
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+
         }
-    }*/
+    }
 }

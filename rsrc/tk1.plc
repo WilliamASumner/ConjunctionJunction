@@ -1,0 +1,9 @@
+// TrackController #1
+// Controls:
+// Switch J58 (to Yard)
+// Switch J62 (from Yard)
+
+// Switches J58 and J62 are controlled by CTC
+// This controller cannot assess occupancy outside of
+// the track (i.e. the yard occupancy), so nothing can be done
+// as any operation would override CTC operation of the switches

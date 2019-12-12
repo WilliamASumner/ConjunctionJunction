@@ -1,0 +1,55 @@
+// TrackController #2
+// Controls:
+// Switch M76
+// Switch O86
+
+// Switch M76
+// Previous (main): M75
+// Previous (fork): N77
+// Next (main): N77
+// Next (fork): R101
+
+// If a train back from loop
+if (N77.occupancy  == occupied ) then // checking following block
+    M76.switchstate = fork;
+endif;
+
+// If no train is coming, route to R101
+if (M75.occupancy == occupied) then
+    M76.switchstate = main;
+endif;
+
+// Error checking - will override in case of impending collision
+// If train coming into N77 and train in N77
+if (M75.occupancy == occupied and N77.occupancy == occupied) then
+    M76.switchstate = main;
+    A1.authority = A1;
+endif;
+
+// Yield to train going to R101
+if (N77.occupancy == occupied and M75.occupancy == occupied) then
+    M75.authority = M75; // once not assereted, CTC will override
+endif;
+
+//Switch O86
+//Previous(main): N85
+//Previous(fork): Q100
+//Next (main): O87
+//Next (fork): N85
+
+// If a train coming into loop
+if (N85.occupancy == occupied) then
+    O86.switchstate = main;
+endif;
+
+// If no coming train, then just switch back
+if (N85.occupancy != occupied or Q100.occupancy == occupied) then
+    O86.switchstate = fork;
+endif;
+
+// Error checking - will override in case of impending collision
+// Forked train yields
+if (N85.occupancy == occupied and Q100.occupancy == occupied) then
+    O86.switchstate = main;
+    Q100.authority = Q100;
+endif;

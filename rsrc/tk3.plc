@@ -1,0 +1,44 @@
+// TrackController #3
+// Controls:
+// Switch C9 (to-from Yard)
+// Switch E15
+
+// Switch C9 is controlled by the CTC for adding/removing trains
+
+// Switch E15
+// Previous (main): E14/F16
+// Previous (fork): E14/A1
+// Next (main): F16/E14
+// Next (fork): A1/E14
+
+
+//Switch E15
+//setting main
+if (E14.occupancy == occupied) then
+    E15.switchstate = main;
+endif;
+
+// setting fork
+if (A1.occupancy == occupied) then
+    E15.switchstate = fork;
+endif;
+
+// fork upwards
+if (F16.occupancy == occupied) then
+    E15.switchstate = fork;
+endif;
+
+// Error checking for oncoming trains
+// main yields to fork
+if (E14.occupancy == occupied and F16.occupancy == occupied) then
+    E14.authority = E14;
+    F16.authority = F16;
+endif;
+
+// standstill to avoid crash
+if (A1.occupancy == occupied and F16.occupancy == occupied) then
+    A1.authority = A1;
+    F16.authority = F16;
+endif;
+
+
