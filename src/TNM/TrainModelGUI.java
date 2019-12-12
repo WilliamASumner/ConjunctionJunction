@@ -16,6 +16,9 @@ import javafx.stage.Stage;
 public class TrainModelGUI extends Application {
 
     boolean testmode = false;
+	int windowH = 290;
+	int windowW = 550;
+	
 	boolean testIntToggle = false;
 	
 	String myName = "wowee";
@@ -79,6 +82,9 @@ public class TrainModelGUI extends Application {
     Button eBrake = new Button("EMERGENCY BRAKE: Currently OFF");
     Button sBrake = new Button("SERVICE BRAKE: Currently OFF");
 	
+	//
+	Label pepsi_Label = new Label("BUY PEPSI");
+	
 	//Test buttons
     Button add5pass_button = new Button("+5 Passengers");
     Button rem5pass_button = new Button("-5 Passengers");
@@ -102,47 +108,37 @@ public class TrainModelGUI extends Application {
 	{
 		
 		eBrake.setStyle("-fx-text-fill: black");
-        eBrake.setMinWidth(400);
-        eBrake.setMaxWidth(400);
         eBrake.setMinWidth(200);
         eBrake.setMaxWidth(200);
 		
 		sBrake.setStyle("-fx-text-fill: black");
-        sBrake.setMinWidth(400);
-        sBrake.setMaxWidth(400);
         sBrake.setMinWidth(200);
         sBrake.setMaxWidth(200);
 		
 		EbrakeFailButton.setStyle("-fx-text-fill: black");
-        EbrakeFailButton.setMinWidth(400);
-        EbrakeFailButton.setMaxWidth(400);
         EbrakeFailButton.setMinWidth(200);
         EbrakeFailButton.setMaxWidth(200);
 		
 		SbrakeFailButton.setStyle("-fx-text-fill: black");
-        SbrakeFailButton.setMinWidth(400);
-        SbrakeFailButton.setMaxWidth(400);
         SbrakeFailButton.setMinWidth(200);
         SbrakeFailButton.setMaxWidth(200);
 		
 		EngineFailButton.setStyle("-fx-text-fill: black");
-        EngineFailButton.setMinWidth(400);
-        EngineFailButton.setMaxWidth(400);
         EngineFailButton.setMinWidth(200);
         EngineFailButton.setMaxWidth(200);
 		
 		SignalFailButton.setStyle("-fx-text-fill: black");
-        SignalFailButton.setMinWidth(400);
-        SignalFailButton.setMaxWidth(400);
         SignalFailButton.setMinWidth(200);
         SignalFailButton.setMaxWidth(200);
 		
 		//Main Flowpane
+		
 		flowpane = new FlowPane();
 		
 		//speed VBOX
 		VBox speed = new VBox();
         speed.setMinWidth(200);
+        speed.setMaxWidth(200);
 		speed.setStyle("-fx-border-color: black");
 		
 		speed.getChildren().add(currentSpeedLabel); //add speedlabel to brake flowpane
@@ -163,6 +159,7 @@ public class TrainModelGUI extends Application {
 		
 		VBox block_VBOX = new VBox();
         block_VBOX.setMinWidth(200);
+        block_VBOX.setMaxWidth(200);
 		block_VBOX.setStyle("-fx-border-color: black");
 		
 		block_VBOX.getChildren().add(currentBlockLabel); //add speedlabel to brake flowpane
@@ -181,7 +178,8 @@ public class TrainModelGUI extends Application {
 		
 		//internal VBOX
 		VBox internal = new VBox();
-        block_VBOX.setMinWidth(200);
+        internal.setMinWidth(150);
+        internal.setMaxWidth(150);
 		internal.setStyle("-fx-border-color: black");
 		
 		internal.getChildren().add(Temp_Label); //add speedlabel to brake flowpane
@@ -221,6 +219,18 @@ public class TrainModelGUI extends Application {
 		brake.getChildren().add(sBrake); //add eBrake to brake flowpane
         flowpane.getChildren().add(brake); //add brake flowpane to main flowpane
 		
+		//Pepsi VBox
+		
+		VBox pepsi = new VBox();
+        pepsi.setMinWidth(150);
+        pepsi.setMaxWidth(150);
+		pepsi.setStyle("-fx-border-color: black");
+		
+		pepsi.getChildren().add(pepsi_Label); //add speedlabel to brake flowpane
+		
+        //flowpane.getChildren().add(pepsi); //add brake flowpane to main flowpane
+		
+		
 		//testing buttons flowpane
 		FlowPane test = new FlowPane();
         test.setStyle("-fx-border-color: black");
@@ -256,11 +266,12 @@ public class TrainModelGUI extends Application {
 		
 		
 	}
-    @Override // not sure what this does?
+    @Override //
     public void start(Stage primaryStage) { // entry point for all apps
         primaryStage.setTitle("Train Model GUI: "+ myName); // container for all of it
         initGUI();
-        Scene scene = new Scene(flowpane, 601, 400);
+		if(testmode)windowH=360;
+        Scene scene = new Scene(flowpane, windowW, windowH);
         primaryStage.setScene(scene); // content container
         primaryStage.show();
     }
