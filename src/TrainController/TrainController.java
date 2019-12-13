@@ -15,8 +15,8 @@ import javafx.stage.Stage;
 
 
 public class TrainController{
-    private double currSpeed = 60;
-    private double driverSetSpeed = 0;
+    double currSpeed = 60;
+    double driverSetSpeed = 0;
     String authority = "test block";
     double auditedSpeed = 70;
     double CTCSpeed = 100;
