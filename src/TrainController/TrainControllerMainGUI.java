@@ -161,7 +161,7 @@ public class TrainControllerMainGUI extends Application implements EventHandler<
            powerConfigButton.setOnAction(new powerConfigHandler());
            tncButton.setOnAction(new tncHandler());
            if(scene == null){
-            scene = new Scene(flowpane, 300, 125);
+            scene = new Scene(flowpane, 400, 125);
            }
 
            primaryStage.setScene(scene);

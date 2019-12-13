@@ -19,6 +19,7 @@ public class TrainController{
     private double driverSetSpeed = 0;
     String authority = "test block";
     double auditedSpeed = 70;
+    double CTCSpeed = 100;
     String beaconData;
     boolean serviceBrake_isActive;
     boolean[] Doors = new boolean[8];
@@ -41,7 +42,7 @@ public class TrainController{
     
     //Train Controller Constructor
     public TrainController(String name, String a, double speed, TrainModel trainModel){
-        auditedSpeed = speed;
+        CTCSpeed = speed;
         authority = a;
         trainName = name;
         tm = trainModel;
@@ -77,6 +78,7 @@ public class TrainController{
         return myGUI;
     }
 
+   
     
     //function called on each system tick
     public void update(){
@@ -98,21 +100,22 @@ public class TrainController{
             toggleServiceBrake();
             set = 0;
         }
-        //System.out.println("TrainController: Speed = " +currSpeed);
-        //myGUI.updatePowerCommand();
     }
 
     //Called when train controller selected from main menu
     void showGUI(Stage primaryStage){
-       // System.out.println("TrainController: Hello from Train Controller:" + this);
         myGUI.start(primaryStage);
     }
 
     public void setCurrBlock(){
         currBlock = tm.getCurrentBlock();
+        if(currBlock != null){
+            myGUI.setCurrBlock(currBlock.getBlockID());
+        } 
     }
 
     public Block getCurrBlock(){
+        
         return currBlock;
     }
 
@@ -124,8 +127,8 @@ public class TrainController{
         //if we are in automatic mode, then the set speed
         //is the audited speed limit of the track
         if(isAutomaticMode){
-            if(auditedSpeed > 0){
-                return auditedSpeed;
+            if(auditedSpeed > CTCSpeed){
+                return CTCSpeed;
             }
             else{
                 return 0;
@@ -175,7 +178,7 @@ public class TrainController{
     }
 
     //Set e brake failure, called from TrainModel
-    public void setEBrakeFailure(boolean state){
+    public void setEBrakeFailure(boolean state){ 
         eBrakeFailure = state;
         myGUI.setEBrakeFailureText(state);
     }
@@ -306,11 +309,11 @@ public class TrainController{
        // System.out.println("TrainController: TRAIN: " + this + " - Power CMD " + powerOut);
 
        if(currBlock != null){
-        if(eBrakeOn || sBrakeOn || currBlock.getBlockID() == authority){
+        if(eBrakeOn || sBrakeOn || currBlock.getNextBlockVal().getBlockID() == authority || engineFailure){
             powerOut = 0; 
         }
        }
-        
+        myGUI.setPower(powerOut);
         return powerOut;
     }
 
