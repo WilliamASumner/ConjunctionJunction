@@ -1,5 +1,7 @@
 package cjunction; // conjunction junction package
 
+import java.util.ArrayList;
+
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -9,314 +11,112 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage; 
 
-//import javafx.event.ActionEvent;
-
-
-
-
-public class TrainController{
-    private double currSpeed = 60;
-    private double driverSetSpeed = 0;
-    String authority = "test block";
-    double auditedSpeed = 70;
-    double CTCSpeed = 100;
-    String beaconData;
-    boolean serviceBrake_isActive;
-    boolean[] Doors = new boolean[8];
-    double powerCommand;
-    double temperature = 70.0;
-    Block currBlock;
-    boolean eBrakeOn;
-    boolean sBrakeOn;
-    boolean isAutomaticMode = true;
-    boolean engineFailure;
-    boolean trackCircuitFailure;
-    boolean eBrakeFailure;
-    boolean serviceBrakeFailure;
-    boolean lightsOn = false;
-    String trainName = "train1";
-    TrainModel tm;
-    TrainControllerGUI myGUI;
-    Power myPower;
-    int set = 0;
-    
-    //Train Controller Constructor
-    public TrainController(String name, String a, double speed, TrainModel trainModel){
-        CTCSpeed = speed;
-        authority = a;
-        trainName = name;
-        tm = trainModel;
-		//System.out.println("TrainController: Name: "+name+"Block: "+authority+"Speed: "+auditedSpeed);
-        initGUI();
-        initPower();
-    }
-
-    /*create the Power class object, called by 
-    TrainControllerMainGUI the first time 
-    that the Power gui is opened*/
-    public Power initPower(){
-        myPower = new Power();
-        return myPower;
-    }
-
-    /*returns this specific train controllers reference
-    to its Power object, called from TrainControllerMainGUI*/
-    public Power getPower(){
-        return myPower;
-    }
-
- 
-
-    //Called when train controller is created
-    void initGUI(){
-        myGUI = new TrainControllerGUI(this);
-        
-    }
-
-
-    public TrainControllerGUI getGUI(){
-        return myGUI;
-    }
-
+public class Power{
+    public double Ki = 1.0;
+    public double Kp = 1.0;
+    public double safetyLimit = 0.1;
    
-    
-    //function called on each system tick
-    public void update(){
-        powerCommand = calculatePower();
-        //If either brake is active then power command is 0
-        if(sBrakeOn || eBrakeOn){
-            powerCommand = 0;
+    private double powerOutput;
+    private PowerGUI powerGUI;
+
+    //Power Constructor
+    public Power(){
+        this.init();
+    }
+
+    private void init(){
+        //Set default values for Ki and Kp
+        Ki = 1.0;
+        Kp = 1.0;
+        powerGUI = new PowerGUI(this);
+    }
+
+    public void showGUI(Stage primaryStage){
+        powerGUI = new PowerGUI(this);
+        powerGUI.start(primaryStage);
+    }
+
+    /*@RETURNS double powerCommand - Safety-Critical function called
+    by calculatePower() function within TrainController. TMR System
+    implemented where the powerCommand is calculated three times and 
+    the difference is checked to make sure it is within our 
+    safetyLimit (currently set to 0.1)*/
+    public double calcPowerCommand(TrainController tnc){
+        double power1 = calculatePower1(tnc);
+        double power2 = calculatePower1(tnc);
+        double power3 = calculatePower1(tnc);
+
+        /*If any of our two power calculations are within a safetyLimit(0.1) to eachother,
+        return the average of the two calculations, if not return 0 */
+        if((power1 - power2)/power1 < safetyLimit){
+            return (power1 + power2)/2;
         }
-        getAuditedSpeed();
-        getAuthority();
-        setCurrBlock();
-        currSpeed = getCurrSpeed();
-
-        if(currSpeed > (1.05*auditedSpeed)){
-            toggleServiceBrake();
-            set = 1;
+        else if((power1 - power3)/power1 < safetyLimit){
+            return (power1 + power3)/2;
         }
-        else if(set == 1){
-            toggleServiceBrake();
-            set = 0;
+        else if((power2 - power3)/power2 < safetyLimit){
+            return (power2 + power3)/2;
         }
+        else
+            return 0;
     }
 
-    //Called when train controller selected from main menu
-    void showGUI(Stage primaryStage){
-        myGUI.start(primaryStage);
+    //First Power Calculation for TMR System
+    private double calculatePower1(TrainController tnc){
+        double powerOutput;
+        double KiOut;
+        double KpOut;
+        double error = tnc.getSetSpeed() - tnc.getCurrSpeed();
+        KpOut = Kp * error;
+        KiOut = Ki * error;
+        powerOutput = KiOut + KpOut;
+        return powerOutput;
     }
 
-    public void setCurrBlock(){
-        currBlock = tm.getCurrentBlock();
-        if(currBlock != null){
-            myGUI.setCurrBlock(currBlock.getBlockID());
-        } 
+    //Second Power Calculation for TMR System
+    private double calculatePower2(TrainController tnc){
+        double powerOutput;
+        double KiOut;
+        double KpOut;
+        double error = tnc.getSetSpeed() - tnc.getCurrSpeed();
+        KiOut = Ki * error;
+        KpOut = Kp * error;
+        powerOutput = KiOut + KpOut;
+        return powerOutput;
     }
 
-    public Block getCurrBlock(){
-        
-        return currBlock;
-    }
-
-    public double getCurrSpeed(){
-        return tm.getVelocity();
-    }
-
-    public double getSetSpeed(){
-        //if we are in automatic mode, then the set speed
-        //is the audited speed limit of the track
-        if(isAutomaticMode){
-            if(auditedSpeed > CTCSpeed){
-                return CTCSpeed;
-            }
-            else{
-                return 0;
-            }
-        }
-        //if we are in manual mode, return driver set speed
-        else{
-            if(driverSetSpeed > 0){
-                return driverSetSpeed;
-            }
-            else{
-                return 0;
-            }
-            
-        }
-    }
-
-    //Updates train's audited speed limit from the train model
-    public void getAuditedSpeed(){
-        if(!trackCircuitFailure){
-            auditedSpeed = tm.getAuditedSpeed();
-        }
-    }
-
-    //Updates train's authority from the train model
-    public void getAuthority(){
-        if(!trackCircuitFailure){
-            authority = tm.getAuthority();  
-        }
-    }
-
-    //Updates train's authority from the train model
-    public String getName(){
-        return trainName;
-    }
-
-    //Set engine failure, called from TrainModel
-    public void setEngineFailure(boolean state){
-        engineFailure = state;
-        myGUI.setPowerFailureText(state);
-    }
-
-    //Set track signal failure, called from TrainModel
-    public void setSignalFailure(boolean state){
-        trackCircuitFailure = state;
-        myGUI.setSignalFailureText(state);
-    }
-
-    //Set e brake failure, called from TrainModel
-    public void setEBrakeFailure(boolean state){ 
-        eBrakeFailure = state;
-        myGUI.setEBrakeFailureText(state);
-    }
-
-    //Set s brake failure, called from TrainModel
-    public void setSBrakeFailure(boolean state){
-        serviceBrakeFailure = state;
-        myGUI.setSBrakeFailureText(state);
-    }
-
-    //Driver sets train controller mode to automatic
-    public void setAutomaticMode(){
-        /*
-        Note: when we switch from automatic to manual mode we begin using
-        the driverSetSpeed as the new set speed for the power calculations
-        so as to not have the speed of the train affected by switching
-        from auto to manual mode we set the driverSetSpeed to the current
-        speed of the train
-        */
-        driverSetSpeed = currSpeed;
-        isAutomaticMode = true;
-    }
-
-    //Driver sets train controller mode to manual
-    public void setManualMode(){
-        isAutomaticMode = false;
-    }
-
-    //toggle the lights
-    //called from TrainControllerGUI when the toggle lights button
-    //is pressed
-    public boolean setLights(){
-        boolean currentState;
-        if(lightsOn){
-            lightsOn = false;
-        }
-        else{
-            lightsOn = true;
-        }  
-        tm.toggleLights();
-        currentState = lightsOn;
-        return currentState;
-    }
-
-    //Set speed of train to new driverSetSpeed, only if it not above
-    //speed limit
-    public boolean setNewSpeed(double input){
-        if(!isAutomaticMode){
-            driverSetSpeed = input;
-            return true;
-        }
-        return false;
-        
-    }
-
-    //Set temperature of train cabin to newTemp value (fahrenheit)
-    public void setTemp(double newTemp){
-        temperature = newTemp;
-        tm.setTemperature(newTemp);
-    }
-
-    public double getTemp(){
-        return temperature;
-    }
-
-    //Toggle the emergency brake, called from TrainControllerGUI
-    public boolean toggleEBrake(){
-        boolean currentState;
-        //if we do not currently have an e brake failure then toggle
-        if(!eBrakeFailure){
-            if(eBrakeOn){
-                eBrakeOn = false;
-            }
-            else{
-                eBrakeOn = true;
-            }
-            tm.toggleEBrake();
-        }
-        currentState = eBrakeOn;
-        return currentState;
-    }
-
-    //Toggle the service brake, called from TrainControllerGUI
-    public boolean toggleServiceBrake(){
-        boolean currentState;
-        //if we do not currently have an s brake failure then toggle
-        if(!serviceBrakeFailure){
-            if(sBrakeOn){
-                sBrakeOn = false;
-            }
-            else{
-                sBrakeOn = true;
-            }
-            tm.toggleSBrake();
-        }
-        currentState = sBrakeOn;
-        return currentState;
-    }
-
-    //Driver inputs a new driver set speed, called from TrainControllerGUI
-    public void newDriverSetSpeed(double setSpeed){
-        //check that the driver setSpeed is less our speed limit
-        if((setSpeed < auditedSpeed) && (setSpeed > 0) && (!isAutomaticMode)){
-            driverSetSpeed = setSpeed;
-        }
-    }
-
-    public boolean toggleDoor(int doorNum){
-        boolean currentState;
-            if(Doors[doorNum]){
-                Doors[doorNum] = false;
-                tm.setDoorStatus(Doors);
-            }
-            else{
-                Doors[doorNum] = true;
-                tm.setDoorStatus(Doors);
-            }
-            currentState = Doors[doorNum];
-            return currentState;
-    }
-
-    //@returns double calculatePower - power command to Train Model in kiloWatts 
-    //Calculates power command based on current and desired speed
-    public double calculatePower(){
-        double powerOut;   //power command output, in kiloWatts
-        //Power.calcPowerCommand(this);
-        powerOut = myPower.calcPowerCommand(this);
-       // System.out.println("TrainController: TRAIN: " + this + " - Power CMD " + powerOut);
-
-       if(currBlock != null){
-        if(eBrakeOn || sBrakeOn || currBlock.getNextBlockVal().getBlockID() == authority || engineFailure){
-            powerOut = 0; 
-        }
-       }
-        myGUI.setPower(powerOut);
-        return powerOut;
+    //Third Power Calculation for TMR System
+    private double calculatePower3(TrainController tnc){
+        double powerOutput;
+        double error = tnc.getSetSpeed() - tnc.getCurrSpeed();
+        powerOutput = (Ki*error) + (Kp*error);
+        return powerOutput;
     }
 
 
-    
+    public double getPowerCommand(){
+        return powerOutput;
+    }
+
+    //Set a new Ki value
+    public void setKi(double i){
+        System.out.println("Power: Ki: " + Ki + " --> "+ i);
+		Ki = i;
+    }
+
+    //Set a new Kp value
+    public void setKp(double p){
+        System.out.println("Power: Kp: " + Kp + " --> "+ p);
+        Kp = p;
+    }
+
+    public double getKi(){
+        return Ki;
+    }
+
+    public double getKp(){
+        return Kp;
+    }
 }
+
+
